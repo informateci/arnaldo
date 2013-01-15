@@ -21,16 +21,16 @@ class GourmetBot(MiniBot):
             sayit=self._doit()
             self.write_message(sayit)
         else
-			nrand = randint(0, 2000)
+	    nrand = randint(0, 2000)
             if nrand <= 2:
-				print "Say it!"
-				sayit=self._doit()
-				self.write_message(sayit)
-			elif nrand <= 4:
-				print "Say it!"
-				infile = opener.open('http://it.wikipedia.org/w/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=json')
-				sayit="Parliamo di " + json.loads(infile.read())['query']['random'][0]['title']
-				self.write_message(sayit)
+                print "Say it!"
+                sayit=self._doit()
+                self.write_message(sayit)
+            elif nrand <= 4:
+                print "Say it!"
+                infile = opener.open('http://it.wikipedia.org/w/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=json')
+                sayit="Parliamo di " + json.loads(infile.read())['query']['random'][0]['title']
+                self.write_message(sayit)
             
     def _doit(self):
         citta=choice([[a.split(',')[1] for a in (self.cy).split(",,,,")[6:-11]]][0])
