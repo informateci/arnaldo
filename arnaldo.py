@@ -13,7 +13,7 @@ class GourmetBot(MiniBot):
         self.nn = file('nounlist.txt', 'r').read()
         MiniBot.__init__(self, 'chat.freenode.net', 6666, '#informateci', 'Illuvatar594')
         opener = urllib2.build_opener()
-    	opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+		opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 
     def _on_message(self, author, content, private):
         if ("ANAL" in content):
@@ -51,10 +51,3 @@ if __name__ == "__main__":
     bot = GourmetBot()
     bot.register_command("tipo?", bot._tipo)
     bot.start()
-
-
-
-opener = urllib2.build_opener()
-opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-infile = opener.open('http://it.wikipedia.org/w/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=json')
-title = json.loads(infile.read())['query']['random'][0]['title']
