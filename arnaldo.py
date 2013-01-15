@@ -13,7 +13,7 @@ class GourmetBot(MiniBot):
         self.nn = file('nounlist.txt', 'r').read()
         MiniBot.__init__(self, 'chat.freenode.net', 6666, '#informateci', 'Illuvatar594')
         opener = urllib2.build_opener()
-		opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 
     def _on_message(self, author, content, private):
         if ("ANAL" in content):
