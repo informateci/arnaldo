@@ -21,7 +21,7 @@ class GourmetBot(MiniBot):
             sayit=self._doit()
             self.write_message(sayit)
         else
-	    nrand = randint(0, 2000)
+            nrand = randint(0, 2000)
             if nrand <= 2:
                 print "Say it!"
                 sayit=self._doit()
