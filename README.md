@@ -1,5 +1,5 @@
 Arnaldo
 =======
 
-Simple IRC bot for fun & profit
+Simple IRC bot for fun & profit.
 
