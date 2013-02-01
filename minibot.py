@@ -34,7 +34,7 @@ class MiniBot(object):
         chan        --  IRC channel name (e.g. '#foo').
         nick        --  Bot nickname.
         ident       --  User's displayed name.
-        realname    --  User's real name.  
+        realname    --  User's real name.
         verbose     --  Enable/disable printed messages.
 
         """
@@ -45,7 +45,7 @@ class MiniBot(object):
         self.nick = nick
         self.ident = ident
         self.realname = realname
-        self.verbose = verbose 
+        self.verbose = verbose
         # commands management (requires runtime setup)
         self.admins = [] # nicknames with admin privileges
         self.__user_commands = {}
@@ -53,7 +53,7 @@ class MiniBot(object):
         # private data
         self.__sock = socket.socket()
         self.__connected = False
-    
+
     ############################# Public methods ###############################
 
     def start(self):
@@ -92,10 +92,10 @@ class MiniBot(object):
                     and must return a boolean value to indicate if the message
                     has been consumed (i.e. on_message() wont be called).
         admin   --  True if the command requires admin privileges.
-        
+
         """
         if admin :
-            self.__admin_commands[command] = handler        
+            self.__admin_commands[command] = handler
         else:
             self.__user_commands[command] = handler
         self.__deb("Command %s registered (admin:%s)" % (command, admin))
@@ -171,7 +171,7 @@ class MiniBot(object):
             self.__sock.connect((self.host, self.port))
             self.__sock.send("NICK %s\r\n" % self.nick)
             self.__sock.send("USER %s %s 0 :%s\r\n" % (self.ident, self.host, self.realname))
-            self.__sock.send("JOIN :%s\r\n" % self.chan)    
+            self.__sock.send("JOIN :%s\r\n" % self.chan)
             self.__connected = True
             self.__deb("...done!")
         else:
@@ -189,8 +189,7 @@ class MiniBot(object):
         # commands management
         consumed = False
         if re.match('%s.?\ ' % self.nick, content): # someone is calling
-            tokens = content.split()[1:] # remove the bot name
-            cmd = tokens[0]
+            cmd = content.replace(self.nick,'') # remove the bot name
             self.__deb("Command: %s" % cmd)
             # user command
             if cmd in self.__user_commands :
@@ -202,10 +201,10 @@ class MiniBot(object):
                 handler = self.__admin_commands[cmd]
                 arg = " ".join(tokens[1:])
                 consumed = handler(self, author, arg, private)
-        if not consumed:            
+        if not consumed:
             # call the custom message handler
             self._on_message(author, content, private)
-        
+
     def __process_action_message(self, message, private):
 	try:
             self.__deb("Action: %s" % message)
@@ -222,7 +221,7 @@ class MiniBot(object):
         return (author, content)
 
     def __deb(self, msg):
-        if self.verbose: 
+        if self.verbose:
             print msg
 
 
