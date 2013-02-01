@@ -4,7 +4,7 @@ import cStringIO
 from random import choice, randint
 import requests
 import json
-
+import re
 
 class GourmetBot(MiniBot):
 
@@ -13,8 +13,29 @@ class GourmetBot(MiniBot):
         self.cy = file('SUB-EST2011-01.csv', 'r').read()
         self.nn = file('nounlist.txt', 'r').read()
         MiniBot.__init__(self, 'chat.freenode.net', 6666, '#informateci', self.nick)
+        self.commands = [
+            (re.compile('ANAL'), self.anal),
+            (re.compile('^allivello\\?'), self.allivello)
+        ]
+        self.strip_name = re.compile('^\s*(' + self.nick + ')?[.:]?\s*')
 
     def _on_message(self, author, content, private):
+        stripped_content = self.strip_name.sub('', content)
+        for r, callback in self.commands:
+            match = r.search(stripped_content)
+            if match:
+                callback(match)
+                return
+
+    def anal(self, match):
+        print " -- NEW ANAL --"
+        self.write_message(self.ANAL())
+
+    def allivello(self, match):
+        print " -- NEW ALLIVELLO --"
+        self.write_message(self.parliamo())
+
+    def OLD_on_message(self, author, content, private):
         if ("ANAL" in content):
             print "Say it!"
             sayit=self.ANAL()
