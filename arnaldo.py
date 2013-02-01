@@ -44,7 +44,7 @@ class GourmetBot(MiniBot):
         if(respa.ok):
              msgg=reduce(dict.get,['query','random'], json.loads(respa.content))
              if msgg is not None and len(msgg)>0 and msgg[0].get('title',None) is not None:
-                 return "Parliamo di " + msgg[0].get('title',None)
+                 return "Parliamo di " + (msgg[0].get('title',None)).encode("utf-8")
         return None
 
 
