@@ -60,10 +60,16 @@ class GourmetBot(MiniBot):
             self.write_message(sayit)
             return True
 
+    def _eallora(self,n,a,p,d):
+            print "Say it!"
+            self.write_message("e allora le foibe?")
+            return True
+
 if __name__ == "__main__":
     print "Starting GourmetBot 1.0"
     bot = GourmetBot()
     bot.register_command("tipo?", bot._tipo)
     bot.register_command("allivello?", bot._allivello)
+    bot.register_command("e allora?", bot._eallora)
     bot.start()
 
