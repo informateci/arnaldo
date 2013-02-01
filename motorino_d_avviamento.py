@@ -11,7 +11,8 @@ def rinasci_arnaldo():
 
     if PROCESS is not None:
         PROCESS.terminate()
-    
+
+    subprocess.check_call(['git', 'pull'])
     PROCESS = subprocess.Popen(['python', 'arnaldo.py'])
 
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
