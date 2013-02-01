@@ -16,7 +16,14 @@ def rinasci_arnaldo():
 
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_the_404(self):
-        self.send_error(404, 'ONORE AL COMMENDATORE')
+        p='<html><h1>ONORE AL COMMENDATORE</h1><audio autoplay loop><source src="http://www.fileden.com/files/2009/3/22/2374149/Giorgio%20Moroder%20-%20Einzelganger%20%281%29%20-%20Einzelganger.mp3" type="audio/mp3"></audio><p><img alt="" src="http://25.media.tumblr.com/tumblr_lxom7sxjDv1qcy8xgo1_500.gif" class="alignnone" width="500" height="333"></p></html>'
+        self.send_response(404)
+        self.send_header("Content-Type", "text/html")
+        self.send_header("Content-length", str(len(p)))
+        self.end_headers()
+        self.wfile.write(p)
+        self.wfile.flush()
+        self.connection.shutdown(1)
 
     def do_the_dance(self):
         rinasci_arnaldo()
