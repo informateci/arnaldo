@@ -1,43 +1,12 @@
 # This Python file uses the following encoding: utf-8
 
-import sys, socket, string, re
+import sys
+import socket
+import string
+import re
 
 class MiniBot(object):
-    """A simple and customizable IRC Bot.
-
-    Script-oriented usage
-    ---------------------
-    - Initialize a MiniBot instance.
-    - Set the list of users with admin privileges.
-    - Register the commands and the command handlers.
-    - Run the bot by calling the start() method.
-
-
-    Object-oriented usage
-    ---------------------
-    - Create a class extending MiniBot.
-    - Implement the message handler methods _on_message() and _on_action().
-    - Run the subclass instance by calling the start() method.
-
-
-    The two approaches described above can be combined.
-
-    """
-
     def __init__(self, host, port, chan, nick, ident='Anna', realname='Anna', verbose=True):
-        """Initialize a MiniBot instance.
-
-        Arguments
-        ---------
-        host        --  Server hostname.
-        port        --  Server port.
-        chan        --  IRC channel name (e.g. '#foo').
-        nick        --  Bot nickname.
-        ident       --  User's displayed name.
-        realname    --  User's real name.
-        verbose     --  Enable/disable printed messages.
-
-        """
         # user-defined attributes
         self.host = host
         self.port = port
@@ -46,29 +15,35 @@ class MiniBot(object):
         self.ident = ident
         self.realname = realname
         self.verbose = verbose
+
         # commands management (requires runtime setup)
         self.admins = [] # nicknames with admin privileges
-        self.__user_commands = {}
-        self.__admin_commands = {}
+        self.__user_commands = []
+        self.__admin_commands = []
+
         # private data
         self.__sock = socket.socket()
         self.__connected = False
 
+        self.__strip_name = re.compile('^\s*(' + self.nick + ')?[,:]?\s*')
+
     ############################# Public methods ###############################
 
     def start(self):
-        """Join the channel and start listening."""
-        self.__join() # join the channel
+        self.__join()
+
         # start the main loop
         while True:
             message = self.__read()
             tokens = message.split()
+
             # server message
-            if len(tokens) > 0 and tokens[0] == "PING" :
+            if len(tokens) > 0 and tokens[0] == "PING":
                 self.__ping_reply(tokens[1])
-            elif len(tokens) > 0 and tokens[0] == 'ERROR' :
+            elif len(tokens) > 0 and tokens[0] == 'ERROR':
                 print "ERROR: %s" % message
                 sys.exit()
+
             # user meesage
             elif len(tokens) > 3 and tokens[1] == "PRIVMSG":
                 private = tokens[2] == self.nick # public / private message
@@ -77,57 +52,14 @@ class MiniBot(object):
                 else :
                     self.__process_message(message, private) # normal message
 
-    def register_command(self, command, handler, admin=False):
-        """Register new command handler.
-
-        Arguments
-        ---------
-        command --  Command name.
-        handler --  Function called when the command is received.
-                    Given function will be invoked with following arguments:
-                        bot  -- The bot instance (i.e. self)
-                        nick -- Sender nickname.
-                        arg  -- Text following the command.
-                        priv -- True in case of private message.
-                    and must return a boolean value to indicate if the message
-                    has been consumed (i.e. on_message() wont be called).
-        admin   --  True if the command requires admin privileges.
-
-        """
-        if admin :
-            self.__admin_commands[command] = handler
-        else:
-            self.__user_commands[command] = handler
-        self.__deb("Command %s registered (admin:%s)" % (command, admin))
-
-    def disable_command(self, command):
-        """Remove a registered command
-
-        Arguments
-        ---------
-        command -- Command name.
-
-        """
-        if command in self.__user_commands :
-            self.__user_commands.pop(command)
-            self.__deb("User command %s removed" % command)
-        elif command in self.__admin_commands :
-            self.__admin_commands.pop(command)
-            self.__deb("Admin command %s removed" % command)
-        else :
-            self.__deb("Unable to remove command %s" % command)
+    def register_command(self, regexp, handler, admin=False):
+        command = self.__admin_commands if admin else self.__user_commands
+        command.append((re.compile(regexp), handler))
 
     def write_message(self, text, receiver=None):
-        """Write a message toward the channel or a specific user.
-
-        Arguments
-        ---------
-        text        --  Message content.
-        receiver    --  A nickname or None for public messages.
-
-        """
         if receiver is None:
             receiver = self.chan
+
         self.__sock.send("PRIVMSG %s :%s\r\n" % (receiver, text))
 
     ############# Protected methods (are meant to be overridden) ###############
@@ -184,29 +116,39 @@ class MiniBot(object):
         self.__sock.send("PONG %s\r\n" % ping)
 
     def __process_message(self, message, private):
+        def parse_commands(stripped_content, commands):
+            for r, callback in commands:
+                match = r.search(stripped_content)
+                if match:
+                    try:
+                        callback(match)
+                        return True
+                    except e:
+                        self.write_message('Exception: ' + str(e).replace('\n', ' - '))
+                        continue
+
+            return False
+
         self.__deb("Message: %s" % message)
-        author, content = self.__get_author_and_content(message)
-        # commands management
-        consumed = False
-        if re.match('%s.?\ ' % self.nick, content): # someone is calling
-            cmd = content.replace(self.nick,'') # remove the bot name
-            self.__deb("Command: %s" % cmd)
-            # user command
-            if cmd in self.__user_commands :
-                handler = self.__user_commands[cmd]
-                arg = " ".join(tokens[1:])
-                consumed = handler(self, author, arg, private)
-            # admin command
-            elif cmd in self.__admin_commands and author in self.admins:
-                handler = self.__admin_commands[cmd]
-                arg = " ".join(tokens[1:])
-                consumed = handler(self, author, arg, private)
-        if not consumed:
-            # call the custom message handler
-            self._on_message(author, content, private)
+
+        author, content  = self.__get_author_and_content(message)
+        stripped_content = self.__strip_name.sub('', content)
+        consumed         = False
+
+        if author in self.admins:
+            consumed = parse_commands(stripped_content, self.__admin_commands)
+
+        if consumed:
+            return
+
+        consumed = parse_commands(stripped_content, self.__user_commands)
+        if consumed:
+            return
+
+        self._on_message(author, content, private)
 
     def __process_action_message(self, message, private):
-	try:
+        try:
             self.__deb("Action: %s" % message)
             author, content = self.__get_author_and_content(message)
             action = content[content.index(' ')+1 : -1]
