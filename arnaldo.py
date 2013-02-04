@@ -16,7 +16,8 @@ class GourmetBot(MiniBot):
         self.register_command('ANAL', self.anal)
         self.register_command('^allivello\\?', self.allivello)
         self.register_command('e allora\\?$', self.eallora)
-    
+        self.register_command('peso', self.peso)
+
     def anal(self, match):
         print " -- NEW ANAL --"
         self.write_message(self.ANAL())
@@ -27,6 +28,9 @@ class GourmetBot(MiniBot):
 
     def eallora(self, match):
         self.write_message("e allora le foibe?")
+
+    def peso(self, match):
+        self.write_message("PESO")
 
     def OLD_on_message(self, author, content, private):
         nrand = randint(0, 2000)
