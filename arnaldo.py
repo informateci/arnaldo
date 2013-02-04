@@ -16,7 +16,7 @@ class GourmetBot(MiniBot):
         self.register_command('ANAL', self.anal)
         self.register_command('^allivello\\?', self.allivello)
         self.register_command('e allora\\?$', self.eallora)
-        self.register_command('^peso', self.peso)
+        self.register_command(self.nick+'[,:]?peso', self.peso)
 
     def anal(self, match):
         print " -- NEW ANAL --"
