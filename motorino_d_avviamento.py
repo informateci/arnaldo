@@ -13,7 +13,7 @@ def rinasci_arnaldo():
         PROCESS.terminate()
 
     subprocess.check_call(['git', 'pull'])
-    PROCESS = subprocess.Popen(['python', 'arnaldo.py'])
+    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net \#\#prova-prova-sa-sa pippo'.split())
 
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_the_404(self):
