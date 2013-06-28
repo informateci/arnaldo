@@ -1,47 +1,66 @@
-from minibot import MiniBot
+#! /usr/bin/env python
+
+import irc.bot
+import irc.strings
+from irc.client import ip_numstr_to_quad, ip_quad_to_numstr
+
 import cStringIO
 from random import choice, randint
 import json
 import re
 import urllib2
 
-class GourmetBot(MiniBot):
+class TestBot(irc.bot.SingleServerIRCBot):
+    def __init__(self, channel, nickname, server, port=6667):
+        irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
+        self.channel = channel
+        self.commands = []
 
-    def __init__(self, nick='Illuvatar594'):
-        self.nick = nick
         self.cy = file('SUB-EST2011-01.csv', 'r').read()
         self.nn = file('nounlist.txt', 'r').read()
-        MiniBot.__init__(self, 'chat.freenode.net', 6666, '#informateci', self.nick)
 
         self.register_command('ANAL', self.anal)
         self.register_command('^allivello\\?', self.allivello)
         self.register_command('e allora\\?$', self.eallora)
-        self.register_command(self.nick+'[,:]?peso', self.peso)
 
-    def anal(self, match):
-        print " -- NEW ANAL --"
-        self.write_message(self.ANAL())
+    def on_nicknameinuse(self, c, e):
+        c.nick(c.get_nickname() + "_")
 
-    def allivello(self, match):
-        print " -- NEW ALLIVELLO --"
-        self.write_message(self.parliamo())
+    def on_welcome(self, c, e):
+        c.join(self.channel)
 
-    def eallora(self, match):
-        self.write_message("e allora le foibe?")
+    def on_privmsg(self, c, e):
+        self.do_command(e)
 
-    def peso(self, match):
-        self.write_message("PESO")
+    def on_pubmsg(self, c, e):
+        self.do_command(e)
 
-    def OLD_on_message(self, author, content, private):
-        nrand = randint(0, 2000)
-        if nrand <= 2:
-            print "Say it!"
-            sayit=self.ANAL()
-            self.write_message(sayit)
-        elif nrand <= 4:
-            print "Say it!"
-            sayit=self.parliamo()
-            self.write_message(sayit)
+    def register_command(self, regexp, handler, admin=False):
+        self.commands.append((re.compile(regexp), handler))
+
+    def do_command(self, e):
+        for r, callback in self.commands:
+            match = r.search(e.arguments[0])
+            if match:
+                try:
+                    callback(e, match)
+                    return True
+                except Exception as ex:
+                    self.reply(e, 'Exception: ' + str(ex).replace('\n', ' - '))
+                    continue
+   
+    def reply(self, e, m):
+        target = e.source.nick if e.target == self.connection.get_nickname() else e.target
+        self.connection.notice(target, m)
+
+    def anal(self, e, match):
+        self.reply(e, self.ANAL())
+
+    def allivello(self, e, match):
+        self.reply(e, self.parliamo())
+
+    def eallora(self, e, match):
+        self.reply(e, "e allora le foibe?")
 
     def ANAL(self):
         citta=choice([[a.split(',')[1] for a in (self.cy).split(",,,,")[6:-11]]][0])
@@ -63,6 +82,45 @@ class GourmetBot(MiniBot):
             return "Parliamo di " + (msgg[0].get('title',None)).encode("utf-8")
 
         return ''
+
+def main():
+    import sys
+    if len(sys.argv) != 4:
+        print "Usage: testbot <server[:port]> <channel> <nickname>"
+        sys.exit(1)
+
+    s = sys.argv[1].split(":", 1)
+    server = s[0]
+    if len(s) == 2:
+        try:
+            port = int(s[1])
+        except ValueError:
+            print "Error: Erroneous port."
+            sys.exit(1)
+    else:
+        port = 6667
+    channel = sys.argv[2]
+    nickname = sys.argv[3]
+
+    bot = TestBot(channel, nickname, server, port)
+    bot.start()
+
+if __name__ == "__main__":
+    main()
+
+class GourmetBot(MiniBot):
+
+    def __init__(self, nick='Illuvatar594'):
+        self.nick = nick
+        self.cy = file('sub-est2011-01.csv', 'r').read()
+        self.nn = file('nounlist.txt', 'r').read()
+        minibot.__init__(self, 'chat.freenode.net', 6666, '#informateci', self.nick)
+
+        self.register_command('anal', self.anal)
+        self.register_command('^allivello\\?', self.allivello)
+        self.register_command('e allora\\?$', self.eallora)
+        self.register_command(self.nick+'[,:]?peso', self.peso)
+
 
 if __name__ == "__main__":
     bot = GourmetBot()
