@@ -79,7 +79,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         msgg=reduce(dict.get,['query','random'], json.loads(respa))
         if msgg is not None and len(msgg)>0 and msgg[0].get('title',None) is not None:
-            return "Parliamo di " + (msgg[0].get('title',None)).encode("utf-8")
+            return "Parliamo di " + (msgg[0].get('title',None)).decode("utf-8")
 
         return ''
 
