@@ -101,7 +101,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         msgg=reduce(dict.get,['query','random'], json.loads(respa))
         if msgg is not None and len(msgg)>0 and msgg[0].get('title',None) is not None:
             troiaio=tdecode(msgg[0].get('title',None))
-            return u"Parliamo di %s" %(tencode(troiaio))
+            return (u"Parliamo di " +(tencode(troiaio))).encode('ascii','replace')
 
         return ''
 
