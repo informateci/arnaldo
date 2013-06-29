@@ -3,12 +3,33 @@
 import irc.bot
 import irc.strings
 from irc.client import ip_numstr_to_quad, ip_quad_to_numstr
-
 import cStringIO
 from random import choice, randint
 import json
 import re
 import urllib2
+
+def tdecode(bytes):
+    try:
+        text = bytes.decode('utf-8')
+    except UnicodeDecodeError:
+        try:
+            text = bytes.decode('iso-8859-1')
+        except UnicodeDecodeError:
+            text = bytes.decode('cp1252')
+    return text
+
+
+def tencode(bytes):
+    try:
+        text = bytes.encode('utf-8')
+    except UnicodeEncodeError:
+        try:
+            text = bytes.encode('iso-8859-1')
+        except UnicodeEncodeError:
+            text = bytes.encode('cp1252')
+    return text
+
 
 class TestBot(irc.bot.SingleServerIRCBot):
     def __init__(self, channel, nickname, server, port=6667):
@@ -79,7 +100,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         msgg=reduce(dict.get,['query','random'], json.loads(respa))
         if msgg is not None and len(msgg)>0 and msgg[0].get('title',None) is not None:
-            return "Parliamo di " + (msgg[0].get('title',None)).decode("utf-8")
+            troiaio=tdecode(msgg[0].get('title',None))
+            return u"Parliamo di %s" %(tencode(troiaio))
 
         return ''
 
@@ -107,22 +129,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-class GourmetBot(MiniBot):
-
-    def __init__(self, nick='Illuvatar594'):
-        self.nick = nick
-        self.cy = file('sub-est2011-01.csv', 'r').read()
-        self.nn = file('nounlist.txt', 'r').read()
-        minibot.__init__(self, 'chat.freenode.net', 6666, '#informateci', self.nick)
-
-        self.register_command('anal', self.anal)
-        self.register_command('^allivello\\?', self.allivello)
-        self.register_command('e allora\\?$', self.eallora)
-        self.register_command(self.nick+'[,:]?peso', self.peso)
-
-
-if __name__ == "__main__":
-    bot = GourmetBot()
-    bot.start()
-
