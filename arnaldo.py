@@ -51,7 +51,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
    
     def reply(self, e, m):
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
-        self.connection.notice(target, m)
+        self.connection..privmsg(target, m)
 
     def anal(self, e, match):
         self.reply(e, self.ANAL())
