@@ -134,7 +134,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             crop_dim = 430
             cropped_mex = self.parliamo_summary[crop_index:crop_dim]
             while len(cropped_mex) != 0:
-                self.reply(e, self.parliamo_summary)
+                self.reply(e, cropped_mex)
                 crop_index = crop_index + crop_dim
                 cropped_mex = self.parliamo_summary[crop_index:crop_index+crop_dim]
         
