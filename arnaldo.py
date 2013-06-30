@@ -130,7 +130,13 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def checcazzo(self, e, match):
         if self.parliamo_summary:
-            self.reply(e, self.parliamo_summary)
+            crop_index = 0
+            crop_dim = 500
+            cropped_mex = self.parliamo_summary[crop_index:crop_dim]
+            while len(cropped_mex) != 0:
+                self.reply(e, self.parliamo_summary)
+                crop_index = crop_index + crop_dim
+                cropped_mex = self.parliamo_summary[crop_index:crop_index+crop_dim]
         
 def main():
     import sys
