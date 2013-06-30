@@ -7,7 +7,10 @@ import cStringIO
 from random import choice, randint
 import json
 import re
+import urllib
 import urllib2
+from html2text import HTML2Text
+import time
 
 def tdecode(bytes):
     try:
@@ -40,9 +43,13 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.cy = file('SUB-EST2011-01.csv', 'r').read()
         self.nn = file('nounlist.txt', 'r').read()
 
+        self.parliamo_summary = None
+
         self.register_command('ANAL', self.anal)
-        self.register_command('^allivello\\?', self.allivello)
         self.register_command('e allora\\?$', self.eallora)
+        self.register_command('^allivello\\?', self.allivello)
+        self.register_command('parliamo di', self.allivello)
+        self.register_command('parliamone', self.checcazzo)
 
     def on_nicknameinuse(self, c, e):
         c.nick(c.get_nickname() + "_")
@@ -78,7 +85,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.reply(e, self.ANAL())
 
     def allivello(self, e, match):
-        self.reply(e, self.parliamo())
+        self.reply(e, self.parliamo2())
 
     def eallora(self, e, match):
         self.reply(e, "e allora le foibe?")
@@ -105,6 +112,26 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         return ''
 
+    def parliamo2(self):
+        wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
+        wikipedia_url += str(time.time())
+        query = urllib.urlencode((('url', wikipedia_url),))
+        data = urllib2.urlopen('http://noembed.com/embed?' + query)
+        respa = json.loads(data.read())
+        parser = HTML2Text()
+        parser.body_width = 0
+        parser.ignore_links = True
+        parser.ignore_images = True
+        parser.ignore_emphasis = True
+
+        text = parser.handle(respa['html'])
+        self.parliamo_summary = ' '.join(text.split('\n')[:-4])
+        return u'Parliamo di ' + respa['title']
+
+    def checcazzo(self, e, match):
+        if self.parliamo_summary:
+            self.reply(e, self.parliamo_summary)
+        
 def main():
     import sys
     if len(sys.argv) != 4:
