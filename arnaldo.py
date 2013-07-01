@@ -12,6 +12,8 @@ import urllib2
 from html2text import HTML2Text
 import time
 import sys, traceback
+import bleach
+from BeautifulSoup import BeautifulSoup
 
 traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
@@ -128,15 +130,14 @@ class TestBot(irc.bot.SingleServerIRCBot):
         wikipedia_url += str(time.time())
         query = urllib.urlencode((('url', wikipedia_url),))
         data = urllib2.urlopen('http://noembed.com/embed?' + query)
-        respa = json.loads(data.read())
-        parser = HTML2Text()
-        parser.body_width = 0
-        parser.ignore_links = True
-        parser.ignore_images = True
-        parser.ignore_emphasis = True
-
-        text = parser.handle(respa['html'])
-        self.parliamo_summary = ' '.join(text.split('\n')[:-4])
+        respa = json.loads(data.read()) #meglio una raspa d'una ruspa
+        soup = BeautifulSoup(respa['html'])
+        if soup.p:
+            text=bleach.clean(soup.p,tags=[], strip=True)
+        else:
+            text="macche'"
+        #text = parser.handle(respa['html'])
+        self.parliamo_summary = ' '.join(text.split('\n'))
         return u'Parliamo di ' + respa['title']
 
     def checcazzo(self, e, match):
