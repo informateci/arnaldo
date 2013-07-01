@@ -11,6 +11,13 @@ import urllib
 import urllib2
 from html2text import HTML2Text
 import time
+import sys, traceback
+
+traceback_template = '''Tracefazza (most recent call last):
+  File "%(filename)s", line %(lineno)s, in %(name)s
+  %(type)s: %(message)s\n'''
+
+
 
 def tdecode(bytes):
     try:
@@ -74,7 +81,17 @@ class TestBot(irc.bot.SingleServerIRCBot):
                     callback(e, match)
                     return True
                 except Exception as ex:
-                    self.reply(e, 'Exception: ' + str(ex).replace('\n', ' - '))
+                    exc_type, exc_value, exc_traceback = sys.exc_info()
+                    traceback_details = {
+                         'filename': exc_traceback.tb_frame.f_code.co_filename,
+                         'lineno'  : exc_traceback.tb_lineno,
+                         'name'    : exc_traceback.tb_frame.f_code.co_name,
+                         'type'    : exc_type.__name__,
+                         'message' : exc_value.message, # or see traceback._some_str()
+                        }
+                    del(exc_type, exc_value, exc_traceback)
+                    det=traceback_template % traceback_details
+                    self.reply(e, det)
                     continue
    
     def reply(self, e, m):
