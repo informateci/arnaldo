@@ -81,17 +81,11 @@ class TestBot(irc.bot.SingleServerIRCBot):
                     callback(e, match)
                     return True
                 except Exception as ex:
-                    exc_type, exc_value, exc_traceback = sys.exc_info()
-                    traceback_details = {
-                         'filename': exc_traceback.tb_frame.f_code.co_filename,
-                         'lineno'  : exc_traceback.tb_lineno,
-                         'name'    : exc_traceback.tb_frame.f_code.co_name,
-                         'type'    : exc_type.__name__,
-                         'message' : exc_value.message, # or see traceback._some_str()
-                        }
-                    del(exc_type, exc_value, exc_traceback)
-                    det=traceback_template % traceback_details
-                    self.reply(e, det)
+                    excfazza=""
+                    for frame in traceback.extract_tb(sys.exc_info()[2]):
+                        fname,lineno,fn,text = frame
+                        excfazza=excfazza+ "Error in %s on line %d" % (fname, lineno)    
+                    self.reply(e, excfazza)
                     continue
    
     def reply(self, e, m):
