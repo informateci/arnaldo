@@ -81,11 +81,11 @@ class TestBot(irc.bot.SingleServerIRCBot):
                     callback(e, match)
                     return True
                 except Exception as ex:
-                    excfazza=""
+                    excfazza="Error in"
                     for frame in traceback.extract_tb(sys.exc_info()[2]):
                         fname,lineno,fn,text = frame
-                        excfazza=excfazza+ "Error in %s on line %d" % (fname, lineno)    
-                    self.reply(e, excfazza)
+                        excfazza=excfazza+ "%s on line %d; " % (fname, lineno)    
+                    self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
    
     def reply(self, e, m):
