@@ -124,12 +124,12 @@ class TestBot(irc.bot.SingleServerIRCBot):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
         wikipedia_url += str(time.time())
         respa = self.request_oembed(wikipedia_url)
-        soup = BeautifulSoup(respa['html'])
-        if soup.p:
-            text=bleach.clean(soup.p,tags=[], strip=True)
-        else:
-            text="macche'"
-        #text = parser.handle(respa['html'])
+        corpo=respa.get('html',None)
+        text="macche'"
+        if corpo not None:
+            soup = BeautifulSoup(respa['html'])
+            if soup.p:
+                text=bleach.clean(soup.p,tags=[], strip=True)
         self.parliamo_summary = ' '.join(text.split('\n'))
         return u'Parliamo di ' + respa['title']
 
