@@ -100,7 +100,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.reply(e, self.ANAL())
 
     def allivello(self, e, match):
-        self.reply(e, self.parliamo2())
+        self.reply(e, self.parliamo())
 
     def eallora(self, e, match):
         self.reply(e, "e allora le foibe?")
@@ -114,26 +114,13 @@ class TestBot(irc.bot.SingleServerIRCBot):
         nome=choice(self.nn.split('\n')).upper()
         return "%s ANAL %s"%(citta,nome)
 
-    def parliamo(self):
-        request = urllib2.Request('http://it.wikipedia.org/w/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=json')
-        request.add_header('User-Agent', 'Mozilla/5.0')
-
-        respa = urllib2.build_opener().open(request).read()
-
-        msgg=reduce(dict.get,['query','random'], json.loads(respa))
-        if msgg is not None and len(msgg)>0 and msgg[0].get('title',None) is not None:
-            troiaio=tdecode(msgg[0].get('title',None))
-            return (u"Parliamo di " +(tencode(troiaio))).encode('ascii','replace')
-
-        return ''
-
     def request_oembed(self, url):
         query = urllib.urlencode((('url', url),))
         data = urllib2.urlopen('http://noembed.com/embed?' + query)
         respa = json.loads(data.read()) #meglio una raspa d'una ruspa
         return respa
 
-    def parliamo2(self):
+    def parliamo(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
         wikipedia_url += str(time.time())
         respa = self.request_oembed(wikipedia_url)
