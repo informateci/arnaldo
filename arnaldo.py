@@ -126,7 +126,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         respa = self.request_oembed(wikipedia_url)
         corpo=respa.get('html',None)
         text="macche'"
-        if corpo not None:
+        if corpo != None:
             soup = BeautifulSoup(respa['html'])
             if soup.p:
                 text=bleach.clean(soup.p,tags=[], strip=True)
