@@ -19,7 +19,7 @@ traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
   %(type)s: %(message)s\n'''
 
-
+URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
 def tdecode(bytes):
     try:
@@ -89,7 +89,9 @@ class TestBot(irc.bot.SingleServerIRCBot):
                         excfazza=excfazza+ "%s on line %d; " % (fname, lineno)    
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
-   
+
+        self.oembed_link(e)
+
     def reply(self, e, m):
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
         self.connection.privmsg(target, m)
@@ -125,12 +127,16 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         return ''
 
+    def request_oembed(self, url):
+        query = urllib.urlencode((('url', url),))
+        data = urllib2.urlopen('http://noembed.com/embed?' + query)
+        respa = json.loads(data.read()) #meglio una raspa d'una ruspa
+        return respa
+
     def parliamo2(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
         wikipedia_url += str(time.time())
-        query = urllib.urlencode((('url', wikipedia_url),))
-        data = urllib2.urlopen('http://noembed.com/embed?' + query)
-        respa = json.loads(data.read()) #meglio una raspa d'una ruspa
+        respa = self.request_oembed(wikipedia_url)
         soup = BeautifulSoup(respa['html'])
         if soup.p:
             text=bleach.clean(soup.p,tags=[], strip=True)
@@ -143,7 +149,19 @@ class TestBot(irc.bot.SingleServerIRCBot):
     def checcazzo(self, e, match):
         if self.parliamo_summary:
             self.reply(e, self.parliamo_summary[:430])
+
+    def oembed_link(self, e):
+        allurls = URL_RE.findall(e.arguments[0])
+        if len(allurls) != 1:
+            pass
+
+        try:
+            respa = self.request_oembed(allurls[0][0])
+            self.reply(e, respa['title'])
+        except:
+            pass
         
+
 def main():
     import sys
     if len(sys.argv) != 4:
