@@ -131,7 +131,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             if soup.p:
                 text=bleach.clean(soup.p,tags=[], strip=True)
         self.parliamo_summary = ' '.join(text.split('\n'))
-        return u'Parliamo di ' + respa['title']
+        return u'Parliamo di ' + respa.get('title',"macche'")
 
     def checcazzo(self, e, match):
         if self.parliamo_summary:
