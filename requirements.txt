@@ -1,0 +1,5 @@
+BeautifulSoup>=3.2.1
+argparse>=1.2.1
+bleach>=1.2.2
+irc>=0.0.08.0.1
+
