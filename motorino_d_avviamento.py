@@ -3,6 +3,7 @@ import SocketServer
 
 import subprocess
 import signal
+import urlparse 
 
 PORT    = 8000
 PROCESS = None
@@ -33,11 +34,14 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
         self.do_the_404()
 
-    def do_POST(self):
+    def do_POST(self,s):
         if self.path != '/github':
             self.do_the_404()
             return
-        
+        length = int(s.headers['Content-Length'])
+        post_data = urlparse.parse_qs(s.rfile.read(length).decode('utf-8'))
+        for key, value in post_data.iteritems():
+            print "%s=%s" % (key, value)
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
