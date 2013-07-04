@@ -52,6 +52,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.nn = file('nounlist.txt', 'r').read()
 
         self.parliamo_summary = None
+        self.BAM = None
 
         self.register_command('ANAL', self.anal)
         self.register_command('e allora\\?$', self.eallora)
@@ -75,6 +76,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.commands.append((re.compile(regexp), handler))
 
     def do_command(self, e):
+        self.BAMBAM(e)
         for r, callback in self.commands:
             match = r.search(e.arguments[0])
             if match:
@@ -146,7 +148,13 @@ class TestBot(irc.bot.SingleServerIRCBot):
             self.reply(e, respa['title'])
         except:
             pass
-        
+
+    def BAMBAM(self, e): 
+        if self.BAM == e.arguments[0]:
+            self.reply(e, self.BAM)
+            self.BAM = None
+        else:
+            self.BAM = e.arguments[0]
 
 def main():
     import sys
