@@ -14,7 +14,7 @@ import sys, traceback
 import bleach
 from BeautifulSoup import BeautifulSoup
 import signal
-
+import sys
 
 traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
@@ -64,7 +64,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
 
     def on_muori(self,a,b):
-        self.connection.privmsg( self.connection.get_nickname(),"speriamo venga la guerra!")
+        self.connection.disconnect("speriamo venga la guerra!")
+        sys.exit(0)
 
     def on_nicknameinuse(self, c, e):
         c.nick(c.get_nickname() + "_")
@@ -182,7 +183,7 @@ def main():
     nickname = sys.argv[3]
 
     bot = TestBot(channel, nickname, server, port)
-    signal.signal(signal.SIGTERM, bot.on_muori)   
+    signal.signal(signal.SIGUSR1, bot.on_muori)   
     bot.start()
 
 if __name__ == "__main__":

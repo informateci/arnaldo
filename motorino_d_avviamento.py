@@ -2,6 +2,7 @@ import SimpleHTTPServer
 import SocketServer
 
 import subprocess
+import signal
 
 PORT    = 8000
 PROCESS = None
@@ -10,7 +11,7 @@ def rinasci_arnaldo():
     global PROCESS
 
     if PROCESS is not None:
-        PROCESS.terminate()
+        PROCESS.send_signal(signal.SIGUSR1)
 
     subprocess.check_call(['git', 'pull'])
     PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net #informateci arnaldo'.split())
