@@ -65,7 +65,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def on_muori(self,a,b):
         self.connection.privmsg(self.channel, "speriamo venga la guerra!")
-        self.connection.disconnect("speriamo venga la guerra!")
+        self.connection.disconnect("speriamo venga la guerra! PER DAVVERO.")
         sys.exit(0)
 
     def on_nicknameinuse(self, c, e):
