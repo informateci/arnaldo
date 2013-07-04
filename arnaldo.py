@@ -13,6 +13,8 @@ import time
 import sys, traceback
 import bleach
 from BeautifulSoup import BeautifulSoup
+import signal
+
 
 traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
@@ -59,6 +61,10 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^allivello\\?', self.allivello)
         self.register_command('parliamo di', self.allivello)
         self.register_command('parliamone', self.checcazzo)
+
+
+    def on_muori(self):
+        self.connection.privmsg( self.connection.get_nickname(),"speriamo venga la guerra!")
 
     def on_nicknameinuse(self, c, e):
         c.nick(c.get_nickname() + "_")
@@ -176,6 +182,7 @@ def main():
     nickname = sys.argv[3]
 
     bot = TestBot(channel, nickname, server, port)
+    signal.signal(signal.SIGTERM, bot.on_muori())   
     bot.start()
 
 if __name__ == "__main__":
