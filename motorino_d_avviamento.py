@@ -45,7 +45,7 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         for key, value in post_data.iteritems():
             if key=="payload" and len(value)>0:
                 payload=json.loads(value[0])
-                commits=get('commits',None)
+                commits=value[0].get('commits',None)
                 if commits != None and len(commits)>0:
                     author=commits[0].get('author',None)
                     message=commits[0].get('message',None)
