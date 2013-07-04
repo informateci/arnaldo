@@ -9,7 +9,6 @@ import json
 import re
 import urllib
 import urllib2
-from html2text import HTML2Text
 import time
 import sys, traceback
 import bleach
