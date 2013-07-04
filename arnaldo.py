@@ -161,6 +161,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
     def checcazzo(self, e, match):
         if self.parliamo_summary:
             self.reply(e, self.parliamo_summary[:430])
+            self.parliamo_summary = None
 
     def oembed_link(self, e):
         allurls = URL_RE.findall(e.arguments[0])
