@@ -15,7 +15,7 @@ def rinasci_arnaldo():
         PROCESS.send_signal(signal.SIGUSR1)
 
     subprocess.check_call(['git', 'pull'])
-    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net #zazza arnaldo'.split())
+    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net #informateci arnaldo'.split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_the_404(self):
