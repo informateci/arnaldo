@@ -34,12 +34,12 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
         self.do_the_404()
 
-    def do_POST(self,s):
+    def do_POST(self):
         if self.path != '/github':
             self.do_the_404()
             return
-        length = int(s.headers['Content-Length'])
-        post_data = urlparse.parse_qs(s.rfile.read(length).decode('utf-8'))
+        length = int(self.headers['Content-Length'])
+        post_data = urlparse.parse_qs(self.rfile.read(length).decode('utf-8'))
         for key, value in post_data.iteritems():
             print "%s=%s" % (key, value)
         self.send_response(200)
