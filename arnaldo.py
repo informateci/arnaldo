@@ -81,7 +81,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         if author!=None and message!=None:
             message='%s ha committato "%s"'%(author, message)
         self.connection.privmsg(self.channel, message if message !=None else "speriamo venga la guerra!")
-        self.connection.disconnect("speriamo venga la guerra!")
+        self.connection.disconnect("speriamo venga la guerra! PER DAVVERO.")
         sys.exit(0)
 
     def on_nicknameinuse(self, c, e):
