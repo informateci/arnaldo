@@ -63,7 +63,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('parliamone', self.checcazzo)
 
 
-    def on_muori(self):
+    def on_muori(self,a,b):
         self.connection.privmsg( self.connection.get_nickname(),"speriamo venga la guerra!")
 
     def on_nicknameinuse(self, c, e):
