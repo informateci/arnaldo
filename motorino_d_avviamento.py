@@ -15,7 +15,7 @@ def rinasci_arnaldo():
         PROCESS.send_signal(signal.SIGUSR1)
 
     subprocess.check_call(['git', 'pull'])
-    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net #informateci arnaldo'.split())
+    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net #zazza arnaldo'.split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_the_404(self):
@@ -45,7 +45,7 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         for key, value in post_data.iteritems():
             if key=="payload" and len(value)>0:
                 payload=json.loads(value[0])
-                commits=value[0].get('commits',None)
+                commits=payload.get('commits',None)
                 if commits != None and len(commits)>0:
                     author=commits[0].get('author',None)
                     message=commits[0].get('message',None)
