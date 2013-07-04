@@ -182,7 +182,7 @@ def main():
     nickname = sys.argv[3]
 
     bot = TestBot(channel, nickname, server, port)
-    signal.signal(signal.SIGTERM, bot.on_muori())   
+    signal.signal(signal.SIGTERM, bot.on_muori)   
     bot.start()
 
 if __name__ == "__main__":
