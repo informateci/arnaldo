@@ -80,7 +80,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
                 pass
         if author!=None and message!=None:
             message='[%s ha committato "%s]"'%(author, message)
-        self.connection.privmsg(self.channel, message if message !=None else "speriamo venga la guerra!")
+        self.connection.privmsg(self.channel, message if message !=None else "speriamo venga la guerra!" )
         self.connection.disconnect("mi levo di 'ulo.")
         sys.exit(0)
 
