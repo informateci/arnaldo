@@ -15,7 +15,8 @@ import bleach
 from BeautifulSoup import BeautifulSoup
 import signal
 import sys
-
+import os.path
+import os
 traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
   %(type)s: %(message)s\n'''
@@ -64,7 +65,22 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
 
     def on_muori(self,a,b):
-        self.connection.privmsg(self.channel, "speriamo venga la guerra!")
+        msg=None
+        author=None
+        message=None
+        if os.path.isfile('arnaldo.commit'):
+            try:            
+                f=open('arnaldo.commit',"r")
+                allo=f.readline()
+                f.close()
+                allo=allo.split(':')
+                author=allo[0]
+                message=":".join(allo[1:])
+            except:
+                pass
+        if author!=None and message!=None:
+            message='%s ha committato "%s"'%(author, message)
+        self.connection.privmsg(self.channel, message if message !=None else "speriamo venga la guerra!")
         self.connection.disconnect("speriamo venga la guerra! PER DAVVERO.")
         sys.exit(0)
 

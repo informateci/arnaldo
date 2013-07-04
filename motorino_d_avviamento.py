@@ -4,7 +4,7 @@ import SocketServer
 import subprocess
 import signal
 import urlparse 
-
+import json
 PORT    = 8000
 PROCESS = None
 
@@ -16,7 +16,7 @@ def rinasci_arnaldo():
 
     subprocess.check_call(['git', 'pull'])
     PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net #informateci arnaldo'.split())
-
+    subprocess.Popen('rm -f arnaldo.commit'.split())
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_the_404(self):
         p='<html><h1>ONORE AL COMMENDATORE</h1><audio autoplay loop><source src="http://www.fileden.com/files/2009/3/22/2374149/Giorgio%20Moroder%20-%20Einzelganger%20%281%29%20-%20Einzelganger.mp3" type="audio/mp3"></audio><p><img alt="" src="http://25.media.tumblr.com/tumblr_lxom7sxjDv1qcy8xgo1_500.gif" class="alignnone" width="500" height="333"></p></html>'
@@ -40,8 +40,23 @@ class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             return
         length = int(self.headers['Content-Length'])
         post_data = urlparse.parse_qs(self.rfile.read(length).decode('utf-8'))
+        author=None
+        message=None
         for key, value in post_data.iteritems():
-            print "%s=%s" % (key, value)
+            if key=="payload" and len(value)>0:
+                payload=json.loads(value[0])
+                commits=get('commits',None)
+                if commits != None and len(commits)>0:
+                    author=commits[0].get('author',None)
+                    message=commits[0].get('message',None)
+                    author=author.get('name',None)
+                    print "<%s>: %s"%(author,message)
+                    
+        if author!=None and message !=None:
+            f=open("arnaldo.commit",'w')
+            f.write("%s:%s"%(author,message))
+            f.close()
+
         self.send_response(200)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
