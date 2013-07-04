@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# vim: set fileencoding=utf-8:
 
 import irc.bot
 import irc.strings
@@ -62,7 +63,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^allivello\\?', self.allivello)
         self.register_command('parliamo di', self.allivello)
         self.register_command('parliamone', self.checcazzo)
-
+        self.register_command('anche no', self.ancheno)
 
     def on_muori(self,a,b):
         msg=None
@@ -180,6 +181,10 @@ class TestBot(irc.bot.SingleServerIRCBot):
             self.BAM = None
         else:
             self.BAM = e.arguments[0]
+
+    def ancheno(self, e, match):
+        self.reply(e, u'ಥ_ಥ  ockay')
+        self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
 
 def main():
     import sys
