@@ -183,8 +183,9 @@ class TestBot(irc.bot.SingleServerIRCBot):
             self.BAM = e.arguments[0]
 
     def ancheno(self, e, match):
-        self.reply(e, u'ಥ_ಥ  ockay')
-        self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
+        if self.parliamo_summary:
+            self.reply(e, u'ಥ_ಥ  ockay')
+            self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
 
 def main():
     import sys
