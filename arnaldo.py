@@ -176,11 +176,21 @@ class TestBot(irc.bot.SingleServerIRCBot):
             pass
 
     def BAMBAM(self, e): 
-        if self.BAM == e.arguments[0]:
+        t = e.arguments[0]
+        if self.BAM == t:
             self.reply(e, self.BAM)
             self.BAM = None
         else:
-            self.BAM = e.arguments[0]
+            try:
+                if self.BAM.lower() == self.BAM and \
+                        self.BAM.upper() == t:
+                    self.reply(e, t + 'ISSIMO')
+                    self.BAM = None
+                else:
+                    self.BAM = t
+            except:
+                self.BAM = t
+        
 
     def ancheno(self, e, match):
         if self.parliamo_summary:
