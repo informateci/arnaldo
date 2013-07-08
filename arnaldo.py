@@ -184,6 +184,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             try:
                 if self.BAM.lower() == self.BAM and \
                         self.BAM.upper() == t:
+                    t = re.sub('[aeiou]$', '', t, flags=re.IGNORECASE)
                     self.reply(e, t + 'ISSIMO')
                     self.BAM = None
                 else:
