@@ -70,7 +70,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         author=None
         message=None
         if os.path.isfile('arnaldo.commit'):
-            try:            
+            try:
                 f=open('arnaldo.commit',"r")
                 allo=f.readline()
                 f.close()
@@ -112,7 +112,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
                     excfazza="Error in"
                     for frame in traceback.extract_tb(sys.exc_info()[2]):
                         fname,lineno,fn,text = frame
-                        excfazza=excfazza+ "%s on line %d; " % (fname, lineno)    
+                        excfazza=excfazza+ "%s on line %d; " % (fname, lineno)
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
 
@@ -175,7 +175,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         except:
             pass
 
-    def BAMBAM(self, e): 
+    def BAMBAM(self, e):
         t = e.arguments[0]
         if self.BAM == t:
             self.reply(e, self.BAM)
@@ -184,14 +184,21 @@ class TestBot(irc.bot.SingleServerIRCBot):
             try:
                 if self.BAM.lower() == self.BAM and \
                         self.BAM.upper() == t:
+                    marks = re.compile("([!?.;:]+)$")
+                    m = marks.search(t)
+                    if m:
+                        m = m.groups()[0]
+                        t = marks.sub('', t)
+                    else:
+                        m = ''
                     t = re.sub('i?[aeiou]$', '', t, flags=re.IGNORECASE)
-                    self.reply(e, t + 'ISSIMO')
+                    self.reply(e, "%sISSIMO%s" % (t, m))
                     self.BAM = None
                 else:
                     self.BAM = t
             except:
                 self.BAM = t
-        
+
 
     def ancheno(self, e, match):
         if self.parliamo_summary:
@@ -218,7 +225,7 @@ def main():
     nickname = sys.argv[3]
 
     bot = TestBot(channel, nickname, server, port)
-    signal.signal(signal.SIGUSR1, bot.on_muori)   
+    signal.signal(signal.SIGUSR1, bot.on_muori)
     bot.start()
 
 if __name__ == "__main__":
