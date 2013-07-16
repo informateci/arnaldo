@@ -31,7 +31,7 @@ def random_quote():
 def search_quote(pattern):
     pattern = '%' + pattern.lower() + '%'
     c = db().cursor()
-    c.execute('SELECT * FROM quotes WHERE LOWER(author) LIKE ?', (pattern,))
+    c.execute('SELECT * FROM quotes WHERE LOWER(author) LIKE ? ORDER BY RANDOM() LIMIT 1', (pattern,))
     r = c.fetchone()
     
     if r is None:
