@@ -210,7 +210,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
 
     def add_quote(self, e, match):
-        self.reply(e, str(match))
+        quote.add_quote(e.source.nick, match.groups()[0])
 
     def random_quote(self, e, match):
         self.reply(e, '#%d: %s' % quote.random_quote())

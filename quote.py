@@ -25,8 +25,8 @@ def add_quote(author, quote):
 def random_quote():
     c = db().cursor()
     c.execute('SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1')
-    print c.fetchone()
-
+    r = c.fetchone()
+    return r[0], r[1]
 
 if __name__ == '__main__':
     random_quote()
