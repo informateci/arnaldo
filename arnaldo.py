@@ -68,6 +68,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('anche no', self.ancheno)
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
+        self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
 
     def on_muori(self,a,b):
         msg=None
@@ -214,6 +215,14 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def random_quote(self, e, match):
         self.reply(e, '#%d: %s' % quote.random_quote())
+    
+    def search_quote(self, e, match):
+        q = quote.search_quote(match.groups()[0])
+        if q is None:
+            self.reply(e, 'no such quote')
+        else:
+            self.reply(e, '#%d: %s' % q)
+        
 
 def main():
     import sys

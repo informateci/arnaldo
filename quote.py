@@ -28,6 +28,17 @@ def random_quote():
     r = c.fetchone()
     return r[0], r[1]
 
+def search_quote(pattern):
+    pattern = '%' + pattern.lower() + '%'
+    c = db().cursor()
+    c.execute('SELECT * FROM quotes WHERE LOWER(author) LIKE ?', (pattern,))
+    r = c.fetchone()
+    
+    if r is None:
+        return None
+    else:
+        return r[0], r[1]
+    
 if __name__ == '__main__':
     random_quote()
     
