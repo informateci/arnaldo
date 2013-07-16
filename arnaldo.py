@@ -105,7 +105,6 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.commands.append((re.compile(regexp), handler))
 
     def do_command(self, e):
-        self.BAMBAM(e)
         for r, callback in self.commands:
             match = r.search(e.arguments[0])
             if match:
@@ -120,6 +119,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
 
+        self.BAMBAM(e)
         self.oembed_link(e)
 
     def reply(self, e, m):
