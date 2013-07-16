@@ -18,6 +18,8 @@ import signal
 import sys
 import os.path
 import os
+import quote
+
 traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
   %(type)s: %(message)s\n'''
@@ -64,6 +66,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('parliamo di', self.allivello)
         self.register_command('parliamone', self.checcazzo)
         self.register_command('anche no', self.ancheno)
+        self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
+        self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
 
     def on_muori(self,a,b):
         msg=None
@@ -204,6 +208,12 @@ class TestBot(irc.bot.SingleServerIRCBot):
         if self.parliamo_summary:
             self.reply(e, u'ಥ_ಥ  ockay')
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
+
+    def add_quote(self, e, match):
+        self.reply(e, str(match))
+
+    def random_quote(self, e, match):
+        self.reply(e, '#%d: %s' % quote.random_quote())
 
 def main():
     import sys
