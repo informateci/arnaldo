@@ -18,8 +18,6 @@ import signal
 import sys
 import os.path
 import os
-import quote
-
 traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
   %(type)s: %(message)s\n'''
@@ -66,9 +64,6 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('parliamo di', self.allivello)
         self.register_command('parliamone', self.checcazzo)
         self.register_command('anche no', self.ancheno)
-        self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
-        self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
-        self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
 
     def on_muori(self,a,b):
         msg=None
@@ -106,6 +101,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.commands.append((re.compile(regexp), handler))
 
     def do_command(self, e):
+        self.BAMBAM(e)
         for r, callback in self.commands:
             match = r.search(e.arguments[0])
             if match:
@@ -120,7 +116,6 @@ class TestBot(irc.bot.SingleServerIRCBot):
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
 
-        self.BAMBAM(e)
         self.oembed_link(e)
 
     def reply(self, e, m):
@@ -209,20 +204,6 @@ class TestBot(irc.bot.SingleServerIRCBot):
         if self.parliamo_summary:
             self.reply(e, u'ಥ_ಥ  ockay')
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
-
-    def add_quote(self, e, match):
-        quote.add_quote(e.source.nick, match.groups()[0])
-
-    def random_quote(self, e, match):
-        self.reply(e, '#%d: %s' % quote.random_quote())
-    
-    def search_quote(self, e, match):
-        q = quote.search_quote(match.groups()[0])
-        if q is None:
-            self.reply(e, 'no such quote')
-        else:
-            self.reply(e, '#%d: %s' % q)
-        
 
 def main():
     import sys
