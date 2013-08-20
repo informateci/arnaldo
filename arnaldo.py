@@ -14,6 +14,7 @@ import time
 import sys, traceback
 import bleach
 from BeautifulSoup import BeautifulSoup
+import random
 import signal
 import sys
 import os.path
@@ -64,7 +65,9 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('parliamo di', self.allivello)
         self.register_command('parliamone', self.checcazzo)
         self.register_command('anche no', self.ancheno)
+        self.register_command('beuta', self.beuta)
 
+    
     def on_muori(self,a,b):
         msg=None
         author=None
@@ -145,6 +148,22 @@ class TestBot(irc.bot.SingleServerIRCBot):
         data = urllib2.urlopen('http://noembed.com/embed?' + query)
         respa = json.loads(data.read()) #meglio una raspa d'una ruspa
         return respa
+
+    def beuta(self,e, match):
+        cocktail_id=random.randint(1, 4750)
+        data=urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d"%cocktail_id)
+        soup = BeautifulSoup(data.read())
+        directions=soup.findAll("div", { "class" : "recipeDirection" })
+        measures=soup.findAll("div", { "class" : "recipeMeasure" })
+
+        s="== %s ==\n"%(soup.find("h2").text)
+
+        for m in measures:
+            s=s+u' '.join(m.findAll(text=True))+"\n"
+
+        for d in directions:
+            s=s+u' '.join(d.findAll(text=True))+"\n"
+        self.reply(e, s)
 
     def parliamo(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
