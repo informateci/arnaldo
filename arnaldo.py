@@ -19,6 +19,10 @@ import signal
 import sys
 import os.path
 import os
+import time
+
+MULTILINE_TOUT = 0.5
+
 traceback_template = '''Tracefazza (most recent call last):
   File "%(filename)s", line %(lineno)s, in %(name)s
   %(type)s: %(message)s\n'''
@@ -123,7 +127,13 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def reply(self, e, m):
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
-        self.connection.privmsg(target, m)
+        if '\n' in m:
+            ll=m.split('\n')
+            for l in ll:
+              self.connection.privmsg(target, l)
+              time.sleep(MULTILINE_TOUT)
+        else:
+            self.connection.privmsg(target, m)
 
     def anal(self, e, match):
         self.reply(e, self.ANAL())
@@ -141,9 +151,10 @@ class TestBot(irc.bot.SingleServerIRCBot):
         except:
             pass
         if ggallin:
-            uri = 'http://tumbolia.appspot.com/py/'
-            response = urllib2.urlopen(uri + urllib.quote(ggallin)).read()
-        self.reply(e, ';'.join(response.split('\n')))
+            urlo="http://shell.appspot.com/shell.do"
+            session="agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
+            response = urllib2.urlopen(urlo+"?&"+urllib.urlencode((("statement",ggallin),("session",session)))).read()
+        self.reply(response)
             
 
     def ANAL(self):
