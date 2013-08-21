@@ -153,8 +153,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
         if ggallin:
             urlo="http://shell.appspot.com/shell.do"
             session="agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
-            response = urllib2.urlopen(urlo+"?&"+urllib.urlencode((("statement",ggallin),("session",session)))).read()
-        self.reply(e,response.replace("@t","    ").replace("@n","\n"))
+            response = urllib2.urlopen(urlo+"?&"+urllib.urlencode((("statement",ggallin.replace("@t","    ").replace("@n","\n")),("session",session)))).read()
+        self.reply(e,response)
             
 
     def ANAL(self):
