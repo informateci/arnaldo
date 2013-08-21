@@ -66,7 +66,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('parliamone', self.checcazzo)
         self.register_command('anche no', self.ancheno)
         self.register_command('beuta', self.beuta)
-
+        self.register_command('^facci (.+)', self.accollo)
     
     def on_muori(self,a,b):
         msg=None
@@ -133,6 +133,18 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def eallora(self, e, match):
         self.reply(e, "e allora le foibe?")
+    
+    def accollo(self, e, match):
+        ggallin=None;
+        try:
+            ggallin=match.groups()[0]
+        except:
+            pass
+        if ggallin:
+            uri = 'http://tumbolia.appspot.com/py/'
+            response = urllib2.urlopen(uri + urllib.quote(ggallin)).read()
+        self.reply(e, ';'.join(response.split('\n')))
+            
 
     def ANAL(self):
         citta=choice([[a.split(',')[1] for a in (self.cy).split(",,,,")[6:-11]]][0])
@@ -163,7 +175,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         for d in directions:
             s=s+u' '.join(d.findAll(text=True))+"\n"
-        self.reply(e, '\t'.join(s.split('\n')))
+        self.reply(e, ';'.join(s.split('\n')))
 
     def parliamo(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
