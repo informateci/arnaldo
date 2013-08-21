@@ -154,7 +154,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             urlo="http://shell.appspot.com/shell.do"
             session="agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
             response = urllib2.urlopen(urlo+"?&"+urllib.urlencode((("statement",ggallin),("session",session)))).read()
-        self.reply(response)
+        self.reply(e,response)
             
 
     def ANAL(self):
