@@ -127,12 +127,12 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.oembed_link(e)
     
     def bombe(self, e, match):
-        urlo = "http://smutty.com/search/?q=%23bigboobs&sort=date&lazy=1&page="
-        response = urllib2.urlopen(urlo+str(random.randint(1,400))).read()
+        urlo = "http://imgur.com/r/boobies/new/day/page/%d/hit?scrolled"
+        response = urllib2.urlopen(urlorandom.randint(1,50)).read()
         soup = BeautifulSoup(response)
-        l=soup.findAll("img",{"class":"collection_image_chart"})
+        l=soup.findAll("div",{"class":"post"})
         i=choice(l)
-        self.reply(e, i.get("src"))
+        self.reply(e, "http://i.imgur.com/%s.jpg"%i.get("id"))
 
     def reply(self, e, m):
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
