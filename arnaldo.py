@@ -127,10 +127,10 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.oembed_link(e)
     
     def bombe(self, e, match):
-        urlo="http://www.flickriver.com/groups/1160381@N21/pool/random/?ajax&page="
-        response = urllib2.urlopen(urlo+str(random.randint(1,1000))).read()
+        urlo = "http://smutty.com/search/?q=%23bigboobs&sort=date&lazy=1&page="
+        response = urllib2.urlopen(urlo+str(random.randint(1,400))).read()
         soup = BeautifulSoup(response)
-        l=soup.findAll("img",{"class":"photo-panel-img"})
+        l=soup.findAll("img",{"class":"collection_image_chart"})
         i=choice(l)
         self.reply(e, i.get("src"))
 
