@@ -129,6 +129,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
     def bombe(self, e, match):
         urlo="http://www.flickriver.com/groups/1160381@N21/pool/random/?ajax&page="
         response = urllib2.urlopen(urlo+str(random.randint(1,1000))).read()
+        soup = BeautifulSoup(response)
         l=soup.findAll("img",{"class":"photo-panel-img"})
         i=choice(l)
         self.reply(e, i.get("src"))
