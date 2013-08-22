@@ -128,7 +128,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
     
     def bombe(self, e, match):
         urlo = "http://imgur.com/r/boobies/new/day/page/%d/hit?scrolled"
-        response = urllib2.urlopen(urlorandom.randint(1,50)).read()
+        response = urllib2.urlopen(urlo%random.randint(1,50)).read()
         soup = BeautifulSoup(response)
         l=soup.findAll("div",{"class":"post"})
         i=choice(l)
