@@ -198,7 +198,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         for d in directions:
             s=s+u' '.join(d.findAll(text=True))+"\n"
-        self.reply(e, ';'.join(s.split('\n')))
+        self.reply(e, s+"enjoy")
 
     def parliamo(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
