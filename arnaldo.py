@@ -71,6 +71,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('anche no', self.ancheno)
         self.register_command('beuta', self.beuta)
         self.register_command('^facci (.+)', self.accollo)
+        self.register_command('boobs please', self.bombe)
     
     def on_muori(self,a,b):
         msg=None
@@ -124,14 +125,24 @@ class TestBot(irc.bot.SingleServerIRCBot):
                     continue
 
         self.oembed_link(e)
+    
+    def bombe(self, e, match):
+        urlo="http://www.flickriver.com/groups/1160381@N21/pool/random/?ajax&page="
+        response = urllib2.urlopen(urlo+str(random.randint(1,1000))).read()
+        l=soup.findAll("img",{"class":"photo-panel-img"})
+        i=choice(l)
+        self.reply(e, i.get("src"))
 
     def reply(self, e, m):
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
         if '\n' in m:
             ll=m.split('\n')
-            for l in ll:
-              self.connection.privmsg(target, l)
-              time.sleep(MULTILINE_TOUT)
+            if len(ll)>12:
+                self.connection.privmsg(target, "flodda tu ma'")
+            else:
+                for l in ll:
+                  self.connection.privmsg(target, l)
+                  time.sleep(MULTILINE_TOUT)
         else:
             self.connection.privmsg(target, m)
 
