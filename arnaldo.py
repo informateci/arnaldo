@@ -264,7 +264,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             s=""
             for row in range(ROWS):
                 for c in ggallin:
-                    s=s+ ASCIItable[c][row],
+                    s=str(s)+str(ASCIItable[c][row]),
                 s=s+'\n'
             s=s+'\n'
             self.reply(e,s)
