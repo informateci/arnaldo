@@ -261,13 +261,13 @@ class TestBot(irc.bot.SingleServerIRCBot):
         except:
             pass
         if ggallin:
-            s=""
+            icsa=""
             for row in range(ROWS):
                 for c in ggallin:
-                    s=str(s)+str(ASCIItable[c][row]),
-                s=s+'\n'
-            s=s+'\n'
-            self.reply(e,s)
+                    icsa=str(icsa)+str(ASCIItable[c][row]),
+                icsa=icsa+'\n'
+            icsa=icsa+'\n'
+            self.reply(e,icsa)
 
     def anal(self, e, match):
         self.reply(e, self.ANAL())
