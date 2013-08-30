@@ -255,19 +255,22 @@ class TestBot(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(target, m)
 
     def icsah(self,e,match):
-        ggallin=None;
         try:
-            ggallin=match.groups()[0]
+            ggallin=None;
+            try:
+                ggallin=match.groups()[0]
+            except:
+                pass
+            if ggallin:
+                icsa=""
+                for row in range(ROWS):
+                    for c in ggallin:
+                        icsa=str(icsa)+str(ASCIItable[c][row])
+                    icsa=icsa+'\n'
+                icsa=icsa+'\n'
+                self.reply(e,icsa)
         except:
             pass
-        if ggallin:
-            icsa=""
-            for row in range(ROWS):
-                for c in ggallin:
-                    icsa=str(icsa)+str(ASCIItable[c][row])
-                icsa=icsa+'\n'
-            icsa=icsa+'\n'
-            self.reply(e,icsa)
 
     def anal(self, e, match):
         self.reply(e, self.ANAL())
