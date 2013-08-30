@@ -264,7 +264,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             icsa=""
             for row in range(ROWS):
                 for c in ggallin:
-                    icsa=str(icsa)+str(ASCIItable[c][row]),
+                    icsa=str(icsa)+str(ASCIItable[c][row])
                 icsa=icsa+'\n'
             icsa=icsa+'\n'
             self.reply(e,icsa)
