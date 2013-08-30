@@ -132,7 +132,7 @@ X      | X     |  X    |   X   |    X  |     X |      X|\|
 ASCIItable = {}
 for form in letterforms:
     if '|' in form:
-        table[form[-2]] = form[:-3].split('|')
+        ASCIItable[form[-2]] = form[:-3].split('|')
 ROWS = len(table.values()[0])
 
 def tdecode(bytes):
@@ -264,7 +264,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             s=""
             for row in range(ROWS):
                 for c in ggallin:
-                    s=s+ table[c][row],
+                    s=s+ ASCIItable[c][row],
                 s=s+'\n'
             s=s+'\n'
             self.reply(e,s)
