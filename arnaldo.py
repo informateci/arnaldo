@@ -133,7 +133,7 @@ ASCIItable = {}
 for form in letterforms:
     if '|' in form:
         ASCIItable[form[-2]] = form[:-3].split('|')
-ROWS = len(table.values()[0])
+ROWS = len(ASCIItable.values()[0])
 
 def tdecode(bytes):
     try:
