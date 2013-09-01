@@ -179,6 +179,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^facci (.+)', self.accollo)
         self.register_command('boobs please', self.bombe)
         self.register_command('^icsah (.+)', self.icsah)
+        self.register_command('^brazzami (.+)', self.brazzafazza)
     
     def on_muori(self,a,b):
         msg=None
@@ -281,6 +282,11 @@ class TestBot(irc.bot.SingleServerIRCBot):
     def eallora(self, e, match):
         self.reply(e, "e allora le foibe?")
     
+    def brazzafazza(self, e, match):
+      urlo=match.groups()[0]
+      response = urllib2.urlopen("http://brazzifier.ueuo.com/index.php?urlz="+urlo).read()
+      self.reply(e,response)
+
     def accollo(self, e, match):
         ggallin=None;
         try:
@@ -409,3 +415,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
