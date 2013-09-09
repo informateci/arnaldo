@@ -288,7 +288,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
           response = urllib2.urlopen("http://brazzifier.ueuo.com/index.php?urlz="+urlo).read()
           self.reply(e,response)
       else:
-        elf.reply(e,"brazzami stocazzo.")
+        self.reply(e,"brazzami stocazzo.")
 
     def accollo(self, e, match):
         ggallin=None;
