@@ -20,6 +20,7 @@ import sys
 import os.path
 import os
 import time
+import quote
 
 MULTILINE_TOUT = 0.5
 
@@ -180,7 +181,25 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('boobs please', self.bombe)
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^brazzami (.+)', self.brazzafazza)
+        self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
+        self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
+        self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
+
+    def add_quote(self, e, match):
+        quote.add_quote(e.source.nick, match.groups()[0])
+
+    def random_quote(self, e, match):
+        self.reply(e, '#%d: %s' % quote.random_quote())
     
+    def search_quote(self, e, match):
+        q = quote.search_quote(match.groups()[0])
+        if q is None:
+            self.reply(e, 'no such quote')
+        else:
+            self.reply(e, '#%d: %s' % q)
+
+
+
     def on_muori(self,a,b):
         msg=None
         author=None
