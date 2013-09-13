@@ -302,7 +302,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.reply(e, "e allora le foibe?")
     
     def brazzafazza(self, e, match):
-      if (e.source.nick != "asciuganano"):
+      if (not e.source.nick.startswith("asciuga")):
           urlo=match.groups()[0]
           response = urllib2.urlopen("http://brazzifier.ueuo.com/index.php?urlz="+urlo).read()
           self.reply(e,response)
