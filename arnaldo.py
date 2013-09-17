@@ -209,7 +209,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
 
     def saggezza(self, e, match):
-        self.reply(e, " ".join(choice(PROV1)) +" "+ " ".join(choice(PROV2)) )
+        saggia=u" ".join(choice(PROV1)) +" "+ " ".join(choice(PROV2))
+        self.reply(e, saggia.encode("utf8"))
 
     def on_muori(self,a,b):
         msg=None
