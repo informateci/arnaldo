@@ -191,7 +191,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('proverbia', self.saggezza)
-        self.register_command('dio', self.smoccola)
+        self.register_command('smadonna', self.smoccola)
         
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
@@ -217,7 +217,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def saggezza(self, e, match):
         saggia=u" ".join(choice(PROV1)) +u" "+ u" ".join(choice(PROV2))
-        self.reply(e, saggia.encode("utf8"))
+        self.reply(e, saggia)
 
     def on_muori(self,a,b):
         msg=None
