@@ -205,7 +205,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def attardati(self, e, match):
         jay = self.attardi[random.randint(0, len(self.attardi))]
-        self.reply(e, "Stefano %s Attardi" % jay)
+        jay[0] = 'J'
+        self.reply(e, "Stefano %s Attardi" % jay[:-1])
 
     def add_quote(self, e, match):
         quote.add_quote(e.source.nick, match.groups()[0])
