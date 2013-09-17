@@ -21,6 +21,14 @@ import os.path
 import os
 import time
 import quote
+import pickle
+
+pkl_file = open('prov1.pkl', 'rb')
+PROV1 = pickle.load(pkl_file)
+pkl_file.close()
+pkl_file = open('prov2.pkl', 'rb')
+PROV2 = pickle.load(pkl_file)
+pkl_file.close()
 
 MULTILINE_TOUT = 0.5
 
@@ -181,6 +189,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('boobs please', self.bombe)
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^brazzami (.+)', self.brazzafazza)
+        self.register_command('proverbia', self.saggezza)
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
@@ -199,6 +208,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
             self.reply(e, '#%d: %s' % q)
 
 
+    def saggezza(self, e, match):
+        self.reply(e, " ".join(choice(PROV1)) +" "+ " ".join(choice(PROV2)) )
 
     def on_muori(self,a,b):
         msg=None
