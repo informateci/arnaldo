@@ -174,6 +174,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         self.cy = file('SUB-EST2011-01.csv', 'r').read()
         self.nn = file('nounlist.txt', 'r').read()
+        self.moccoli = open('moccoli.txt').readlines()
 
         self.parliamo_summary = None
         self.BAM = None
@@ -190,9 +191,15 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('proverbia', self.saggezza)
+        self.register_command('dio', self.smoccola)
+        
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
+        
+    def smoccola(self,e,match):
+        moc = self.moccoli[random.randint(0,len(self.moccoli))]
+        self.reply(e, moc)
 
     def add_quote(self, e, match):
         quote.add_quote(e.source.nick, match.groups()[0])
@@ -210,7 +217,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def saggezza(self, e, match):
         saggia=u" ".join(choice(PROV1)) +u" "+ u" ".join(choice(PROV2))
-        self.reply(e, saggia)
+        self.reply(e, saggia.encode("utf8"))
 
     def on_muori(self,a,b):
         msg=None
