@@ -175,6 +175,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.cy = file('SUB-EST2011-01.csv', 'r').read()
         self.nn = file('nounlist.txt', 'r').read()
         self.moccoli = open('moccoli.txt').readlines()
+        self.attardi = open('attardi.txt').readlines()
 
         self.parliamo_summary = None
         self.BAM = None
@@ -192,6 +193,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('proverbia', self.saggezza)
         self.register_command('smadonna', self.smoccola)
+        self.register_command('attardati', self.attardati)
         
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
@@ -200,6 +202,10 @@ class TestBot(irc.bot.SingleServerIRCBot):
     def smoccola(self,e,match):
         moc = self.moccoli[random.randint(0,len(self.moccoli))]
         self.reply(e, moc)
+
+    def attardati(self, e, match):
+        jay = self.attardi[random.randint(0, len(self.attardi))]
+        self.reply(e, "Stefano %s Attardi" % jay)
 
     def add_quote(self, e, match):
         quote.add_quote(e.source.nick, match.groups()[0])
