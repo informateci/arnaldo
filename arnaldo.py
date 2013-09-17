@@ -24,10 +24,10 @@ import quote
 import pickle
 
 pkl_file = open('prov1.pkl', 'rb')
-PROV1 = pickle.load(pkl_file)
+PROV1 = pickle.load(pkl_file, encoding='latin1')
 pkl_file.close()
 pkl_file = open('prov2.pkl', 'rb')
-PROV2 = pickle.load(pkl_file)
+PROV2 = pickle.load(pkl_file, encoding='latin1')
 pkl_file.close()
 
 MULTILINE_TOUT = 0.5
