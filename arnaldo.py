@@ -205,7 +205,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def attardati(self, e, match):
         jay = self.attardi[random.randint(0, len(self.attardi))]
-        l = list(jay)
+        l = list(jay.lower())
         l[0] = 'J'
         jay = "".join(l)
         self.reply(e, "Stefano %s Attardi" % jay[:-1])
