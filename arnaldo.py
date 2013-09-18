@@ -21,14 +21,13 @@ import os.path
 import os
 import time
 import quote
-import pickle
 
-pkl_file = open('prov1.pkl', 'rb')
-PROV1 = pickle.load(pkl_file)
-pkl_file.close()
-pkl_file = open('prov2.pkl', 'rb')
-PROV2 = pickle.load(pkl_file)
-pkl_file.close()
+import redis
+
+try:
+    brain = redis.Redis("localhost")
+except:
+    sys.exit("Insane in the membrane!!!")
 
 MULTILINE_TOUT = 0.5
 
@@ -166,17 +165,42 @@ def tencode(bytes):
     return text
 
 
+
+class Brain():
+        def __init__(self,brain):
+            self.b=brain
+
+        def choicefromlist(self,name):
+            i=random.randint(0,self.b.llen(name)-1)
+            return self.b.lindex(name, i)
+
+        def getCitta(self):
+            return self.choicefromlist("CITTA")
+
+        def getNomecen(self):
+            return self.choicefromlist("NOMICEN")
+
+        def getAttardi(self):
+            return self.choicefromlist("ATTARDI")
+
+        def getProverbiUno(self):
+            return self.choicefromlist("PROV1")
+
+        def getProverbiDue(self):
+            return self.choicefromlist("PROV2")
+
 class TestBot(irc.bot.SingleServerIRCBot):
+
     def __init__(self, channel, nickname, server, port=6667):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
         self.channel = channel
         self.commands = []
 
-        self.cy = file('SUB-EST2011-01.csv', 'r').read()
-        self.nn = file('nounlist.txt', 'r').read()
-        self.attardi = open('attardi.txt').readlines()
         self.masculi = open('masculi.txt').readlines()
         self.femmene = open('femmene.txt').readlines()
+
+        self.brain = Brain(brain)
+
 
         self.parliamo_summary = None
         self.BAM = None
@@ -208,11 +232,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.reply(e, u"%s %s" %(subj, obj))
 
     def attardati(self, e, match):
-        jay = self.attardi[random.randint(0, len(self.attardi)-1)]
-        l = list(jay.lower())
-        l[0] = 'J'
-        jay = "".join(l)
-        self.reply(e, "Stefano %s Attardi" % jay[:-1])
+        self.reply(e, "Stefano %s Attardi" % self.brain.getAttardi())
 
     def add_quote(self, e, match):
         quote.add_quote(e.source.nick, match.groups()[0])
@@ -229,8 +249,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
 
     def saggezza(self, e, match):
-        saggia=u" ".join(choice(PROV1)) +u" "+ u" ".join(choice(PROV2))
-        self.reply(e, saggia)
+        bnn="%s %s"%(self.brain.getProverbiUno(),self.brain.getProverbiDue())
+        self.reply(e,bnn.decode("utf8"))
 
     def on_muori(self,a,b):
         msg=None
@@ -325,7 +345,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
             pass
 
     def anal(self, e, match):
-        self.reply(e, self.ANAL())
+        self.reply(e, "%s ANAL %s"%(self.brain.getCitta(),self.brain.getNomecen()))
 
     def allivello(self, e, match):
         self.reply(e, self.parliamo())
@@ -353,16 +373,6 @@ class TestBot(irc.bot.SingleServerIRCBot):
             response = urllib2.urlopen(urlo+"?&"+urllib.urlencode((("statement",ggallin.replace("@t","    ").replace("@n","\n")),("session",session)))).read()
         self.reply(e,response)
             
-
-    def ANAL(self):
-        citta=choice([[a.split(',')[1] for a in (self.cy).split(",,,,")[6:-11]]][0])
-        citta=citta.upper()
-        citta=citta.replace("(BALANCE)",'').replace("CITY",'')
-        if citta[-1:]==" ":
-            citta=citta[:-1]
-        nome=choice(self.nn.split('\n')).upper()
-        return "%s ANAL %s"%(citta,nome)
-
     def request_oembed(self, url):
         query = urllib.urlencode((('url', url),))
         data = urllib2.urlopen('http://noembed.com/embed?' + query)
