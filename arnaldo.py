@@ -32,8 +32,8 @@ except:
 MULTILINE_TOUT = 0.5
 
 traceback_template = '''Tracefazza (most recent call last):
-  File "%(filename)s", line %(lineno)s, in %(name)s
-  %(type)s: %(message)s\n'''
+    File "%(filename)s", line %(lineno)s, in %(name)s
+    %(type)s: %(message)s\n'''
 
 URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
@@ -167,40 +167,80 @@ def tencode(bytes):
 
 
 class Brain():
-        def __init__(self,brain):
-            self.b=brain
+    def __init__(self,brain):
+        self.b=brain
 
-        def choicefromlist(self,name):
-            i=random.randint(0,self.b.llen(name)-1)
-            return self.b.lindex(name, i)
+    def choicefromlist(self,name):
+        i=random.randint(0,self.b.llen(name)-1)
+        return self.b.lindex(name, i)
 
-        def getCitta(self):
-            return self.choicefromlist("CITTA")
+    def getCitta(self):
+        return self.choicefromlist("CITTA")
 
-        def getNomecen(self):
-            return self.choicefromlist("NOMICEN")
+    def getNomecen(self):
+        return self.choicefromlist("NOMICEN")
 
-        def getAttardi(self):
-            return self.choicefromlist("ATTARDI")
+    def getAttardi(self):
+        return self.choicefromlist("ATTARDI")
 
-        def getProverbiUno(self):
-            return self.choicefromlist("PROV1")
+    def getProverbiUno(self):
+        return self.choicefromlist("PROV1")
 
-        def getProverbiDue(self):
-            return self.choicefromlist("PROV2")
+    def getProverbiDue(self):
+        return self.choicefromlist("PROV2")
 
-class TestBot(irc.bot.SingleServerIRCBot):
+class Sproloquio():
+    def __init__(self):
+        self.brain = Brain(brain)
+
+    def attardati(self):
+        return "Stefano %s Attardi" % self.brain.getAttardi()
+
+    def ANAL(self):
+        return "%s ANAL %s" % (self.brain.getCitta(), self.brain.getNomecen())
+
+    def proverbia(self):
+        return "%s %s" % (self.proverbi.getProverbiUno(), self.proverbi.getProverbiDue())
+
+    def beuta(self):
+        cocktail_id = random.randint(1, 4750)
+        data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d"%cocktail_id)
+        soup = BeautifulSoup(data.read())
+        directions = soup.findAll("div", { "class" : "recipeDirection" })
+        measures = soup.findAll("div", { "class" : "recipeMeasure" })
+
+        ret = []
+        ret += "== %s ==\n"%(soup.find("h2").text)
+
+        for m in measures:
+            ret += u' '.join(m.findAll(text=True))
+
+        ret += ''
+
+        for d in directions:
+            ret += u' '.join(d.findAll(text=True))
+
+        ret += 'enjoy'
+        return ret
+
+    def boobs(self):
+        urlo = "http://imgur.com/r/boobies/new/day/page/%d/hit?scrolled"
+        response = urllib2.urlopen(urlo % random.randint(1, 50)).read()
+        soup = BeautifulSoup(response)
+        l = soup.findAll("div", {"class": "post"})
+        i = choice(l)
+        return "http://i.imgur.com/%s.jpg" % i.get("id")
+
+sproloquio = Sproloquio()
+
+class Arnaldo(irc.bot.SingleServerIRCBot):
 
     def __init__(self, channel, nickname, server, port=6667):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
         self.channel = channel
         self.commands = []
 
-        self.masculi = open('masculi.txt').readlines()
-        self.femmene = open('femmene.txt').readlines()
-
         self.brain = Brain(brain)
-
 
         self.parliamo_summary = None
         self.BAM = None
@@ -213,26 +253,18 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('anche no', self.ancheno)
         self.register_command('beuta', self.beuta)
         self.register_command('^facci (.+)', self.accollo)
-        self.register_command('boobs please', self.bombe)
+        self.register_command('boobs please', self.boobs)
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^brazzami (.+)', self.brazzafazza)
-        self.register_command('proverbia', self.saggezza)
+        self.register_command('proverbia', self.proverbia)
         self.register_command('attardati', self.attardati)
-        self.register_command('smoccola', self.smoccola)
 
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
 
-    def smoccola(self, e, match):
-        l = [u'Gesù', 'Dio', 'Madonna']
-        subj = l[random.randint(0, len(l)-1)]
-        q = self.masculi + self.femmene
-        obj = q[random.randint(0, len(q)-1)]
-        self.reply(e, u"%s %s" %(subj, obj))
-
     def attardati(self, e, match):
-        self.reply(e, "Stefano %s Attardi" % self.brain.getAttardi())
+        self.reply(e, sproloquio.attardati())
 
     def add_quote(self, e, match):
         quote.add_quote(e.source.nick, match.groups()[0])
@@ -247,10 +279,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
         else:
             self.reply(e, '#%d: %s' % q)
 
-
-    def saggezza(self, e, match):
-        bnn="%s %s"%(self.brain.getProverbiUno(),self.brain.getProverbiDue())
-        self.reply(e,bnn.decode("utf8"))
+    def proverbia(self, e, match):
+        self.reply(e, sproloquio.proverbia())
 
     def on_muori(self,a,b):
         msg=None
@@ -305,13 +335,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         self.oembed_link(e)
     
-    def bombe(self, e, match):
-        urlo = "http://imgur.com/r/boobies/new/day/page/%d/hit?scrolled"
-        response = urllib2.urlopen(urlo%random.randint(1,50)).read()
-        soup = BeautifulSoup(response)
-        l=soup.findAll("div",{"class":"post"})
-        i=choice(l)
-        self.reply(e, "http://i.imgur.com/%s.jpg"%i.get("id"))
+    def boobs(self, e, match):
+        self.reply(e, sproloquio.boobs())
 
     def reply(self, e, m):
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
@@ -380,20 +405,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         return respa
 
     def beuta(self,e, match):
-        cocktail_id=random.randint(1, 4750)
-        data=urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d"%cocktail_id)
-        soup = BeautifulSoup(data.read())
-        directions=soup.findAll("div", { "class" : "recipeDirection" })
-        measures=soup.findAll("div", { "class" : "recipeMeasure" })
-
-        s="== %s ==\n"%(soup.find("h2").text)
-
-        for m in measures:
-            s=s+u' '.join(m.findAll(text=True))+"\n"
-
-        for d in directions:
-            s=s+u' '.join(d.findAll(text=True))+"\n"
-        self.reply(e, s+"enjoy")
+        self.reply(e, '\n'.join(sproloquio.beuta()))
 
     def parliamo(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
@@ -457,7 +469,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 def main():
     import sys
     if len(sys.argv) != 4:
-        print "Usage: testbot <server[:port]> <channel> <nickname>"
+        print "Usage: arnaldo <server[:port]> <channel> <nickname>"
         sys.exit(1)
 
     s = sys.argv[1].split(":", 1)
@@ -473,10 +485,9 @@ def main():
     channel = sys.argv[2]
     nickname = sys.argv[3]
 
-    bot = TestBot(channel, nickname, server, port)
+    bot = Arnaldo(channel, nickname, server, port)
     signal.signal(signal.SIGUSR1, bot.on_muori)
     bot.start()
 
 if __name__ == "__main__":
     main()
-    
