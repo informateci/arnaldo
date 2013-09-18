@@ -200,27 +200,27 @@ class Sproloquio():
         return "%s ANAL %s" % (self.brain.getCitta(), self.brain.getNomecen())
 
     def proverbia(self):
-        return "%s %s" % (self.proverbi.getProverbiUno(), self.proverbi.getProverbiDue())
+        return "%s %s" % (self.brain.getProverbiUno(), self.brain.getProverbiDue())
 
     def beuta(self):
         cocktail_id = random.randint(1, 4750)
-        data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d"%cocktail_id)
+        data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d" % scocktail_id)
         soup = BeautifulSoup(data.read())
         directions = soup.findAll("div", { "class" : "recipeDirection" })
         measures = soup.findAll("div", { "class" : "recipeMeasure" })
 
         ret = []
-        ret += "== %s ==\n"%(soup.find("h2").text)
+        ret += ["== %s ==\n" % (soup.find("h2").text)]
 
         for m in measures:
-            ret += u' '.join(m.findAll(text=True))
+            ret += [u' '.join(m.findAll(text=True))]
 
-        ret += ''
+        ret += ['']
 
         for d in directions:
-            ret += u' '.join(d.findAll(text=True))
+            ret += [u' '.join(d.findAll(text=True))]
 
-        ret += 'enjoy'
+        ret += ['enjoy']
         return ret
 
     def boobs(self):
@@ -404,7 +404,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         respa = json.loads(data.read()) #meglio una raspa d'una ruspa
         return respa
 
-    def beuta(self,e, match):
+    def beuta(self, e, match):
         self.reply(e, '\n'.join(sproloquio.beuta()))
 
     def parliamo(self):
