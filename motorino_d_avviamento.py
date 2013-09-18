@@ -17,9 +17,9 @@ def rinasci_arnaldo():
     if PROCESS is not None:
         PROCESS.send_signal(signal.SIGUSR1)
 
-    #subprocess.check_call(['git', 'pull'])
+    subprocess.check_call(['git', 'pull'])
     PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##smarmella arnaldo'.split())
-    #subprocess.Popen('rm -f arnaldo.commit'.split())
+    subprocess.Popen('rm -f arnaldo.commit'.split())
 
     ##XXX: POPOLO REDIS AD OGNI AVVIO, DA RIVEDERE!!!!!!!!!
     try:
