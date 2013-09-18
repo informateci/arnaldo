@@ -175,6 +175,8 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.cy = file('SUB-EST2011-01.csv', 'r').read()
         self.nn = file('nounlist.txt', 'r').read()
         self.attardi = open('attardi.txt').readlines()
+        self.masculi = open('masculi.txt').readlines()
+        self.femmene = open('femmene.txt').readlines()
 
         self.parliamo_summary = None
         self.BAM = None
@@ -192,10 +194,18 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('proverbia', self.saggezza)
         self.register_command('attardati', self.attardati)
-        
+        self.register_command('smoccola', self.smoccola)
+
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
+
+    def smoccola(self, e, match):
+        l = ['Gesù', 'Dio', 'Madonna']
+        subj = l[random.randint(0, len(l))]
+        q = self.masculi + self.femmene
+        obj = q[random.randint(0, len(q))]
+        self.reply(e, "%s %s" %(subj, obj))
 
     def attardati(self, e, match):
         jay = self.attardi[random.randint(0, len(self.attardi))]
