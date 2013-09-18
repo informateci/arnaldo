@@ -174,6 +174,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
         self.cy = file('SUB-EST2011-01.csv', 'r').read()
         self.nn = file('nounlist.txt', 'r').read()
+        self.attardi = open('attardi.txt').readlines()
 
         self.parliamo_summary = None
         self.BAM = None
