@@ -202,13 +202,13 @@ class TestBot(irc.bot.SingleServerIRCBot):
 
     def smoccola(self, e, match):
         l = ['Gesù', 'Dio', 'Madonna']
-        subj = l[random.randint(0, len(l))]
+        subj = l[random.randint(0, len(l)-1)]
         q = self.masculi + self.femmene
-        obj = q[random.randint(0, len(q))]
-        self.reply(e, "%s %s" %(subj, obj))
+        obj = q[random.randint(0, len(q)-1)]
+        self.reply(e, u"%s %s" %(subj, obj))
 
     def attardati(self, e, match):
-        jay = self.attardi[random.randint(0, len(self.attardi))]
+        jay = self.attardi[random.randint(0, len(self.attardi)-1)]
         l = list(jay.lower())
         l[0] = 'J'
         jay = "".join(l)
