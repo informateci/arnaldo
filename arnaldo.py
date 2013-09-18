@@ -201,7 +201,7 @@ class TestBot(irc.bot.SingleServerIRCBot):
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
 
     def smoccola(self, e, match):
-        l = ['Gesù', 'Dio', 'Madonna']
+        l = [u'Gesù', 'Dio', 'Madonna']
         subj = l[random.randint(0, len(l)-1)]
         q = self.masculi + self.femmene
         obj = q[random.randint(0, len(q)-1)]
