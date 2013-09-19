@@ -213,12 +213,12 @@ class Sproloquio():
         ret += ["== %s ==\n" % (soup.find("h2").text)]
 
         for m in measures:
-            ret += [u' '.join(m.findAll(text=True))]
+            ret += [u' '.join([x.strip() for x in m.findAll(text=True)])]
 
         ret += ['']
 
         for d in directions:
-            ret += [u' '.join(d.findAll(text=True))]
+            ret += [u' '.join([x.strip() for x in d.findAll(text=True)])]
 
         ret += ['enjoy']
         return ret
