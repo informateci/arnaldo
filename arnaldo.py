@@ -315,11 +315,13 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.commands.append((re.compile(regexp), handler))
 
     def do_command(self, e):
+        notmatch=True
         for r, callback in self.commands:
             match = r.search(e.arguments[0])
             if match:
                 try:
                     callback(e, match)
+                    notmatch=False
                     return True
                 except Exception as ex:
                     excfazza="Error in"
@@ -329,7 +331,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
             else:
-                self.BAMBAM(e)
+        if notmatch:
+            self.BAMBAM(e)
 
         self.oembed_link(e)
     
