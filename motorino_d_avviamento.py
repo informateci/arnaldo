@@ -36,6 +36,7 @@ def accendi_il_cervello():
         cy = cyf.read()
         cyf.close()
         print "Rigenero CITTA"
+        brain.delete("CITTA")
         for c in [[a.split(',')[1].upper() for a in (cy).split(",,,,")[6:-11]]][0]:
             brain.rpush("CITTA", c) # in CITTA c'e' la lista delle citta' maiuscole
 
@@ -46,6 +47,7 @@ def accendi_il_cervello():
         nn = nnf.read()
         nnf.close()
         print "Rigenero NOMICEN"
+        brain.delete("NOMICEN")
         for n in nn.split('\n'):
             brain.rpush("NOMICEN", n.upper()) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
@@ -56,6 +58,7 @@ def accendi_il_cervello():
         atta = attaf.readlines()
         attaf.close()
         print "Rigenero ATTARDI"
+        brain.delete("ATTARDI")
         for a in [x.capitalize()[:-1] for x in atta]:
             brain.rpush("ATTARDI", a) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
@@ -66,6 +69,7 @@ def accendi_il_cervello():
         PROV1 = pickle.load(pkl_file)
         pkl_file.close()
         print "Rigenero PROV1"
+        brain.delete("PROV1")
         for p1 in PROV1: #lista prima meta' dei proverbi in PROV1
             brain.rpush("PROV1"," ".join(p1))
         del(PROV1)
@@ -77,6 +81,7 @@ def accendi_il_cervello():
         PROV2 = pickle.load(pkl_file)
         pkl_file.close()
         print "Rigenero PROV2"
+        brain.delete("PROV2")
         for p2 in PROV2: #lista 2a meta' dei proverbi in PROV2
             brain.rpush("PROV2"," ".join(p2))
         del(PROV2)
