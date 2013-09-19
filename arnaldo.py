@@ -387,10 +387,10 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
           self.contabrazze[h] = []
 
       d = datetime.datetime.now()
-      self.contabrazze[h] = filter(lambda x: datetime.timedelta(x, d) < 1000*60*30, self.contabrazze[h])
+      self.contabrazze[h] = filter(lambda x: (d-x).total_seconds() < 60*30, self.contabrazze[h])
       l = self.contabrazze[h]
 
-      if len(l) == 0 or (datetime.timedelta(l[0], d) < 1000*60*30 and len(l) < 3):
+      if len(l) == 0 or ((d-l[0]).total_seconds() < 60*30 and len(l) < 3):
           self.contabrazze[h].append(d)
           urlo = match.groups()[0]
           response = urllib2.urlopen("http://brazzifier.ueuo.com/index.php?urlz="+urlo).read()
