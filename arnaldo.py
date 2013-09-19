@@ -330,7 +330,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                         excfazza=excfazza+ "%s on line %d; " % (fname, lineno)
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
-            else:
         if notmatch:
             self.BAMBAM(e)
 
