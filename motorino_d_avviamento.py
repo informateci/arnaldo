@@ -18,7 +18,7 @@ def rinasci_arnaldo():
         PROCESS.send_signal(signal.SIGUSR1)
 
     subprocess.check_call(['git', 'pull'])
-    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##smarmella arnaldo'.split())
+    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##informateci arnaldo'.split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
 
     ##XXX: POPOLO REDIS AD OGNI AVVIO, DA RIVEDERE!!!!!!!!!
