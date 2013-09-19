@@ -188,6 +188,19 @@ class Brain():
     def getProverbiDue(self):
         return self.choicefromlist("PROV2")
 
+    def getProverbioandid(self):
+        i1=random.randint(0,self.b.llen("PROV1")-1)
+        i2=random.randint(0,self.b.llen("PROV2")-1)
+        p=u"%s %s"%(self.b.lindex("PROV1", i1).decode('utf8'),self.b.lindex("PROV2", i2).decode('utf8'))
+        return (p, "%dP%d"%(i1,i2))
+
+    def getProverbiobyid(self,idp):
+        try:
+            p=idp.split('P')
+            return u"%s %s"%(self.b.lindex("PROV1", int(p[0])).decode('utf8'),self.b.lindex("PROV2", int(p[1])).decode('utf8'))
+        except:
+                return "macche'"
+
 class Sproloquio():
     def __init__(self):
         self.brain = Brain(brain)
@@ -200,6 +213,12 @@ class Sproloquio():
 
     def proverbia(self):
         return u"%s %s" % (self.brain.getProverbiUno().decode('utf8'), self.brain.getProverbiDue().decode('utf8'))
+
+    def proverbiaandid(self):
+        return self.brain.getProverbioandid()
+
+    def proverbiabyid(self,idp):
+        return self.brain.getProverbiobyid(idp)
 
     def beuta(self):
         cocktail_id = random.randint(1, 4750)
