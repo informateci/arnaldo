@@ -20,49 +20,51 @@ def rinasci_arnaldo():
     subprocess.check_call(['git', 'pull'])
     PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##informateci arnaldo'.split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
+    accendi_il_cervello()
 
-    ##XXX: POPOLO REDIS AD OGNI AVVIO, DA RIVEDERE!!!!!!!!!
+
+def accendi_il_cervello():
     try:
         brain = redis.Redis("localhost")
     except:
         sys.exit("Insane in the membrane!!!")
 
-    brain.flushall()
+    if brain.llen("CITTA") == 0:
+        cyf = open('SUB-EST2011-01.csv', 'r')
+        cy = cyf.read()
+        cyf.close()
+        for c in [[a.split(',')[1].upper() for a in (cy).split(",,,,")[6:-11]]][0]:
+            brain.rpush("CITTA", c) # in CITTA c'e' la lista delle citta' maiuscole
 
-    cyf=open('SUB-EST2011-01.csv', 'r')
-    cy = cyf.read()
-    cyf.close()
-    nnf = open('nounlist.txt', 'r')
-    nn=nnf.read()
-    nnf.close();
-    attaf=open('attardi.txt', 'r')
-    atta=attaf.readlines()
-    attaf.close()
+    if brain.llen("NOMICEN") == 0:
+        nnf = open('nounlist.txt', 'r')
+        nn = nnf.read()
+        nnf.close()
+        for n in nn.split('\n'):
+            brain.rpush("NOMICEN", n.upper()) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    pkl_file = open('prov1.pkl', 'rb')
-    PROV1 = pickle.load(pkl_file)
-    pkl_file.close()
-    pkl_file = open('prov2.pkl', 'rb')
-    PROV2 = pickle.load(pkl_file)
-    pkl_file.close()
+    if brain.llen("ATTARDI") == 0:
+        attaf = open('attardi.txt', 'r')
+        atta = attaf.readlines()
+        attaf.close()
+        for a in [x.capitalize()[:-1] for x in atta]:
+            brain.rpush("ATTARDI", a) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    for p1 in PROV1: #lista prima meta' dei proverbi in PROV1
-        brain.rpush("PROV1"," ".join(p1))
+    if brain.llen("PROV1") == 0:
+        pkl_file = open('prov1.pkl', 'rb')
+        PROV1 = pickle.load(pkl_file)
+        pkl_file.close()
+        for p1 in PROV1: #lista prima meta' dei proverbi in PROV1
+            brain.rpush("PROV1"," ".join(p1))
+        del(PROV1)
 
-    for p2 in PROV2: #lista 2a meta' dei proverbi in PROV2
-        brain.rpush("PROV2"," ".join(p2))
-
-    del(PROV1)
-    del(PROV2)
-
-    for c in [[a.split(',')[1].upper() for a in (cy).split(",,,,")[6:-11]]][0]:
-        brain.rpush("CITTA",c) # in CITTA c'e' la lista delle citta' maiuscole
-    for n in nn.split('\n'):
-        brain.rpush("NOMICEN",n.upper()) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
-    for a in [x.capitalize()[:-1] for x  in atta]:
-        brain.rpush("ATTARDI",a) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
-
-
+    if brain.llen("PROV2") == 0:
+        pkl_file = open('prov2.pkl', 'rb')
+        PROV2 = pickle.load(pkl_file)
+        pkl_file.close()
+        for p2 in PROV2: #lista 2a meta' dei proverbi in PROV2
+            brain.rpush("PROV2"," ".join(p2))
+        del(PROV2)
 
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_the_404(self):
