@@ -191,10 +191,10 @@ class Sproloquio():
         self.brain = Brain(brain)
 
     def attardati(self):
-        return u"Stefano %s Attardi" % self.brain.getAttardi()
+        return u"Stefano %s Attardi" % self.brain.getAttardi().decode('utf8')
 
     def ANAL(self):
-        return u"%s ANAL %s" % (self.brain.getCitta(), self.brain.getNomecen())
+        return u"%s ANAL %s" % (self.brain.getCitta().decode('utf8'), self.brain.getNomecen().decode('utf8'))
 
     def proverbia(self):
         return u"%s %s" % (self.brain.getProverbiUno().decode('utf8'), self.brain.getProverbiDue().decode('utf8'))
