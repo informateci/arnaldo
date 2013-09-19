@@ -5,7 +5,7 @@ import subprocess
 import signal
 import urlparse 
 import json
-
+import hashlib
 import redis
 
 PORT    = 8000
@@ -29,39 +29,54 @@ def accendi_il_cervello():
     except:
         sys.exit("Insane in the membrane!!!")
 
-    if brain.llen("CITTA") == 0:
+    hs=hashlib.md5(open('SUB-EST2011-01.csv').read()).hexdigest()
+    if brain.get("cyfhash") != hs:
+        brain.set("cyfhash",hs)
         cyf = open('SUB-EST2011-01.csv', 'r')
         cy = cyf.read()
         cyf.close()
+        print "Rigenero CITTA"
         for c in [[a.split(',')[1].upper() for a in (cy).split(",,,,")[6:-11]]][0]:
             brain.rpush("CITTA", c) # in CITTA c'e' la lista delle citta' maiuscole
 
-    if brain.llen("NOMICEN") == 0:
+    hs=hashlib.md5(open('nounlist.txt').read()).hexdigest()
+    if brain.get("nnfhash") != hs:
+        brain.set("nnfhash",hs)
         nnf = open('nounlist.txt', 'r')
         nn = nnf.read()
         nnf.close()
+        print "Rigenero NOMICEN"
         for n in nn.split('\n'):
             brain.rpush("NOMICEN", n.upper()) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    if brain.llen("ATTARDI") == 0:
+    hs=hashlib.md5(open('attardi.txt').read()).hexdigest()
+    if brain.get("attaffhash") != hs:
+        brain.set("attaffhash",hs)
         attaf = open('attardi.txt', 'r')
         atta = attaf.readlines()
         attaf.close()
+        print "Rigenero ATTARDI"
         for a in [x.capitalize()[:-1] for x in atta]:
             brain.rpush("ATTARDI", a) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    if brain.llen("PROV1") == 0:
+    hs=hashlib.md5(open('prov1.pkl').read()).hexdigest()
+    if brain.get("prov1fhash") != hs:
+        brain.set("prov1fhash",hs)
         pkl_file = open('prov1.pkl', 'rb')
         PROV1 = pickle.load(pkl_file)
         pkl_file.close()
+        print "Rigenero PROV1"
         for p1 in PROV1: #lista prima meta' dei proverbi in PROV1
             brain.rpush("PROV1"," ".join(p1))
         del(PROV1)
 
-    if brain.llen("PROV2") == 0:
+    hs=hashlib.md5(open('prov2.pkl').read()).hexdigest()
+    if brain.get("prov2fhash") != hs:
+        brain.set("prov2fhash",hs)
         pkl_file = open('prov2.pkl', 'rb')
         PROV2 = pickle.load(pkl_file)
         pkl_file.close()
+        print "Rigenero PROV2"
         for p2 in PROV2: #lista 2a meta' dei proverbi in PROV2
             brain.rpush("PROV2"," ".join(p2))
         del(PROV2)
