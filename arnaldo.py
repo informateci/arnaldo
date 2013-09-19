@@ -383,7 +383,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
     def brazzafazza(self, e, match):
       h = e.source.host
-      if not self.contrabrazze.has_key(h):
+      if not self.contabrazze.has_key(h):
           self.contabrazze[h] = []
 
       d = datetime.datetime()
