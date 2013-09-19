@@ -204,7 +204,7 @@ class Sproloquio():
 
     def beuta(self):
         cocktail_id = random.randint(1, 4750)
-        data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d" % scocktail_id)
+        data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d" % cocktail_id)
         soup = BeautifulSoup(data.read())
         directions = soup.findAll("div", { "class" : "recipeDirection" })
         measures = soup.findAll("div", { "class" : "recipeMeasure" })
