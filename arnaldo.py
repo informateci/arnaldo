@@ -21,7 +21,6 @@ import os.path
 import os
 import time
 import quote
-
 import redis
 
 try:
@@ -36,8 +35,6 @@ traceback_template = '''Tracefazza (most recent call last):
     %(type)s: %(message)s\n'''
 
 URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
-
-
 
 letterforms = '''\
        |       |       |       |       |       |       | |
@@ -194,13 +191,13 @@ class Sproloquio():
         self.brain = Brain(brain)
 
     def attardati(self):
-        return "Stefano %s Attardi" % self.brain.getAttardi()
+        return u"Stefano %s Attardi" % self.brain.getAttardi()
 
     def ANAL(self):
-        return "%s ANAL %s" % (self.brain.getCitta(), self.brain.getNomecen())
+        return u"%s ANAL %s" % (self.brain.getCitta(), self.brain.getNomecen())
 
     def proverbia(self):
-        return "%s %s" % (self.brain.getProverbiUno(), self.brain.getProverbiDue())
+        return u"%s %s" % (self.brain.getProverbiUno().decode('utf8'), self.brain.getProverbiDue().decode('utf8'))
 
     def beuta(self):
         cocktail_id = random.randint(1, 4750)
@@ -210,17 +207,17 @@ class Sproloquio():
         measures = soup.findAll("div", { "class" : "recipeMeasure" })
 
         ret = []
-        ret += ["== %s ==\n" % (soup.find("h2").text)]
+        ret += [u"== %s ==\n" % (soup.find("h2").text)]
 
         for m in measures:
             ret += [u' '.join([x.strip() for x in m.findAll(text=True)])]
 
-        ret += ['']
+        ret += [u'']
 
         for d in directions:
             ret += [u' '.join([x.strip() for x in d.findAll(text=True)])]
 
-        ret += ['enjoy']
+        ret += [u'enjoy']
         return ret
 
     def boobs(self):
