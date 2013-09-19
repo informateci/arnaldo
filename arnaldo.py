@@ -23,6 +23,8 @@ import time
 import quote
 import redis
 
+import datetime
+
 try:
     brain = redis.Redis("localhost")
 except:
@@ -252,6 +254,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^facci (.+)', self.accollo)
         self.register_command('boobs please', self.boobs)
         self.register_command('^icsah (.+)', self.icsah)
+        self.contabrazze = {}
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('proverbia', self.proverbia)
         self.register_command('attardati', self.attardati)
@@ -377,14 +380,23 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
     def eallora(self, e, match):
         self.reply(e, "e allora le foibe?")
-    
+
     def brazzafazza(self, e, match):
-      if (not e.source.nick.startswith("asciuga")):
-          urlo=match.groups()[0]
+      h = e.source.host
+      if not self.contrabrazze.has_key(h):
+          self.contabrazze[h] = []
+
+      d = datetime.datetime()
+      self.contabrazze[h] = filter(lambda x: datetime.timedelta(x, d) < 1000*60*30, self.contabrazze[h])
+      l = self.contabrazze[h]
+
+      if len(l) == 0 or (datetime.timedelta(l[0], d) < 1000*60*30 and len(l) < 3):
+          self.contabrazze[h].append(d)
+          urlo = match.groups()[0]
           response = urllib2.urlopen("http://brazzifier.ueuo.com/index.php?urlz="+urlo).read()
-          self.reply(e,response)
+          self.reply(e, response)
       else:
-        self.reply(e,"brazzami stocazzo.")
+        self.reply(e, "hai rotto il cazzo.")
 
     def accollo(self, e, match):
         ggallin=None;
