@@ -315,7 +315,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.commands.append((re.compile(regexp), handler))
 
     def do_command(self, e):
-        self.BAMBAM(e)
         for r, callback in self.commands:
             match = r.search(e.arguments[0])
             if match:
@@ -329,6 +328,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                         excfazza=excfazza+ "%s on line %d; " % (fname, lineno)
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
+            else:
+                self.BAMBAM(e)
 
         self.oembed_link(e)
     
