@@ -386,7 +386,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
       if not self.contabrazze.has_key(h):
           self.contabrazze[h] = []
 
-      d = datetime.datetime()
+      d = datetime.datetime.now()
       self.contabrazze[h] = filter(lambda x: datetime.timedelta(x, d) < 1000*60*30, self.contabrazze[h])
       l = self.contabrazze[h]
 
