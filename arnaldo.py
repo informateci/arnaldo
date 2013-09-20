@@ -190,7 +190,9 @@ class Brain():
 
     def getProverbioandid(self):
         i1=random.randint(0,self.b.llen("PROV1")-1)
-        i2=random.randint(0,self.b.llen("PROV2")-1)
+        i2=random.randint(0,self.b.llen("PROV2")-2)
+        if i2 >= i1:
+            i2 += 1
         p=u"%s %s"%(self.b.lindex("PROV1", i1).decode('utf8'),self.b.lindex("PROV2", i2).decode('utf8'))
         return (p, "%dP%d"%(i1,i2))
 
@@ -212,7 +214,8 @@ class Sproloquio():
         return u"%s ANAL %s" % (self.brain.getCitta().decode('utf8'), self.brain.getNomecen().decode('utf8'))
 
     def proverbia(self):
-        return u"%s %s" % (self.brain.getProverbiUno().decode('utf8'), self.brain.getProverbiDue().decode('utf8'))
+        #return u"%s %s" % (self.brain.getProverbiUno().decode('utf8'), self.brain.getProverbiDue().decode('utf8'))
+        return proverbiaandid()[0]
 
     def proverbiaandid(self):
         return self.brain.getProverbioandid()
