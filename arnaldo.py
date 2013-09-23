@@ -215,7 +215,7 @@ class Sproloquio():
 
     def proverbia(self):
         #return u"%s %s" % (self.brain.getProverbiUno().decode('utf8'), self.brain.getProverbiDue().decode('utf8'))
-        return proverbiaandid()[0]
+        return self.proverbiaandid()[0]
 
     def proverbiaandid(self):
         return self.brain.getProverbioandid()
