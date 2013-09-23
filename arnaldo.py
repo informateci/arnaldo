@@ -480,7 +480,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         if len(allurls) != 1:
             pass
 
-        if True:
+        try:
             try: #tipo goto ma peggio
                 respa = self.request_oembed(allurls[0][0])
                 self.reply(e, respa['title'])
@@ -502,8 +502,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 symb,todo=check_SI(expo*v)
                 dignene="%.2f %sGaggo [postato da %s il %s]"%(manti,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
                 self.reply(e, dignene)
-        #except:
-        #   pass
+        except:
+            pass
 
     def BAMBAM(self, e):
         t = e.arguments[0]
