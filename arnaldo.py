@@ -22,8 +22,11 @@ import os
 import time
 import quote
 import redis
+import hashlib
 
 import datetime
+
+SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
 
 try:
     brain = redis.Redis("localhost")
@@ -254,6 +257,19 @@ class Sproloquio():
 
 sproloquio = Sproloquio()
 
+
+def check_SI(p):
+    mapping = [(-24,('y','yocto')),(-21,('z','zepto')),(-18,('a','atto')),(-15,('f','femto')),(-12,('p','pico')),
+               (-9, ('n','nano')),(-6, ('u','micro')),(-3, ('m','mili')),(-2, ('c','centi')),(-1, ('d','deci')),
+               (3,  ('k','kilo')),(6,  ('M','mega')),(9,  ('G','giga')),(12, ('T','tera')),(15, ('P','peta')),
+               (18, ('E','exa')),(21, ('Z','zetta')),(24, ('Y','yotta'))]
+
+    for check, value in mapping:
+        if p <= check:
+            return value
+
+
+
 class Arnaldo(irc.bot.SingleServerIRCBot):
 
     def __init__(self, channel, nickname, server, port=6667):
@@ -464,11 +480,30 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         if len(allurls) != 1:
             pass
 
-        try:
-            respa = self.request_oembed(allurls[0][0])
-            self.reply(e, respa['title'])
-        except:
-            pass
+        if True:
+            try: #tipo goto ma peggio
+                respa = self.request_oembed(allurls[0][0])
+                self.reply(e, respa['title'])
+            except:
+                pass 
+            thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
+            hashish=brain.get(thaurlhash)
+            if hashish == None: #NO FUMO NO FUTURE
+                ts=time.time()
+                nic=e.source.nick
+                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,1))
+            else:
+                ts,nic,v=hashish.split(':')
+                ts=float(ts)
+                delta=time.time() -ts
+                v=int(v)
+                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,v+1))
+                manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
+                symb,todo=check_SI(expo*v)
+                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
+                self.reply(e, dignene)
+        #except:
+        #   pass
 
     def BAMBAM(self, e):
         t = e.arguments[0]
