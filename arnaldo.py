@@ -483,7 +483,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         try:
             try: #tipo goto ma peggio
                 respa = self.request_oembed(allurls[0][0])
-                self.reply(e, respa['title'])
             except:
                 pass 
             thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
@@ -492,6 +491,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 ts=time.time()
                 nic=e.source.nick
                 brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,1))
+                self.reply(e, respa['title'])
             else:
                 ts,nic,v=hashish.split(':')
                 ts=float(ts)
@@ -500,7 +500,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,v+1))
                 manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
                 symb,todo=check_SI(expo*v)
-                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
+                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti,symb,nic.replace('\n',''),datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
                 self.reply(e, dignene)
         except:
             pass
