@@ -496,11 +496,11 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 ts,nic,v=hashish.split(':')
                 ts=float(ts)
                 delta=time.time() -ts
-                v=int(v)
-                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,v+1))
+                v=int(v)+1
+                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,v))
                 manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
                 symb,todo=check_SI(expo*v)
-                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti,symb,nic.replace('\n',''),datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
+                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic.replace('\n',''),datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
                 self.reply(e, dignene)
         except:
             pass
