@@ -296,6 +296,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('proverbia', self.proverbia)
         self.register_command('attardati', self.attardati)
+        self.register_command('^markoviami(.*)', self.markoviami)
 
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
@@ -418,6 +419,20 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
     def eallora(self, e, match):
         self.reply(e, "e allora le foibe?")
+
+    def markoviami(self, e, match):
+      request = "?"
+      ids = match.groups()[0].strip().split()
+      print ids
+      if (len(ids) > 0):
+        for id in ids:
+          request = request + "tweetid=" + id.strip() + "&"
+      else:
+        request = request + "tweetid=Pontifex_it"
+      print "http://markoviami.appspot.com/"+request
+      response = urllib2.urlopen("http://markoviami.appspot.com/"+request).read().decode('utf8')
+      print response
+      self.reply(e, response) 
 
     def brazzafazza(self, e, match):
       h = e.source.host
