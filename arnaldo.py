@@ -292,6 +292,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^facci (.+)', self.accollo)
         self.register_command('boobs please', self.boobs)
         self.register_command('^icsah (.+)', self.icsah)
+
         self.contabrazze = {}
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('proverbia', self.proverbia)
@@ -301,6 +302,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
         self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
+        
+        self.register_command('^bamba$', self.rosa)
 
     def attardati(self, e, match):
         self.reply(e, sproloquio.attardati())
@@ -410,6 +413,15 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 self.reply(e,icsa)
         except:
             pass
+
+    def rosa(self, e, match):
+        icsa=""
+        for row in range(ROWS):
+            for c in 'rosa':
+                icsa=str(icsa)+str(ASCIItable[c][row])
+            icsa=icsa+'\n'
+        icsa=icsa+'\n'
+        self.reply(e,icsa)
 
     def anal(self, e, match):
         self.reply(e, "%s ANAL %s"%(self.brain.getCitta(),self.brain.getNomecen()))
