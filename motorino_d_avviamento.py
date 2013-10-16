@@ -110,7 +110,7 @@ class le_poste(tornado.web.RequestHandler):
             self.redirect("/")
 
         def post(self):
-            data = json.loads(self.request.body)
+            data = urlparse.parse_qs(self.request.body)
             print data
 
 accatitipi = tornado.web.Application([
