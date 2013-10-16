@@ -110,8 +110,26 @@ class le_poste(tornado.web.RequestHandler):
             self.redirect("/")
 
         def post(self):
-            data = urlparse.parse_qs(self.request.body)
-            print data
+            post_data= urlparse.parse_qs(self.request.body)
+            author=None
+            message=None
+            for key, value in post_data.iteritems():
+                if key=="payload" and len(value)>0:
+                    payload=json.loads(value[0])
+                    commits=payload.get('commits',None)
+                    if commits != None and len(commits)>0:
+                        author=commits[0].get('author',None)
+                        message=commits[0].get('message',None)
+                        author=author.get('name',None)
+                        print "<%s>: %s"%(author,message)
+                        
+            if author!=None and message !=None:
+                f=open("arnaldo.commit",'w')
+                f.write("%s:%s"%(author,message))
+                f.close()
+                self.clear()
+                self.set_status(200)
+                self.finish('OK')
 
 accatitipi = tornado.web.Application([
                 (r"/", do_the_404),
