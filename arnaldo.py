@@ -602,14 +602,17 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
 
 
+def htmella(s,code,content,msg):
+            s.clear()
+            s.set_status(code)
+            s.set_header('Content-Type', content)
+            s.finish(msg)
+
 
 class onore(tornado.web.RequestHandler):
 
         def get(self):
-            self.clear()
-            self.set_status(200)
-            self.set_header('Content-Type', 'text/html')
-            self.finish("<html><h1>ONORE AL COMMENDATORE!</h1></html>")
+            htmella(self,200,'text/html',"<html><h1>ONORE AL COMMENDATORE!</h1></html>")
 
 class sputa(tornado.web.RequestHandler):
 
