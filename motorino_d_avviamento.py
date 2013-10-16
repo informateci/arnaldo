@@ -1,3 +1,4 @@
+ #!/usr/bin/env python
 import SimpleHTTPServer
 import SocketServer
 import pickle
@@ -7,7 +8,9 @@ import urlparse
 import json
 import hashlib
 import redis
-
+import tornado.httpserver
+import tornado.ioloop
+import tornado.web
 PORT    = 8000
 PROCESS = None
 
@@ -18,7 +21,7 @@ def rinasci_arnaldo():
         PROCESS.send_signal(signal.SIGUSR1)
 
     subprocess.check_call(['git', 'pull'])
-    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##informateci arnaldo'.split())
+    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##bamba arnaldo'.split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
     accendi_il_cervello()
 
@@ -93,63 +96,41 @@ def accendi_il_cervello():
         brain.set("httppasswd",passf.readline()[:-1])
         passf.close()
 
-class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
-    def do_the_404(self):
-        p='<html><h1>ONORE AL COMMENDATORE</h1><audio autoplay loop><source src="http://k002.kiwi6.com/hotlink/7dfwc95g6j/ztuovbziexvt.128.mp3" type="audio/mp3"></audio><p><img alt="" src="http://25.media.tumblr.com/tumblr_lxom7sxjDv1qcy8xgo1_500.gif" class="alignnone" width="500" height="333"></p></html>'
-        self.send_response(404)
-        self.send_header("Content-Type", "text/html")
-        self.send_header("Content-length", str(len(p)))
-        self.end_headers()
-        self.wfile.write(p)
-        self.wfile.flush()
-        self.connection.shutdown(1)
 
-    def do_the_dance(self):
-        rinasci_arnaldo()
+class do_the_404(tornado.web.RequestHandler):
 
-    def do_GET(self):
-        self.do_the_404()
+        def get(self):
+            self.clear()
+            self.set_status(404)
+            self.set_header('Content-Type', 'text/html')
+            self.finish('<html><h1>ONORE AL COMMENDATORE</h1><audio autoplay loop><source src="http://k002.kiwi6.com/hotlink/7dfwc95g6j/ztuovbziexvt.128.mp3" type="audio/mp3"></audio><p><img alt="" src="http://25.media.tumblr.com/tumblr_lxom7sxjDv1qcy8xgo1_500.gif" class="alignnone" width="500" height="333"></p></html>')
 
-    def do_POST(self):
-        if self.path != '/github':
-            self.do_the_404()
-            return
-        length = int(self.headers['Content-Length'])
-        post_data = urlparse.parse_qs(self.rfile.read(length).decode('utf-8'))
-        author=None
-        message=None
-        for key, value in post_data.iteritems():
-            if key=="payload" and len(value)>0:
-                payload=json.loads(value[0])
-                commits=payload.get('commits',None)
-                if commits != None and len(commits)>0:
-                    author=commits[0].get('author',None)
-                    message=commits[0].get('message',None)
-                    author=author.get('name',None)
-                    print "<%s>: %s"%(author,message)
-                    
-        if author!=None and message !=None:
-            f=open("arnaldo.commit",'w')
-            f.write("%s:%s"%(author,message))
-            f.close()
+class le_poste(tornado.web.RequestHandler):
+        def get(self):
+            self.redirect("/")
 
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write('ONORE AL COMMENDATORE')
-        self.do_the_dance()
+        def post(self):
+            print self.request.body
+
+accatitipi = tornado.web.Application([
+                (r"/", do_the_404),
+                (r"/github", le_poste)
+])
+
+
 
 if __name__ == '__main__':
     print 'Starting arnaldo'
     rinasci_arnaldo()
    
     print "Starting webserver (%s)" % (PORT,)
-    httpd = SocketServer.TCPServer(("", PORT), ServerHandler)
+    http_server = tornado.httpserver.HTTPServer(accatitipi)
+    http_server.listen(PORT, '127.0.0.1')
     try:
-        httpd.serve_forever()
+      tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
       #faster pussycat
       PROCESS.kill()
-     #PROCESS.kill()
+      #PROCESS.kill()
         
 

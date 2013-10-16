@@ -33,6 +33,7 @@ from passlib.hash import bcrypt
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
+from tornado import httpclient
 
 dimme = lasigna('dimmelo')
 
@@ -603,12 +604,19 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
 
 class onore(tornado.web.RequestHandler):
+
         def get(self):
-            self.write("ONORE AL COMMENDATORE!")
+            self.clear()
+            self.set_status(404)
+            self.set_header('Content-Type', 'text/html')
+            self.finish("<html><h1>ONORE AL COMMENDATORE!</h1></html>")
 
 class sputa(tornado.web.RequestHandler):
         def get(self):
-            self.write("che ti levi di ulo?")
+            self.clear()
+            self.set_status(404)
+            self.set_header('Content-Type', 'text/html')
+            self.finish("che ti levi di ulo?")
 
         def post(self):
             author=self.get_argument("chie")
@@ -616,15 +624,19 @@ class sputa(tornado.web.RequestHandler):
             if message:
                 bazza= author=self.get_argument("hasho")
                 cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
+                self.clear()
+                self.set_status(404)
+                self.set_header('Content-Type', 'text/html')
                 if cecco:
                     if author[0]:
                         out = (author[0],message[0])
                     else:
                         out = message[0]
                     dimme.send(out)
-                    self.write("ONORE AL COMMENDATORE!")
+                    self.set_status(200)
+                    self.finish("ONORE AL COMMENDATORE!")
                 else:
-                     self.write("che ti levi di ulo?")
+                     self.finish("che ti levi di ulo?")
 
 accatitipi = tornado.web.Application([
                 (r"/", onore),
