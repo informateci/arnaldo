@@ -607,7 +607,8 @@ class accatitipi(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 self.wfile.write(msg)
                 self.wfile.flush()
                 self.connection.shutdown(1) 
-
+    def do_GET(self):
+        self.fora(404,'text/plain','che ti levi di ulo?')
     def do_POST(self):
         if self.path != '/catarro':
                 self.fora(404,'text/plain','che ti levi di ulo?')
