@@ -110,7 +110,8 @@ class le_poste(tornado.web.RequestHandler):
             self.redirect("/")
 
         def post(self):
-            print self.request.body
+            data = json.loads(self.request.body)
+            print data
 
 accatitipi = tornado.web.Application([
                 (r"/", do_the_404),
@@ -125,7 +126,7 @@ if __name__ == '__main__':
    
     print "Starting webserver (%s)" % (PORT,)
     http_server = tornado.httpserver.HTTPServer(accatitipi)
-    http_server.listen(PORT, '127.0.0.1')
+    http_server.listen(PORT, '0.0.0.0')
     try:
       tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
