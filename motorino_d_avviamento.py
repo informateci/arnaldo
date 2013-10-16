@@ -86,6 +86,13 @@ def accendi_il_cervello():
             brain.rpush("PROV2"," ".join(p2))
         del(PROV2)
 
+    hs=hashlib.md5(open('passvord.txt').read()).hexdigest()
+    if brain.get("passvordfhash") != hs:
+        brain.set("prov2fhash",hs)
+        passf=open('passvord.txt','r')
+        brain.set("httppasswd",passf.readline()[:-1])
+        passf.close()
+
 class ServerHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_the_404(self):
         p='<html><h1>ONORE AL COMMENDATORE</h1><audio autoplay loop><source src="http://k002.kiwi6.com/hotlink/7dfwc95g6j/ztuovbziexvt.128.mp3" type="audio/mp3"></audio><p><img alt="" src="http://25.media.tumblr.com/tumblr_lxom7sxjDv1qcy8xgo1_500.gif" class="alignnone" width="500" height="333"></p></html>'
@@ -138,5 +145,11 @@ if __name__ == '__main__':
    
     print "Starting webserver (%s)" % (PORT,)
     httpd = SocketServer.TCPServer(("", PORT), ServerHandler)
-    httpd.serve_forever()
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+      #faster pussycat
+      PROCESS.kill()
+     #PROCESS.kill()
+        
 

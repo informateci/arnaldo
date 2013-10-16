@@ -23,8 +23,16 @@ import time
 import quote
 import redis
 import hashlib
-
+from blinker import signal as lasigna
 import datetime
+import SimpleHTTPServer
+import SocketServer
+import threading
+import urlparse
+from passlib.hash import bcrypt
+
+
+dimme = lasigna('dimmelo')
 
 SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
 
@@ -292,6 +300,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^facci (.+)', self.accollo)
         self.register_command('boobs please', self.boobs)
         self.register_command('^icsah (.+)', self.icsah)
+        self.register_command('^arnaldo hai visto (.+)\\?', self.chilhavisto)
+
 
         self.contabrazze = {}
         self.register_command('^brazzami (.+)', self.brazzafazza)
@@ -304,6 +314,15 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
         
         self.register_command('^bamba$', self.rosa)
+        dimme.connect(self.dimmeame)        
+
+    def dimmeame(self,msg):
+        conn= self.connection
+
+        if type(msg) == type(()):
+           conn.privmsg(self.channel, '<%s>: %s' % msg)
+        else:
+           conn.privmsg(self.channel, '* %s' % msg)
 
     def attardati(self, e, match):
         self.reply(e, sproloquio.attardati())
@@ -432,6 +451,23 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
     def eallora(self, e, match):
         self.reply(e, "e allora le foibe?")
 
+    def chilhavisto(self, e, match):
+        try:
+            ggallin=None;
+            try:
+                ggallin=match.groups()[0]
+            except:
+                pass
+            if ggallin:
+                ts=float(brain.get(ggallin))
+                if ts:
+                    response = "chiaro il %s" % datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S')
+                else:
+                    response = "macche'"
+                self.reply(e, response)
+        except:
+            pass
+
     def markoviami(self, e, match):
       request = "?"
       ids = match.groups()[0].strip().split()
@@ -441,9 +477,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
           request = request + "tweetid=" + id.strip() + "&"
       else:
         request = request + "tweetid=Pontifex_it"
-      print "http://markoviami.appspot.com/"+request
       response = urllib2.urlopen("http://markoviami.appspot.com/"+request).read().decode('utf8')
-      print response
       self.reply(e, response) 
 
     def brazzafazza(self, e, match):
@@ -533,6 +567,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             pass
 
     def BAMBAM(self, e):
+        brain.set(e.source.nick, time.time())
         t = e.arguments[0]
         if self.BAM == t:
             self.reply(e, self.BAM)
@@ -562,6 +597,45 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.reply(e, u'ಥ_ಥ  ockay')
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
 
+
+class accatitipi(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    def fora(self,code,content,msg):
+                self.send_response(code)
+                self.send_header('Content-type', content)
+                self.end_headers()
+                self.wfile.write(msg)
+                self.wfile.flush()
+                self.connection.shutdown(1) 
+
+    def do_POST(self):
+        if self.path != '/catarro':
+                self.fora(404,'text/plain','che ti levi di ulo?')
+                return
+        length = int(self.headers['Content-Length'])
+        post_data = urlparse.parse_qs(self.rfile.read(length).decode('utf-8'))
+        print post_data
+        author=  post_data.get("chie",[False])
+        message= post_data.get("msg",[""])
+        if message:
+            bazza=post_data.get("hasho",["macche"])
+            cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
+            if cecco:
+                if author[0]:
+                    out = (author[0],message[0])
+                else:
+                    out = message[0]
+                dimme.send(out)
+            else:
+                self.fora(404,'text/plain','che ti levi di ulo?')
+
+        self.fora(200,'text/plain','ONORE AL COMMENDATORE?')
+
+class vedetta(threading.Thread):
+       def run(self):
+            Handler = accatitipi
+            server = SocketServer.TCPServer(('0.0.0.0', 50102), Handler)
+            server.serve_forever()
+
 def main():
     import sys
     if len(sys.argv) != 4:
@@ -580,6 +654,9 @@ def main():
         port = 6667
     channel = sys.argv[2]
     nickname = sys.argv[3]
+
+    T800 = vedetta()
+    T800.start() #I'm a friend of Sarah Connor. I was told she was here. Could I see her please?
 
     bot = Arnaldo(channel, nickname, server, port)
     signal.signal(signal.SIGUSR1, bot.on_muori)
