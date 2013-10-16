@@ -21,7 +21,7 @@ def rinasci_arnaldo():
         PROCESS.send_signal(signal.SIGUSR1)
 
     subprocess.check_call(['git', 'pull'])
-    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##bamba arnaldo'.split())
+    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##informateci arnaldo'.split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
     accendi_il_cervello()
 
@@ -131,18 +131,13 @@ class le_poste(tornado.web.RequestHandler):
                 self.set_status(200)
                 self.finish('OK')
 
-accatitipi = tornado.web.Application([
-                (r"/", do_the_404),
-                (r"/github", le_poste)
-])
-
-
 
 if __name__ == '__main__':
     print 'Starting arnaldo'
     rinasci_arnaldo()
    
     print "Starting webserver (%s)" % (PORT,)
+    accatitipi = tornado.web.Application([(r"/", do_the_404),(r"/github", le_poste)])
     http_server = tornado.httpserver.HTTPServer(accatitipi)
     http_server.listen(PORT, '0.0.0.0')
     try:
