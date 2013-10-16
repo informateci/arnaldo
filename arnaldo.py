@@ -612,6 +612,7 @@ class onore(tornado.web.RequestHandler):
             self.finish("<html><h1>ONORE AL COMMENDATORE!</h1></html>")
 
 class sputa(tornado.web.RequestHandler):
+
         def get(self):
             self.clear()
             self.set_status(404)
@@ -637,10 +638,7 @@ class sputa(tornado.web.RequestHandler):
                 else:
                      self.finish("che ti levi di ulo?")
 
-accatitipi = tornado.web.Application([
-                (r"/", onore),
-                (r"/catarro", sputa)
-])
+accatitipi = tornado.web.Application([(r"/", onore),(r"/catarro", sputa)])
 
 class vedetta(threading.Thread):
        def run(self):
