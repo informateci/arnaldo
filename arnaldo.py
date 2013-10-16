@@ -459,14 +459,15 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             except:
                 pass
             if ggallin:
-                ts=float(brain.get(ggallin))
+                ts=brain.get(ggallin)
                 if ts:
-                    response = "chiaro il %s" % datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S')
+                    response = "chiaro il %s" % datetime.datetime.fromtimestamp(float(ts)).strftime('%d/%m/%y %H:%M:%S')
                 else:
                     response = "macche'"
                 self.reply(e, response)
         except:
             pass
+
 
     def markoviami(self, e, match):
       request = "?"
