@@ -625,9 +625,6 @@ class sputa(tornado.web.RequestHandler):
             if message:
                 bazza= author=self.get_argument("hasho")
                 cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
-                self.clear()
-                self.set_status(404)
-                self.set_header('Content-Type', 'text/html')
                 if cecco:
                     if author[0]:
                         out = (author[0],message[0])
@@ -636,7 +633,7 @@ class sputa(tornado.web.RequestHandler):
                     dimme.send(out)
                     self.redirect("/")
                 else:
-                     self.finish("che ti levi di ulo?")
+                     htmella(self,404,'text/html',"che ti levi di ulo?")
 
 accatitipi = tornado.web.Application([(r"/", onore),(r"/catarro", sputa)])
 
