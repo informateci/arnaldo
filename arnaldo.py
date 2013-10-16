@@ -30,7 +30,9 @@ import SocketServer
 import threading
 import urlparse
 from passlib.hash import bcrypt
-
+import tornado.httpserver
+import tornado.ioloop
+import tornado.web
 
 dimme = lasigna('dimmelo')
 
@@ -599,33 +601,20 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
 
 
-class accatitipi(SimpleHTTPServer.SimpleHTTPRequestHandler):
-    def fora(self,code,content,msg):
-                self.send_response(code)
-                self.send_header('Content-type', content)
-                self.end_headers()
-                self.wfile.write(msg)
-                self.wfile.flush()
-                self.connection.shutdown(1) 
-    def do_HEAD(s):
-        s.send_response(200)
-        s.send_header("Content-type", "text/html")
-        s.end_headers()
 
-    def do_GET(self):
-        self.fora(404,'text/plain','che ti levi di ulo?')
+class onore(tornado.web.RequestHandler):
+        def get(self):
+            self.write("ONORE AL COMMENDATORE!")
 
-    def do_POST(self):
-        if self.path != '/catarro':
-                self.fora(404,'text/plain','che ti levi di ulo?')
-                return
-        length = int(self.headers['Content-Length'])
-        post_data = urlparse.parse_qs(self.rfile.read(length).decode('utf-8'))
-        print post_data
-        author=  post_data.get("chie",[False])
-        message= post_data.get("msg",[""])
+class sputa(tornado.web.RequestHandler):
+        def get(self):
+            self.write("che ti levi di ulo?")
+
+        def post(self):
+            author=self.get_argument("chie")
+            message= self.get_argument("msg")
         if message:
-            bazza=post_data.get("hasho",["macche"])
+            bazza= author=self.get_argument("hasho")
             cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
             if cecco:
                 if author[0]:
@@ -633,15 +622,21 @@ class accatitipi(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 else:
                     out = message[0]
                 dimme.send(out)
+                self.write("ONORE AL COMMENDATORE!")
             else:
-                self.fora(404,'text/plain','che ti levi di ulo?')
+                 self.write("che ti levi di ulo?")
 
-        self.fora(200,'text/plain','ONORE AL COMMENDATORE?')
+accatitipi = tornado.web.Application([
+                (r"/", onore),
+                (r"/catarro", sputa)
+])
 
 class vedetta(threading.Thread):
        def run(self):
-            server = SocketServer.TCPServer(('127.0.0.1', 50102), accatitipi)
-            server.serve_forever()
+            http_server = tornado.httpserver.HTTPServer(accatitipi)
+            http_server.listen(50102, '127.0.0.1')
+            tornado.ioloop.IOLoop.instance().start()
+
 
 def main():
     import sys
