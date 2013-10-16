@@ -640,8 +640,7 @@ class accatitipi(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 class vedetta(threading.Thread):
        def run(self):
-            Handler = accatitipi
-            server = SocketServer.TCPServer(('127.0.0.1', 50102), Handler)
+            server = SocketServer.TCPServer(('127.0.0.1', 50102), accatitipi)
             server.serve_forever()
 
 def main():
