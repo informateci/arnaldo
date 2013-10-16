@@ -616,11 +616,8 @@ class onore(tornado.web.RequestHandler):
 
 class sputa(tornado.web.RequestHandler):
 
-        def get(self):
-            self.clear()
-            self.set_status(404)
-            self.set_header('Content-Type', 'text/html')
-            self.finish("che ti levi di ulo?")
+        def get)
+            htmella(self,404,'text/html',"che ti levi di ulo?")
 
         def post(self):
             author=self.get_argument("chie")
