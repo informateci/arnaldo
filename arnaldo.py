@@ -607,7 +607,7 @@ class onore(tornado.web.RequestHandler):
 
         def get(self):
             self.clear()
-            self.set_status(404)
+            self.set_status(200)
             self.set_header('Content-Type', 'text/html')
             self.finish("<html><h1>ONORE AL COMMENDATORE!</h1></html>")
 
@@ -633,8 +633,7 @@ class sputa(tornado.web.RequestHandler):
                     else:
                         out = message[0]
                     dimme.send(out)
-                    self.set_status(200)
-                    self.finish("ONORE AL COMMENDATORE!")
+                    self.redirect("/")
                 else:
                      self.finish("che ti levi di ulo?")
 
