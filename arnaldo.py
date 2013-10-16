@@ -613,18 +613,18 @@ class sputa(tornado.web.RequestHandler):
         def post(self):
             author=self.get_argument("chie")
             message= self.get_argument("msg")
-        if message:
-            bazza= author=self.get_argument("hasho")
-            cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
-            if cecco:
-                if author[0]:
-                    out = (author[0],message[0])
+            if message:
+                bazza= author=self.get_argument("hasho")
+                cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
+                if cecco:
+                    if author[0]:
+                        out = (author[0],message[0])
+                    else:
+                        out = message[0]
+                    dimme.send(out)
+                    self.write("ONORE AL COMMENDATORE!")
                 else:
-                    out = message[0]
-                dimme.send(out)
-                self.write("ONORE AL COMMENDATORE!")
-            else:
-                 self.write("che ti levi di ulo?")
+                     self.write("che ti levi di ulo?")
 
 accatitipi = tornado.web.Application([
                 (r"/", onore),
