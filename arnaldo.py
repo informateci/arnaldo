@@ -624,8 +624,8 @@ class sputa(tornado.web.RequestHandler):
             message= self.get_argument("msg")
             if message:
                 bazza= self.get_argument("hasho")
-                print bazza
-                cecco=bcrypt.verify(message+brain.get("httppasswd"), bazza)
+                print "%s,%s,%s"%(chie,msg,bazza)
+                cecco=bcrypt.verify(message+brain.get("httppasswd"), str(bazza))
                 if cecco:
                     if author:
                         out = (author,message)
