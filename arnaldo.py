@@ -35,6 +35,8 @@ import tornado.ioloop
 import tornado.web
 from tornado import httpclient
 
+print "meglio una raspa di una ruspa"
+
 dimme = lasigna('dimmelo')
 
 SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
@@ -166,7 +168,6 @@ def tdecode(bytes):
             text = bytes.decode('cp1252')
     return text
 
-
 def tencode(bytes):
     try:
         text = bytes.encode('utf-8')
@@ -176,8 +177,6 @@ def tencode(bytes):
         except UnicodeEncodeError:
             text = bytes.encode('cp1252')
     return text
-
-
 
 class Brain():
     def __init__(self,brain):
