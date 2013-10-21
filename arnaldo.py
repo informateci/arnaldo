@@ -624,6 +624,7 @@ class sputa(tornado.web.RequestHandler):
             message= self.get_argument("msg")
             if message:
                 bazza= self.get_argument("hasho")
+                print bazza
                 cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
                 if cecco:
                     if author[0]:
@@ -640,7 +641,7 @@ accatitipi = tornado.web.Application([(r"/", onore),(r"/catarro", sputa)])
 class vedetta(threading.Thread):
        def run(self):
             http_server = tornado.httpserver.HTTPServer(accatitipi)
-            http_server.listen(50102, '127.0.0.1')
+            http_server.listen(50102, '0.0.0.0')
             tornado.ioloop.IOLoop.instance().start()
 
 
