@@ -121,12 +121,13 @@ class le_poste(tornado.web.RequestHandler):
                         author=commits[0].get('author',None)
                         message=commits[0].get('message',None)
                         author=author.get('name',None)
-                        print "<%s>: %s"%(author,message)
+                        print "Commit di %s, comment: \"%s\""%(author,message)
                         
             if author!=None and message !=None:
                 f=open("arnaldo.commit",'w')
                 f.write("%s:%s"%(author,message))
                 f.close()
+                rinasci_arnaldo()
                 self.clear()
                 self.set_status(200)
                 self.finish('OK')
