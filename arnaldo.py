@@ -625,12 +625,12 @@ class sputa(tornado.web.RequestHandler):
             if message:
                 bazza= self.get_argument("hasho")
                 print bazza
-                cecco=bcrypt.verify(message[0]+brain.get("httppasswd"), bazza[0])
+                cecco=bcrypt.verify(message+brain.get("httppasswd"), bazza)
                 if cecco:
-                    if author[0]:
-                        out = (author[0],message[0])
+                    if author:
+                        out = (author,message)
                     else:
-                        out = message[0]
+                        out = message
                     dimme.send(out)
                     self.redirect("/")
                 else:
