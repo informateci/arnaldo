@@ -301,7 +301,7 @@ class LineBuffer(object):
 
 class BambaRosaNasaBuffer(LineBuffer): #decoda a naso. VIVA!
     def lines(self):
-        for line in super(DecodingLineBuffer, self).lines():
+        for line in super(BambaRosaNasaBuffer, self).lines():
             for encodi in [('utf-8','strict'),('latin-1','strict'),('utf-8','replace'),('utf-8','ignore')]: #tipo a tentativi ma peggio
                 try:
                     l = line.decode(encodi[0], encodi[1])
