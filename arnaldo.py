@@ -308,7 +308,7 @@ class BambaRosaNasaBuffer(LineBuffer): #decoda a naso. VIVA!
                     break
                 except:
                     l = ""
-        yield l
+            yield l
 
 
 
