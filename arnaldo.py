@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # vim: set fileencoding=utf-8:
-
+from __future__ import unicode_literals
 import irc.bot
 import irc.strings
 from irc.client import ip_numstr_to_quad, ip_quad_to_numstr
@@ -278,11 +278,45 @@ def check_SI(p):
         if p <= check:
             return value
 
+class LineBuffer(object):
+    line_sep_exp = re.compile(b'\r?\n')
+
+    def __init__(self):
+        self.buffer = b''
+
+    def feed(self, bytes):
+        self.buffer += bytes
+
+    def lines(self):
+        lines = self.line_sep_exp.split(self.buffer)
+        # save the last, unfinished, possibly empty line
+        self.buffer = lines.pop()
+        return iter(lines)
+
+    def __iter__(self):
+        return self.lines()
+
+    def __len__(self):
+        return len(self.buffer)
+
+class BambaRosaNasaBuffer(LineBuffer): #decoda a naso. VIVA!
+    def lines(self):
+        for line in super(DecodingLineBuffer, self).lines():
+            for encodi in [('utf-8','strict'),('latin-1','strict'),('utf-8','replace'),('utf-8','ignore')]: #tipo a tentativi ma peggio
+                try:
+                    l = line.decode(encodi[0], encodi[1])
+                    break
+                except:
+                    l = ""
+        yield l
+
+
 
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
 
     def __init__(self, channel, nickname, server, port=6667):
+        irc.client.ServerConnection.buffer_class = BambaRosaNasaBuffer
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
         self.channel = channel
         self.commands = []
