@@ -367,14 +367,14 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         quote.add_quote(e.source.nick, match.groups()[0])
 
     def random_quote(self, e, match):
-        self.reply(e, '#%d: %s' % quote.random_quote())
+        self.reply(e, '#%s: %s' % quote.random_quote())
     
     def search_quote(self, e, match):
         q = quote.search_quote(match.groups()[0])
         if q is None:
             self.reply(e, 'no such quote')
         else:
-            self.reply(e, '#%d: %s' % q)
+            self.reply(e, '#%s: %s' % q)
 
     def proverbia(self, e, match):
         self.reply(e, sproloquio.proverbia())
