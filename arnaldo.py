@@ -584,18 +584,18 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             except:
                 pass 
             thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
-            hashish=brain.get(thaurlhash)
+            hashish=brain.get("quote:%s"%thaurlhash)
             if hashish == None: #NO FUMO NO FUTURE
                 ts=time.time()
                 nic=e.source.nick
-                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,1))
+                brain.set("quote:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
                 self.reply(e, respa['title'])
             else:
                 ts,nic,v=hashish.split(':')
                 ts=float(ts)
                 delta=time.time() -ts
                 v=int(v)+1
-                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,v))
+                brain.set("quote:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,v))
                 manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
                 symb,todo=check_SI(expo*v)
                 dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic.replace('\n',''),datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
