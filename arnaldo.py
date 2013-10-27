@@ -598,7 +598,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,v))
                 manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
                 symb,todo=check_SI(expo*v)
-                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic.replace('\n',''),datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
+                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
                 self.reply(e, dignene)
         except:
             pass
