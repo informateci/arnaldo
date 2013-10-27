@@ -19,7 +19,7 @@ def random_quote():
 
     if q is not None:
         q = eval(q)
-        return q['id'], q['quote']
+        return q['id'], q['quote'].decode('utf8')
     else:
         return None
 
@@ -45,7 +45,7 @@ def search_quote(pattern):
     if r is None:
         return None
     else:
-        return r['id'], r['quote']
+        return r['id'], r['quote'].decode('utf8')
     
 if __name__ == '__main__':
     random_quote()
