@@ -32,10 +32,10 @@ def accendi_il_cervello():
     except:
         sys.exit("Insane in the membrane!!!")
 
-    hs=hashlib.md5(open('SUB-EST2011-01.csv').read()).hexdigest()
+    hs=hashlib.md5(open('dati/SUB-EST2011-01.csv').read()).hexdigest()
     if brain.get("cyfhash") != hs:
         brain.set("cyfhash",hs)
-        cyf = open('SUB-EST2011-01.csv', 'r')
+        cyf = open('dati/SUB-EST2011-01.csv', 'r')
         cy = cyf.read()
         cyf.close()
         print "Rigenero CITTA"
@@ -43,10 +43,10 @@ def accendi_il_cervello():
         for c in [[a.split(',')[1].upper() for a in (cy).split(",,,,")[6:-11]]][0]:
             brain.rpush("CITTA", c) # in CITTA c'e' la lista delle citta' maiuscole
 
-    hs=hashlib.md5(open('nounlist.txt').read()).hexdigest()
+    hs=hashlib.md5(open('dati/nounlist.txt').read()).hexdigest()
     if brain.get("nnfhash") != hs:
         brain.set("nnfhash",hs)
-        nnf = open('nounlist.txt', 'r')
+        nnf = open('dati/nounlist.txt', 'r')
         nn = nnf.read()
         nnf.close()
         print "Rigenero NOMICEN"
@@ -54,10 +54,10 @@ def accendi_il_cervello():
         for n in nn.split('\n'):
             brain.rpush("NOMICEN", n.upper()) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    hs=hashlib.md5(open('attardi.txt').read()).hexdigest()
+    hs=hashlib.md5(open('dati/attardi.txt').read()).hexdigest()
     if brain.get("attaffhash") != hs:
         brain.set("attaffhash",hs)
-        attaf = open('attardi.txt', 'r')
+        attaf = open('dati/attardi.txt', 'r')
         atta = attaf.readlines()
         attaf.close()
         print "Rigenero ATTARDI"
@@ -65,10 +65,10 @@ def accendi_il_cervello():
         for a in [x.capitalize()[:-1] for x in atta]:
             brain.rpush("ATTARDI", a) # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    hs=hashlib.md5(open('prov1.pkl').read()).hexdigest()
+    hs=hashlib.md5(open('dati/prov1.pkl').read()).hexdigest()
     if brain.get("prov1fhash") != hs:
         brain.set("prov1fhash",hs)
-        pkl_file = open('prov1.pkl', 'rb')
+        pkl_file = open('dati/prov1.pkl', 'rb')
         PROV1 = pickle.load(pkl_file)
         pkl_file.close()
         print "Rigenero PROV1"
@@ -77,10 +77,10 @@ def accendi_il_cervello():
             brain.rpush("PROV1"," ".join(p1))
         del(PROV1)
 
-    hs=hashlib.md5(open('prov2.pkl').read()).hexdigest()
+    hs=hashlib.md5(open('dati/prov2.pkl').read()).hexdigest()
     if brain.get("prov2fhash") != hs:
         brain.set("prov2fhash",hs)
-        pkl_file = open('prov2.pkl', 'rb')
+        pkl_file = open('dati/prov2.pkl', 'rb')
         PROV2 = pickle.load(pkl_file)
         pkl_file.close()
         print "Rigenero PROV2"
@@ -89,10 +89,10 @@ def accendi_il_cervello():
             brain.rpush("PROV2"," ".join(p2))
         del(PROV2)
 
-    hs=hashlib.md5(open('passvord.txt').read()).hexdigest()
+    hs=hashlib.md5(open('dati/passvord.txt').read()).hexdigest()
     if brain.get("passvordfhash") != hs:
         brain.set("prov2fhash",hs)
-        passf=open('passvord.txt','r')
+        passf=open('dati/passvord.txt','r')
         brain.set("httppasswd",passf.readline()[:-1])
         passf.close()
 
