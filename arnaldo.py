@@ -56,7 +56,7 @@ URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,
 
 def pritaicsa(text):
     icsa=""
-    for row in range(brain.get("asciitable:rows")):
+    for row in range(int(brain.get("asciitable:rows"))):
         for c in text:
             icsa=str(icsa)+str(brain.lindex("asciitable:%s"%c,row))
         icsa=icsa+'\n'
