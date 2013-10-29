@@ -269,14 +269,14 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         quote.add_quote(e.source.nick, match.groups()[0])
 
     def random_quote(self, e, match):
-        self.reply(e, '#%d: %s' % quote.random_quote())
+        self.reply(e, '#%s: %s' % quote.random_quote())
     
     def search_quote(self, e, match):
         q = quote.search_quote(match.groups()[0])
         if q is None:
             self.reply(e, 'no such quote')
         else:
-            self.reply(e, '#%d: %s' % q)
+            self.reply(e, '#%s: %s' % q)
 
     def proverbia(self, e, match):
         self.reply(e, sproloquio.proverbia())
@@ -479,21 +479,21 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             except:
                 pass 
             thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
-            hashish=brain.get(thaurlhash)
+            hashish=brain.get("urlo:%s"%thaurlhash)
             if hashish == None: #NO FUMO NO FUTURE
                 ts=time.time()
                 nic=e.source.nick
-                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,1))
+                brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
                 self.reply(e, respa['title'])
             else:
                 ts,nic,v=hashish.split(':')
                 ts=float(ts)
                 delta=time.time() -ts
                 v=int(v)+1
-                brain.set(thaurlhash,"%f:%s:%d"%(ts,nic,v))
+                brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,v))
                 manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
                 symb,todo=check_SI(expo*v)
-                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic.replace('\n',''),datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
+                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
                 self.reply(e, dignene)
         except:
             pass
