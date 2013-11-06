@@ -48,9 +48,9 @@ try:
             def set(self, a, b):
                 self.suca[a] = b
             def get(self, a):
-                return self.suca[a]
+                return self.suca.get(a,None)
             def llen(self, a):
-                return 0
+                return len(self.suca)
 
         brain = suca()
 except:
