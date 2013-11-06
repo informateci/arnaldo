@@ -38,6 +38,21 @@ SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
 
 try:
     brain = redis.Redis("localhost")
+    try:
+        brain.set('vaffanculo', 'uno')
+    except redis.exceptions.ConnectionError:
+        # L'HAI VOLUTO IL DUCK TYPING?
+        class suca:
+            def __init__(self):
+                self.suca = {}
+            def set(self, a, b):
+                self.suca[a] = b
+            def get(self, a):
+                return self.suca[a]
+            def llen(self, a):
+                return 0
+
+        brain = suca()
 except:
     sys.exit("Insane in the membrane!!!")
 
@@ -64,8 +79,11 @@ class Brain():
         self.b=brain
 
     def choicefromlist(self,name):
-        i=random.randint(0,self.b.llen(name)-1)
-        return self.b.lindex(name, i)
+        try:
+            i=random.randint(0,self.b.llen(name)-1)
+            return self.b.lindex(name, i)
+        except:
+            return 'NISBA'
 
     def getCitta(self):
         return self.choicefromlist("CITTA")
