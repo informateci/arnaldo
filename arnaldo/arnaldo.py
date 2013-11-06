@@ -50,7 +50,16 @@ try:
             def get(self, a):
                 return self.suca.get(a,None)
             def llen(self, a):
-                return len(self.suca)
+                return len(self.suca[a])
+            def lindex(self, a, i):
+                return len(self.suca[a][i])
+            def rpush(self,a, v):
+                self.suca[a] = self.suca.get(a,[])
+                self.suca[a].append(v)
+                return len(self.suca[a]) -1
+            def delete(self,a):
+                if self.suca.has_key(a):
+                    del self.suca[a]
 
         brain = suca()
 except:
