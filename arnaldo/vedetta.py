@@ -7,7 +7,7 @@ import tornado.web
 
 import threading
 
-import .lasigna
+from arnaldo import lasigna
 
 def htmella(s,code,content,msg):
     s.clear()
@@ -45,7 +45,7 @@ class sputa(tornado.web.RequestHandler):
                 else:
                      htmella(self,404,'text/html',"che ti levi di ulo?")
 
-class vedetta(threading.Thread):
+class Vedetta(threading.Thread):
     def run(self):
         accatitipi = tornado.web.Application([(r"/", onore),(r"/catarro", sputa)])
         http_server = tornado.httpserver.HTTPServer(accatitipi)

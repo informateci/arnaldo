@@ -26,9 +26,9 @@ import hashlib
 from blinker import signal as lasigna
 import datetime
 
-from arnaldo.utieffa import *
-from arnaldo.vedetta import Vedetta
-from arnaldo import quote
+from utieffa import *
+from vedetta import Vedetta
+import quote
 
 print "meglio una raspa di una ruspa"
 
