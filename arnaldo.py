@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 # vim: set fileencoding=utf-8:
+
 from __future__ import unicode_literals
 import irc.bot
 import irc.strings
@@ -20,23 +21,14 @@ import sys
 import os.path
 import os
 import time
-import quote
 import redis
 import hashlib
 from blinker import signal as lasigna
 import datetime
-import SimpleHTTPServer
-import SocketServer
-import threading
-import urlparse
-from passlib.hash import bcrypt
-import tornado.httpserver
-import tornado.ioloop
-import tornado.web
-from tornado import httpclient
-
 
 from arnaldo.utieffa import *
+from arnaldo.vedetta import Vedetta
+from arnaldo import quote
 
 print "meglio una raspa di una ruspa"
 
@@ -482,49 +474,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
 
 
-def htmella(s,code,content,msg):
-            s.clear()
-            s.set_status(code)
-            s.set_header('Content-Type', content)
-            s.finish(msg)
-
-
-class onore(tornado.web.RequestHandler):
-
-        def get(self):
-            htmella(self,200,'text/html',"<html><h1>ONORE AL COMMENDATORE!</h1></html>")
-
-class sputa(tornado.web.RequestHandler):
-
-        def get(self):
-            htmella(self,404,'text/html',"che ti levi di ulo?")
-
-        def post(self):
-            author=self.get_argument("chie")
-            message= self.get_argument("msg")
-            if message:
-                bazza= self.get_argument("hasho")
-                print "%s,%s,%s"%(author,message,bazza)
-                cecco=bcrypt.verify(message+brain.get("httppasswd"), str(bazza))
-                if cecco:
-                    if author:
-                        out = (author,message)
-                    else:
-                        out = message
-                    dimme.send(out)
-                    self.redirect("/")
-                else:
-                     htmella(self,404,'text/html',"che ti levi di ulo?")
-
-accatitipi = tornado.web.Application([(r"/", onore),(r"/catarro", sputa)])
-
-class vedetta(threading.Thread):
-       def run(self):
-            http_server = tornado.httpserver.HTTPServer(accatitipi)
-            http_server.listen(50102, '0.0.0.0')
-            tornado.ioloop.IOLoop.instance().start()
-
-
 def main():
     import sys
     if len(sys.argv) != 4:
@@ -544,7 +493,7 @@ def main():
     channel = sys.argv[2]
     nickname = sys.argv[3]
 
-    T800 = vedetta()
+    T800 = Vedetta()
     T800.start() #I'm a friend of Sarah Connor. I was told she was here. Could I see her please?
 
     bot = Arnaldo(channel, nickname, server, port)
