@@ -28,6 +28,8 @@ import datetime
 
 from utieffa import *
 from vedetta import Vedetta
+
+import brain
 import quote
 
 print "meglio una raspa di una ruspa"
@@ -35,36 +37,6 @@ print "meglio una raspa di una ruspa"
 dimme = lasigna('dimmelo')
 
 SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
-
-try:
-    brain = redis.Redis("localhost")
-    try:
-        brain.set('vaffanculo', 'uno')
-    except redis.exceptions.ConnectionError:
-        # L'HAI VOLUTO IL DUCK TYPING?
-        class suca:
-            def __init__(self):
-                self.suca = {}
-            def set(self, a, b):
-                self.suca[a] = b
-            def get(self, a):
-                return self.suca.get(a,None)
-            def llen(self, a):
-                return len(self.suca[a])
-            def lindex(self, a, i):
-                return len(self.suca[a][i])
-            def rpush(self,a, v):
-                self.suca[a] = self.suca.get(a,[])
-                self.suca[a].append(v)
-                return len(self.suca[a]) -1
-            def delete(self,a):
-                if self.suca.has_key(a):
-                    del self.suca[a]
-
-        brain = suca()
-except:
-    sys.exit("Insane in the membrane!!!")
-
 MULTILINE_TOUT = 0.5
 
 traceback_template = '''Tracefazza (most recent call last):
@@ -75,74 +47,30 @@ URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,
 
 def pritaicsa(text):
     icsa=""
-    for row in range(int(brain.get("asciitable:rows"))):
+    for row in range(int(brain.brain.get("asciitable:rows"))):
         for c in text:
-            icsa=str(icsa)+str(brain.lindex("asciitable:%s"%c,row))
+            icsa=str(icsa)+str(brain.brain.lindex("asciitable:%s"%c,row))
         icsa=icsa+'\n'
     icsa=icsa+'\n'
     return icsa
 
-
-class Brain():
-    def __init__(self,brain):
-        self.b=brain
-
-    def choicefromlist(self,name):
-        try:
-            i=random.randint(0,self.b.llen(name)-1)
-            return self.b.lindex(name, i)
-        except:
-            return 'NISBA'
-
-    def getCitta(self):
-        return self.choicefromlist("CITTA")
-
-    def getNomecen(self):
-        return self.choicefromlist("NOMICEN")
-
-    def getAttardi(self):
-        return self.choicefromlist("ATTARDI")
-
-    def getProverbiUno(self):
-        return self.choicefromlist("PROV1")
-
-    def getProverbiDue(self):
-        return self.choicefromlist("PROV2")
-
-    def getProverbioandid(self):
-        i1=random.randint(0,self.b.llen("PROV1")-1)
-        i2=random.randint(0,self.b.llen("PROV2")-2)
-        if i2 >= i1:
-            i2 += 1
-        p=u"%s %s"%(self.b.lindex("PROV1", i1).decode('utf8'),self.b.lindex("PROV2", i2).decode('utf8'))
-        return (p, "%dP%d"%(i1,i2))
-
-    def getProverbiobyid(self,idp):
-        try:
-            p=idp.split('P')
-            return u"%s %s"%(self.b.lindex("PROV1", int(p[0])).decode('utf8'),self.b.lindex("PROV2", int(p[1])).decode('utf8'))
-        except:
-                return "macche'"
-
 class Sproloquio():
-    def __init__(self):
-        self.brain = Brain(brain)
 
     def attardati(self):
-        return u"Stefano %s Attardi" % self.brain.getAttardi().decode('utf8')
+        return u"Stefano %s Attardi" % brain.getAttardi().decode('utf8')
 
     def ANAL(self):
-        return u"%s ANAL %s" % (self.brain.getCitta().decode('utf8'), self.brain.getNomecen().decode('utf8'))
+        return u"%s ANAL %s" % (brain.getCitta().decode('utf8'), brain.getNomecen().decode('utf8'))
 
     def proverbia(self):
-        #return u"%s %s" % (self.brain.getProverbiUno().decode('utf8'), self.brain.getProverbiDue().decode('utf8'))
+        #return u"%s %s" % (brain.getProverbiUno().decode('utf8'), brain.getProverbiDue().decode('utf8'))
         return self.proverbiaandid()[0]
 
     def proverbiaandid(self):
-        return self.brain.getProverbioandid()
+        return brain.getProverbioandid()
 
     def proverbiabyid(self,idp):
-        return self.brain.getProverbiobyid(idp)
+        return brain.getProverbiobyid(idp)
 
     def beuta(self):
         cocktail_id = random.randint(1, 4750)
@@ -193,8 +121,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
         self.channel = channel
         self.commands = []
-
-        self.brain = Brain(brain)
 
         self.parliamo_summary = None
         self.BAM = None
@@ -325,7 +251,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(target, m)
 
 
-
     def icsah(self,e,match):
         try:
             ggallin=None;
@@ -345,7 +270,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.reply(e,icsa)
 
     def anal(self, e, match):
-        self.reply(e, "%s ANAL %s"%(self.brain.getCitta(),self.brain.getNomecen()))
+        self.reply(e, "%s ANAL %s"%(brain.getCitta(),brain.getNomecen()))
 
     def allivello(self, e, match):
         self.reply(e, self.parliamo())
@@ -361,7 +286,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             except:
                 pass
             if ggallin:
-                ts=brain.get(ggallin)
+                ts=brain.brain.get(ggallin)
                 if ts:
                     response = "chiaro il %s" % datetime.datetime.fromtimestamp(float(ts)).strftime('%d/%m/%y %H:%M:%S')
                 else:
@@ -450,18 +375,18 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             except:
                 pass 
             thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
-            hashish=brain.get("urlo:%s"%thaurlhash)
+            hashish=brain.brain.get("urlo:%s"%thaurlhash)
             if hashish == None: #NO FUMO NO FUTURE
                 ts=time.time()
                 nic=e.source.nick
-                brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
+                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
                 self.reply(e, respa['title'])
             else:
                 ts,nic,v=hashish.split(':')
                 ts=float(ts)
                 delta=time.time() -ts
                 v=int(v)+1
-                brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,v))
+                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,v))
                 manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
                 symb,todo=check_SI(expo*v)
                 dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
