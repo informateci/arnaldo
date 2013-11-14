@@ -2,29 +2,28 @@
 # vim: set fileencoding=utf-8:
 
 from __future__ import unicode_literals
+from BeautifulSoup import BeautifulSoup
+from blinker import signal as lasigna
+
 import irc.bot
 import irc.strings
-from irc.client import ip_numstr_to_quad, ip_quad_to_numstr
-import cStringIO
-from random import choice, randint
 import json
 import re
 import urllib
 import urllib2
 import time
-import sys, traceback
+import sys
+import traceback
 import bleach
-from BeautifulSoup import BeautifulSoup
 import random
 import signal
-import sys
 import os.path
 import os
 import time
-import redis
 import hashlib
-from blinker import signal as lasigna
 import datetime
+
+##
 
 from utieffa import *
 from vedetta import Vedetta
@@ -38,10 +37,6 @@ dimme = lasigna('dimmelo')
 
 SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
 MULTILINE_TOUT = 0.5
-
-traceback_template = '''Tracefazza (most recent call last):
-    File "%(filename)s", line %(lineno)s, in %(name)s
-    %(type)s: %(message)s\n'''
 
 URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
@@ -98,7 +93,7 @@ class Sproloquio():
         response = urllib2.urlopen(urlo % random.randint(1, 50)).read()
         soup = BeautifulSoup(response)
         l = soup.findAll("div", {"class": "post"})
-        i = choice(l)
+        i = random.choice(l)
         return "http://i.imgur.com/%s.jpg" % i.get("id")
 
 sproloquio = Sproloquio()
@@ -427,7 +422,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
 
 def main():
-    import sys
     if len(sys.argv) != 4:
         print "Usage: arnaldo <server[:port]> <channel> <nickname>"
         sys.exit(1)
