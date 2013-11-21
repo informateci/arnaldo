@@ -7,19 +7,20 @@ from blinker import signal as lasigna
 
 import irc.bot
 import irc.strings
-import json
+
+import os
+import os.path
+import sys
 import re
+import time
+import json
+
 import urllib
 import urllib2
-import time
-import sys
 import traceback
 import bleach
 import random
 import signal
-import os.path
-import os
-import time
 import hashlib
 import datetime
 
@@ -34,9 +35,6 @@ import quote
 print "meglio una raspa di una ruspa"
 
 dimme = lasigna('dimmelo')
-
-SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
-MULTILINE_TOUT = 0.5
 
 URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
@@ -233,6 +231,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.reply(e, sproloquio.boobs())
 
     def reply(self, e, m):
+        MULTILINE_TOUT = 0.5
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
         if '\n' in m:
             ll=m.split('\n')
@@ -377,6 +376,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
                 self.reply(e, respa['title'])
             else:
+                SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
                 ts,nic,v=hashish.split(':')
                 ts=float(ts)
                 delta=time.time() -ts
