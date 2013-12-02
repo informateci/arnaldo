@@ -403,7 +403,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
     def markoviami(self, e, match):
       request = "?"
       ids = match.groups()[0].strip().split()
-      print ids
+      #print ids
       if (len(ids) > 0):
         for id in ids:
           request = request + "tweetid=" + id.strip() + "&"
