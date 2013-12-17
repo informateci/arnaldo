@@ -279,9 +279,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         respa = json.loads(data.read()) #meglio una raspa d'una ruspa
         return respa
 
-#    def beuta(self, e, match):
-#        self.reply(e, '\n'.join(sproloquio.beuta()))
-
     def parliamo(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
         wikipedia_url += str(time.time())
