@@ -1,3 +1,5 @@
+# vim: set fileencoding=utf-8:
+
 from arnaldo.modules import Arnaldigno, comanda
 import arnaldo.brain
 

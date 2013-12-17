@@ -34,6 +34,7 @@ import quote
 ##
 
 from modules.sproloquio import Sproloquio
+from modules.parliamo import Parliamo
 
 print "meglio una raspa di una ruspa"
 
@@ -69,14 +70,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.channel = channel
         self.commands = []
 
-        self.parliamo_summary = None
         self.BAM = None
 
-        self.register_command('e allora\\?$', self.eallora)
-        self.register_command('^allivello\\?', self.allivello)
-        self.register_command('parliamo di', self.allivello)
-        self.register_command('parliamone', self.checcazzo)
-        self.register_command('anche no', self.ancheno)
         self.register_command('^facci (.+)', self.accollo)
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^arnaldo hai visto (.+)\\?', self.chilhavisto)
@@ -95,6 +90,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
         self.modules = []
         self.modules.append(Sproloquio(self))
+        self.modules.append(Parliamo(self))
 
     def dimmeame(self,msg):
         conn= self.connection
