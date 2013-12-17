@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 # vim: set fileencoding=utf-8:
 
 from __future__ import unicode_literals
@@ -32,6 +31,10 @@ from vedetta import Vedetta
 import brain
 import quote
 
+##
+
+from modules.sproloquio import Sproloquio
+
 print "meglio una raspa di una ruspa"
 
 dimme = lasigna('dimmelo')
@@ -46,55 +49,6 @@ def pritaicsa(text):
         icsa=icsa+'\n'
     icsa=icsa+'\n'
     return icsa
-
-class Sproloquio():
-
-    def attardati(self):
-        return u"Stefano %s Attardi" % brain.getAttardi().decode('utf8')
-
-    def ANAL(self):
-        return u"%s ANAL %s" % (brain.getCitta().decode('utf8'), brain.getNomecen().decode('utf8'))
-
-    def proverbia(self):
-        #return u"%s %s" % (brain.getProverbiUno().decode('utf8'), brain.getProverbiDue().decode('utf8'))
-        return self.proverbiaandid()[0]
-
-    def proverbiaandid(self):
-        return brain.getProverbioandid()
-
-    def proverbiabyid(self,idp):
-        return brain.getProverbiobyid(idp)
-
-    def beuta(self):
-        cocktail_id = random.randint(1, 4750)
-        data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d" % cocktail_id)
-        soup = BeautifulSoup(data.read())
-        directions = soup.findAll("div", { "class" : "recipeDirection" })
-        measures = soup.findAll("div", { "class" : "recipeMeasure" })
-
-        ret = []
-        ret += [u"== %s ==\n" % (soup.find("h2").text)]
-
-        for m in measures:
-            ret += [u' '.join([x.strip() for x in m.findAll(text=True)])]
-
-        ret += [u'']
-
-        for d in directions:
-            ret += [u' '.join([x.strip() for x in d.findAll(text=True)])]
-
-        ret += [u'enjoy']
-        return ret
-
-    def boobs(self):
-        urlo = "http://imgur.com/r/boobies/new/day/page/%d/hit?scrolled"
-        response = urllib2.urlopen(urlo % random.randint(1, 50)).read()
-        soup = BeautifulSoup(response)
-        l = soup.findAll("div", {"class": "post"})
-        i = random.choice(l)
-        return "http://i.imgur.com/%s.jpg" % i.get("id")
-
-sproloquio = Sproloquio()
 
 
 def check_SI(p):
@@ -118,23 +72,18 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.parliamo_summary = None
         self.BAM = None
 
-        self.register_command('ANAL', self.anal)
         self.register_command('e allora\\?$', self.eallora)
         self.register_command('^allivello\\?', self.allivello)
         self.register_command('parliamo di', self.allivello)
         self.register_command('parliamone', self.checcazzo)
         self.register_command('anche no', self.ancheno)
-        self.register_command('beuta', self.beuta)
         self.register_command('^facci (.+)', self.accollo)
-        self.register_command('boobs please', self.boobs)
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^arnaldo hai visto (.+)\\?', self.chilhavisto)
 
 
         self.contabrazze = {}
         self.register_command('^brazzami (.+)', self.brazzafazza)
-        self.register_command('proverbia', self.proverbia)
-        self.register_command('attardati', self.attardati)
         self.register_command('^markoviami(.*)', self.markoviami)
 
         self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
@@ -142,7 +91,10 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
         
         self.register_command('^bamba$', self.rosa)
-        dimme.connect(self.dimmeame)        
+        dimme.connect(self.dimmeame)
+
+        self.modules = []
+        self.modules.append(Sproloquio(self))
 
     def dimmeame(self,msg):
         conn= self.connection
@@ -152,8 +104,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         else:
            conn.privmsg(self.channel, '* %s' % msg)
 
-    def attardati(self, e, match):
-        self.reply(e, sproloquio.attardati())
 
     def add_quote(self, e, match):
         quote.add_quote(e.source.nick, match.groups()[0])
@@ -167,9 +117,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.reply(e, 'no such quote')
         else:
             self.reply(e, '#%s: %s' % q)
-
-    def proverbia(self, e, match):
-        self.reply(e, sproloquio.proverbia())
 
     def on_muori(self,a,b):
         msg=None
@@ -227,9 +174,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
         self.oembed_link(e)
     
-    def boobs(self, e, match):
-        self.reply(e, sproloquio.boobs())
-
     def reply(self, e, m):
         MULTILINE_TOUT = 0.5
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
@@ -263,8 +207,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         icsa=ritaicsa("rosa")
         self.reply(e,icsa)
 
-    def anal(self, e, match):
-        self.reply(e, "%s ANAL %s"%(brain.getCitta(),brain.getNomecen()))
 
     def allivello(self, e, match):
         self.reply(e, self.parliamo())
@@ -337,8 +279,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         respa = json.loads(data.read()) #meglio una raspa d'una ruspa
         return respa
 
-    def beuta(self, e, match):
-        self.reply(e, '\n'.join(sproloquio.beuta()))
+#    def beuta(self, e, match):
+#        self.reply(e, '\n'.join(sproloquio.beuta()))
 
     def parliamo(self):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
