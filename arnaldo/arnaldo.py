@@ -37,20 +37,13 @@ from modules.sproloquio import Sproloquio
 from modules.parliamo import Parliamo
 from modules.quotatore import Quotatore
 from modules.accolli import Accolli
+from modules.icsah import Icsah
 
 print "meglio una raspa di una ruspa"
 
 dimme = lasigna('dimmelo')
 
 URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
-def pritaicsa(text):
-    icsa=""
-    for row in range(int(brain.brain.get("asciitable:rows"))):
-        for c in text:
-            icsa=str(icsa)+str(brain.brain.lindex("asciitable:%s"%c,row))
-        icsa=icsa+'\n'
-    icsa=icsa+'\n'
-    return icsa
 
 def check_SI(p):
     mapping = [(-24,('y','yocto')),(-21,('z','zepto')),(-18,('a','atto')),(-15,('f','femto')),(-12,('p','pico')),
@@ -72,10 +65,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
         self.BAM = None
 
-        self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^arnaldo hai visto (.+)\\?', self.chilhavisto)
 
-        self.register_command('^bamba$', self.rosa)
         dimme.connect(self.dimmeame)
 
         self.modules = []
@@ -83,6 +74,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(Parliamo(self))
         self.modules.append(Quotatore(self))
         self.modules.append(Accolli(self))
+        self.modules.append(Icsah(self))
 
     def dimmeame(self,msg):
         conn= self.connection
@@ -162,24 +154,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         else:
             self.connection.privmsg(target, m)
 
-
-    def icsah(self,e,match):
-        try:
-            ggallin=None;
-            try:
-                ggallin=match.groups()[0]
-            except:
-                pass
-
-            if ggallin:
-                icsa= pritaicsa(ggallin)
-                self.reply(e,icsa)
-        except:
-            pass
-
-    def rosa(self, e, match):
-        icsa=ritaicsa("rosa")
-        self.reply(e,icsa)
 
     def chilhavisto(self, e, match):
         try:
