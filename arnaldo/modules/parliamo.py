@@ -8,8 +8,8 @@ import urllib2
 import random
 
 class Parliamo(Arnaldigno):
-    def __init__(self):
-        super(Sproloquio, self).__init__()
+    def __init__(self, *args):
+        super(Parliamo, self).__init__(*args)
         self.parliamo_summary = None
 
     @comanda('e allora\\?$')
