@@ -35,6 +35,7 @@ import quote
 
 from modules.sproloquio import Sproloquio
 from modules.parliamo import Parliamo
+from modules.quotatore import Quotatore
 
 print "meglio una raspa di una ruspa"
 
@@ -81,9 +82,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.register_command('^brazzami (.+)', self.brazzafazza)
         self.register_command('^markoviami(.*)', self.markoviami)
 
-        self.register_command('^%s[:, \\t]*addquote (.*)' % nickname, self.add_quote)
-        self.register_command('^%s[:, \\t]*quote$' % nickname, self.random_quote)
-        self.register_command('^%s[:, \\t]*quote (.*)$' % nickname, self.search_quote)
         
         self.register_command('^bamba$', self.rosa)
         dimme.connect(self.dimmeame)
@@ -91,6 +89,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules = []
         self.modules.append(Sproloquio(self))
         self.modules.append(Parliamo(self))
+        self.modules.append(Quotatore(self))
 
     def dimmeame(self,msg):
         conn= self.connection
@@ -99,20 +98,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
            conn.privmsg(self.channel, '<%s>: %s' % msg)
         else:
            conn.privmsg(self.channel, '* %s' % msg)
-
-
-    def add_quote(self, e, match):
-        quote.add_quote(e.source.nick, match.groups()[0])
-
-    def random_quote(self, e, match):
-        self.reply(e, '#%s: %s' % quote.random_quote())
-    
-    def search_quote(self, e, match):
-        q = quote.search_quote(match.groups()[0])
-        if q is None:
-            self.reply(e, 'no such quote')
-        else:
-            self.reply(e, '#%s: %s' % q)
 
     def on_muori(self,a,b):
         msg=None

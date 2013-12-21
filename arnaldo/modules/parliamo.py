@@ -1,7 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-import arnaldo.brain
 
 from BeautifulSoup import BeautifulSoup
 import urllib2
