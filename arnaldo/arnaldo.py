@@ -203,13 +203,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         icsa=ritaicsa("rosa")
         self.reply(e,icsa)
 
-
-    def allivello(self, e, match):
-        self.reply(e, self.parliamo())
-
-    def eallora(self, e, match):
-        self.reply(e, "e allora le foibe?")
-
     def chilhavisto(self, e, match):
         try:
             ggallin=None;
@@ -348,13 +341,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                     self.BAM = t
             except:
                 self.BAM = t
-
-
-    def ancheno(self, e, match):
-        if self.parliamo_summary:
-            self.reply(e, u'ಥ_ಥ  ockay')
-            self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
-
 
 def main():
     if len(sys.argv) != 4:
