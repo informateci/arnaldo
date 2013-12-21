@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 from BeautifulSoup import BeautifulSoup
 from blinker import signal as lasigna
-
 import irc.bot
 import irc.strings
 
@@ -38,6 +37,7 @@ from modules.parliamo import Parliamo
 from modules.quotatore import Quotatore
 from modules.accolli import Accolli
 from modules.icsah import Icsah
+from modules.bam import BAM
 
 print "meglio una raspa di una ruspa"
 
@@ -63,10 +63,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.channel = channel
         self.commands = []
 
-        self.BAM = None
-
-        self.register_command('^arnaldo hai visto (.+)\\?', self.chilhavisto)
-
         dimme.connect(self.dimmeame)
 
         self.modules = []
@@ -75,6 +71,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(Quotatore(self))
         self.modules.append(Accolli(self))
         self.modules.append(Icsah(self))
+        self.modules.append(BAM(self))
 
     def dimmeame(self,msg):
         conn= self.connection
@@ -120,14 +117,12 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.commands.append((re.compile(regexp), handler))
 
     def do_command(self, e):
-        notmatch=True
         for r, callback in self.commands:
             match = r.search(e.arguments[0])
             if match:
                 try:
-                    callback(e, match)
-                    notmatch=False
-                    return True
+                    if not callback(e, match):
+                        return True
                 except Exception as ex:
                     excfazza="Error in"
                     for frame in traceback.extract_tb(sys.exc_info()[2]):
@@ -135,8 +130,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                         excfazza=excfazza+ "%s on line %d; " % (fname, lineno)
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
-        if notmatch:
-            self.BAMBAM(e)
 
         self.oembed_link(e)
     
@@ -154,23 +147,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         else:
             self.connection.privmsg(target, m)
 
-
-    def chilhavisto(self, e, match):
-        try:
-            ggallin=None;
-            try:
-                ggallin=match.groups()[0]
-            except:
-                pass
-            if ggallin:
-                ts=brain.brain.get(ggallin)
-                if ts:
-                    response = "chiaro il %s" % datetime.datetime.fromtimestamp(float(ts)).strftime('%d/%m/%y %H:%M:%S')
-                else:
-                    response = "macche'"
-                self.reply(e, response)
-        except:
-            pass
 
     def request_oembed(self, url):
         query = urllib.urlencode((('url', url),))
@@ -210,32 +186,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
         except:
             pass
-
-    def BAMBAM(self, e):
-        brain.set(e.source.nick, time.time())
-        t = e.arguments[0]
-        if self.BAM == t:
-            self.reply(e, self.BAM)
-            self.BAM = None
-        else:
-            try:
-                if self.BAM.lower() == self.BAM and \
-                        self.BAM.upper() == t:
-                    marks = re.compile("([!?.;:]+)$")
-                    m = marks.search(t)
-                    if m:
-                        m = m.groups()[0]
-                        t = marks.sub('', t)
-                    else:
-                        m = ''
-                    t = re.sub('i?[aeiou]$', '', t, flags=re.IGNORECASE)
-                    self.reply(e, "%sISSIMO%s" % (t, m))
-                    self.BAM = None
-                else:
-                    self.BAM = t
-            except:
-                self.BAM = t
-
 def main():
     if len(sys.argv) != 4:
         print "Usage: arnaldo <server[:port]> <channel> <nickname>"
