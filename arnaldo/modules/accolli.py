@@ -5,7 +5,7 @@ import arnaldo.brain
 
 #
 
-from collectionns import defaultdict
+from collections import defaultdict
 import urllib2
 import datetime
 
@@ -56,7 +56,7 @@ class Accolli(Arnaldigno):
         session = "agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
         para = (("statement", ggallin), ("session", session))
         para = urllib.urlencode(para)
-        response = urllib2.urlopen(urlo+"?&"+).read()
+        response = urllib2.urlopen(urlo+"?&"+para).read()
 
         self.reply(e,response)
 

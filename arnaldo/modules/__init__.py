@@ -13,7 +13,7 @@ class Arnaldigno(object):
 
             if regexp:
                 if '%s' in regexp:
-                    regexp = regexp % (self.arnaldo.nick,)
+                    regexp = regexp % (self.arnaldo.nickname,)
 
                 self.arnaldo.register_command(regexp, thing)
 

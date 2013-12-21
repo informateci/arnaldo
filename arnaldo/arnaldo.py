@@ -28,7 +28,6 @@ from utieffa import *
 from vedetta import Vedetta
 
 import brain
-import quote
 
 ##
 
@@ -60,6 +59,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
     def __init__(self, channel, nickname, server, port=6667):
         irc.client.ServerConnection.buffer_class = BambaRosaNasaBuffer
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
+        self.nickname = nickname
         self.channel = channel
         self.commands = []
 
