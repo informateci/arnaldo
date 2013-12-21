@@ -39,13 +39,9 @@ from modules.icsah import Icsah
 from modules.bam import BAM
 from modules.linkini import Linkini
 
-print "meglio una raspa di una ruspa"
-
 dimme = lasigna('dimmelo')
 
-
 class Arnaldo(irc.bot.SingleServerIRCBot):
-
     def __init__(self, channel, nickname, server, port=6667):
         irc.client.ServerConnection.buffer_class = BambaRosaNasaBuffer
         irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
@@ -140,6 +136,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
 
 def main():
+    print "meglio una raspa di una ruspa"
+
     if len(sys.argv) != 4:
         print "Usage: arnaldo <server[:port]> <channel> <nickname>"
         sys.exit(1)
@@ -154,6 +152,7 @@ def main():
             sys.exit(1)
     else:
         port = 6667
+
     channel = sys.argv[2]
     nickname = sys.argv[3]
 

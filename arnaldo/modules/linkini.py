@@ -8,6 +8,7 @@ import arnaldo.brain
 from collections import defaultdict
 import urllib2
 import datetime
+import re
 
 #
 
@@ -44,10 +45,6 @@ def request_oembed(self, url):
     return respa
 
 class Linkini(Arnaldigno):
-    def __init__(self, *args):
-        super(Accolli, self).__init__(*args)
-        self.contabrazze = defaultdict(list)
-
     @comanda('.')
     def oembeddalo(self, e, match):
         allurls = URL_RE.findall(e.arguments[0])
