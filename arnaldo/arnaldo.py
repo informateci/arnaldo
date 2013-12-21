@@ -37,22 +37,12 @@ from modules.quotatore import Quotatore
 from modules.accolli import Accolli
 from modules.icsah import Icsah
 from modules.bam import BAM
+from modules.linkini import Linkini
 
 print "meglio una raspa di una ruspa"
 
 dimme = lasigna('dimmelo')
 
-URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
-
-def check_SI(p):
-    mapping = [(-24,('y','yocto')),(-21,('z','zepto')),(-18,('a','atto')),(-15,('f','femto')),(-12,('p','pico')),
-               (-9, ('n','nano')),(-6, ('u','micro')),(-3, ('m','mili')),(-2, ('c','centi')),(-1, ('d','deci')),
-               (3,  ('k','kilo')),(6,  ('M','mega')),(9,  ('G','giga')),(12, ('T','tera')),(15, ('P','peta')),
-               (18, ('E','exa')),(21, ('Z','zetta')),(24, ('Y','yotta'))]
-
-    for check, value in mapping:
-        if p <= check:
-            return value
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
 
@@ -72,6 +62,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(Accolli(self))
         self.modules.append(Icsah(self))
         self.modules.append(BAM(self))
+        self.modules.append(Linkini(self))
 
     def dimmeame(self,msg):
         conn= self.connection
@@ -148,44 +139,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(target, m)
 
 
-    def request_oembed(self, url):
-        query = urllib.urlencode((('url', url),))
-        data = urllib2.urlopen('http://noembed.com/embed?' + query)
-        respa = json.loads(data.read()) #meglio una raspa d'una ruspa
-        return respa
-
-    def oembed_link(self, e):
-        allurls = URL_RE.findall(e.arguments[0])
-        if len(allurls) != 1:
-            pass
-
-        #tipo goto ma peggio
-        try:
-            try:    respa = self.request_oembed(allurls[0][0])
-            except: pass
-
-            thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
-            hashish=brain.brain.get("urlo:%s"%thaurlhash)
-
-            if hashish == None: #NO FUMO NO FUTURE
-                ts=time.time()
-                nic=e.source.nick
-                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
-                self.reply(e, respa['title'])
-            else:
-                SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
-                ts,nic,v=hashish.split(':')
-                ts=float(ts)
-                delta=time.time() -ts
-                v=int(v)+1
-                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,v))
-                manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
-                symb,todo=check_SI(expo*v)
-                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
-                self.reply(e, dignene)
-
-        except:
-            pass
 def main():
     if len(sys.argv) != 4:
         print "Usage: arnaldo <server[:port]> <channel> <nickname>"

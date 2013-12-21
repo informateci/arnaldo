@@ -1,6 +1,7 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
+from arnaldo.modules.linkini import request_oembed
 
 from BeautifulSoup import BeautifulSoup
 import urllib2
@@ -19,8 +20,8 @@ class Parliamo(Arnaldigno):
     def allivello(self, e, match):
         wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
         wikipedia_url += str(time.time())
-        respa = self.request_oembed(wikipedia_url)
-        corpo=respa.get('html',None)
+        respa = request_oembed(wikipedia_url)
+        corpo = respa.get('html',None)
         text="macche'"
         if corpo != None:
             soup = BeautifulSoup(respa['html'])
