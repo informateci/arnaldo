@@ -10,7 +10,11 @@ class Arnaldigno(object):
 
         for name, thing in self.__class__.__dict__.iteritems():
             regexp = getattr(thing, 'regex', None)
+
             if regexp:
+                if '%s' in regexp:
+                    regexp = regexp % (self.arnaldo.nick,)
+
                 self.arnaldo.register_command(regexp, thing)
 
     def r(self, e, m):
