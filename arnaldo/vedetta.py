@@ -51,3 +51,7 @@ class Vedetta(threading.Thread):
         http_server = tornado.httpserver.HTTPServer(accatitipi)
         http_server.listen(50102, '0.0.0.0')
         tornado.ioloop.IOLoop.instance().start()
+
+    def stop(self):
+        tornado.ioloop.IOLoop.instance().stop()
+

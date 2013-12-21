@@ -161,5 +161,9 @@ def main():
 
     bot = Arnaldo(channel, nickname, server, port)
     signal.signal(signal.SIGUSR1, bot.on_muori)
-    bot.start()
+
+    try:
+        bot.start()
+    except:
+        T800.stop()
 
