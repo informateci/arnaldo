@@ -42,7 +42,6 @@ print "meglio una raspa di una ruspa"
 dimme = lasigna('dimmelo')
 
 URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
-
 def pritaicsa(text):
     icsa=""
     for row in range(int(brain.brain.get("asciitable:rows"))):
@@ -253,36 +252,19 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         respa = json.loads(data.read()) #meglio una raspa d'una ruspa
         return respa
 
-    def parliamo(self):
-        wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'
-        wikipedia_url += str(time.time())
-        respa = self.request_oembed(wikipedia_url)
-        corpo=respa.get('html',None)
-        text="macche'"
-        if corpo != None:
-            soup = BeautifulSoup(respa['html'])
-            if soup.p:
-                text=bleach.clean(soup.p,tags=[], strip=True)
-        self.parliamo_summary = ' '.join(text.split('\n'))
-        return u'Parliamo di ' + respa.get('title',"macche'")
-
-    def checcazzo(self, e, match):
-        if self.parliamo_summary:
-            self.reply(e, self.parliamo_summary[:430])
-            self.parliamo_summary = None
-
     def oembed_link(self, e):
         allurls = URL_RE.findall(e.arguments[0])
         if len(allurls) != 1:
             pass
 
+        #tipo goto ma peggio
         try:
-            try: #tipo goto ma peggio
-                respa = self.request_oembed(allurls[0][0])
-            except:
-                pass 
+            try:    respa = self.request_oembed(allurls[0][0])
+            except: pass
+
             thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
             hashish=brain.brain.get("urlo:%s"%thaurlhash)
+
             if hashish == None: #NO FUMO NO FUTURE
                 ts=time.time()
                 nic=e.source.nick
@@ -299,6 +281,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 symb,todo=check_SI(expo*v)
                 dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
                 self.reply(e, dignene)
+
         except:
             pass
 
