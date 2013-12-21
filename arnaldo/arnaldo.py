@@ -36,6 +36,7 @@ import quote
 from modules.sproloquio import Sproloquio
 from modules.parliamo import Parliamo
 from modules.quotatore import Quotatore
+from modules.accolli import Accolli
 
 print "meglio una raspa di una ruspa"
 
@@ -50,7 +51,6 @@ def pritaicsa(text):
         icsa=icsa+'\n'
     icsa=icsa+'\n'
     return icsa
-
 
 def check_SI(p):
     mapping = [(-24,('y','yocto')),(-21,('z','zepto')),(-18,('a','atto')),(-15,('f','femto')),(-12,('p','pico')),
@@ -72,16 +72,9 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
         self.BAM = None
 
-        self.register_command('^facci (.+)', self.accollo)
         self.register_command('^icsah (.+)', self.icsah)
         self.register_command('^arnaldo hai visto (.+)\\?', self.chilhavisto)
 
-
-        self.contabrazze = {}
-        self.register_command('^brazzami (.+)', self.brazzafazza)
-        self.register_command('^markoviami(.*)', self.markoviami)
-
-        
         self.register_command('^bamba$', self.rosa)
         dimme.connect(self.dimmeame)
 
@@ -89,6 +82,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(Sproloquio(self))
         self.modules.append(Parliamo(self))
         self.modules.append(Quotatore(self))
+        self.modules.append(Accolli(self))
 
     def dimmeame(self,msg):
         conn= self.connection
@@ -204,48 +198,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         except:
             pass
 
-
-    def markoviami(self, e, match):
-      request = "?"
-      ids = match.groups()[0].strip().split()
-      print ids
-      if (len(ids) > 0):
-        for id in ids:
-          request = request + "tweetid=" + id.strip() + "&"
-      else:
-        request = request + "tweetid=Pontifex_it"
-      response = urllib2.urlopen("http://markoviami.appspot.com/"+request).read().decode('utf8')
-      self.reply(e, response) 
-
-    def brazzafazza(self, e, match):
-      h = e.source.host
-      if not self.contabrazze.has_key(h):
-          self.contabrazze[h] = []
-
-      d = datetime.datetime.now()
-      self.contabrazze[h] = filter(lambda x: (d-x).total_seconds() < 60*30, self.contabrazze[h])
-      l = self.contabrazze[h]
-
-      if len(l) == 0 or ((d-l[0]).total_seconds() < 60*30 and len(l) < 3):
-          self.contabrazze[h].append(d)
-          urlo = match.groups()[0]
-          response = urllib2.urlopen("http://brazzifier.ueuo.com/index.php?urlz="+urlo).read()
-          self.reply(e, response)
-      else:
-        self.reply(e, "hai rotto il cazzo.")
-
-    def accollo(self, e, match):
-        ggallin=None;
-        try:
-            ggallin=match.groups()[0]
-        except:
-            pass
-        if ggallin:
-            urlo="http://shell.appspot.com/shell.do"
-            session="agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
-            response = urllib2.urlopen(urlo+"?&"+urllib.urlencode((("statement",ggallin.replace("@t","    ").replace("@n","\n")),("session",session)))).read()
-        self.reply(e,response)
-            
     def request_oembed(self, url):
         query = urllib.urlencode((('url', url),))
         data = urllib2.urlopen('http://noembed.com/embed?' + query)
