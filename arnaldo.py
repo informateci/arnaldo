@@ -469,6 +469,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.parliamo_summary = None
 
     def oembed_link(self, e):
+        if "[shh]" in e.arguments[0]:
+            return
         allurls = URL_RE.findall(e.arguments[0])
         if len(allurls) != 1:
             pass
