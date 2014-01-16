@@ -469,8 +469,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.parliamo_summary = None
 
     def oembed_link(self, e):
-        if "[shh]" in e.arguments[0]:
-            return
         allurls = URL_RE.findall(e.arguments[0])
         if len(allurls) != 1:
             pass
@@ -483,6 +481,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
             hashish=brain.get("urlo:%s"%thaurlhash)
             if hashish == None: #NO FUMO NO FUTURE
+                if "[shh]" in e.arguments[0]:
+                    return
                 ts=time.time()
                 nic=e.source.nick
                 brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
