@@ -11,7 +11,7 @@ except:
 def add_quote(author, quote):
     maxa = max([int(x.split(':')[1]) for x in brain.keys('quote:*')])
     q = {"author": author, "date": str(time.time()), "id": str(maxa+1), "quote":quote }
-    braind.set("quote:%d"%(maxa+1),q)
+    brain.set("quote:%d"%(maxa+1),q)
     
 
 def random_quote():
