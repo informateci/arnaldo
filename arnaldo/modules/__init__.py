@@ -4,6 +4,7 @@ def comanda(regex):
         return f
     return d
 
+
 class Arnaldigno(object):
     def __init__(self, arnaldo):
         self.arnaldo = arnaldo
@@ -19,4 +20,3 @@ class Arnaldigno(object):
 
     def r(self, e, m):
         self.arnaldo.reply(e, m)
-        

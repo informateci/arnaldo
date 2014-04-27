@@ -1,34 +1,20 @@
 # vim: set fileencoding=utf-8:
 
 from __future__ import unicode_literals
-from BeautifulSoup import BeautifulSoup
 from blinker import signal as lasigna
 import irc.bot
 import irc.strings
-
 import os
 import os.path
 import sys
-import re
 import time
-import json
-
-import urllib
-import urllib2
 import traceback
-import bleach
-import random
+
 import signal
-import hashlib
-import datetime
 
 ##
-
 from utieffa import *
 from vedetta import Vedetta
-
-import brain
-
 ##
 
 from modules.sproloquio import Sproloquio
@@ -57,34 +43,32 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(Quotatore(self))
         self.modules.append(Accolli(self))
         self.modules.append(Icsah(self))
-        self.modules.append(BAM(self))
+        #self.modules.append(BAM(self))
         self.modules.append(Linkini(self))
 
-    def dimmeame(self,msg):
-        conn= self.connection
-
+    def dimmeame(self, msg):
+        conn = self.connection
         if type(msg) == type(()):
-           conn.privmsg(self.channel, '<%s>: %s' % msg)
+            conn.privmsg(self.channel, '<%s>: %s' % msg)
         else:
-           conn.privmsg(self.channel, '* %s' % msg)
+            conn.privmsg(self.channel, '* %s' % msg)
 
-    def on_muori(self,a,b):
-        msg=None
-        author=None
-        message=None
+    def on_muori(self, a, b):
+        author = None
+        message = None
         if os.path.isfile('arnaldo.commit'):
             try:
-                f=open('arnaldo.commit',"r")
-                allo=f.readline()
+                f = open('arnaldo.commit', "r")
+                allo = f.readline()
                 f.close()
-                allo=allo.split(':')
-                author=allo[0]
-                message=":".join(allo[1:])
+                allo = allo.split(':')
+                author = allo[0]
+                message = ":".join(allo[1:])
             except:
                 pass
-        if author!=None and message!=None:
-            message='[%s ha committato "%s"]'%(author, message)
-        self.connection.privmsg(self.channel, message if message !=None else "speriamo venga la guerra!" )
+        if author is not None and message is not None:
+            message = '[%s ha committato "%s"]' % (author, message)
+        self.connection.privmsg(self.channel, message if message is not None else "speriamo venga la guerra!" )
         self.connection.disconnect("mi levo di 'ulo.")
         sys.exit(0)
 
@@ -111,26 +95,26 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                     if not callback(e, match):
                         return True
                 except Exception as ex:
-                    excfazza="Error in"
+                    excfazza = "Error in"
                     for frame in traceback.extract_tb(sys.exc_info()[2]):
-                        fname,lineno,fn,text = frame
-                        excfazza=excfazza+ "%s on line %d; " % (fname, lineno)
+                        fname, lineno, fn, text = frame
+                        excfazza = "%s %s on line %d; " % (excfazza, fname, lineno)
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
 
         self.oembed_link(e)
     
     def reply(self, e, m):
-        MULTILINE_TOUT = 0.5
+        multiline_tout = 0.5
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
         if '\n' in m:
-            ll=m.split('\n')
-            if len(ll)>12:
+            ll = m.split('\n')
+            if len(ll) > 12:
                 self.connection.privmsg(target, "flodda tu ma'")
             else:
                 for l in ll:
-                  self.connection.privmsg(target, l)
-                  time.sleep(MULTILINE_TOUT)
+                    self.connection.privmsg(target, l)
+                    time.sleep(multiline_tout)
         else:
             self.connection.privmsg(target, m)
 

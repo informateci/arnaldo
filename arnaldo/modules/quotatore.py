@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-import arnaldo.brain
+from arnaldo.brain import brain
 
 import time
 from random import choice
@@ -14,7 +14,7 @@ class Quotatore(Arnaldigno):
         quote = match.groups()[0]
         maxa = max([int(x.split(':')[1]) for x in brain.keys('quote:*')])
         q = {"author": author, "date": str(time.time()), "id": str(maxa+1), "quote":quote }
-        braind.set("quote:%d"%(maxa+1),q)
+        brain.set("quote:%d" % (maxa+1), q)
 
     # prima che qualche faccia di merda si lamenti
     # e' l'eval per ritrasformare il tostring di un 
@@ -53,5 +53,4 @@ class Quotatore(Arnaldigno):
         self.r(e, '#%s: %s' % r['id'], r['quote'].decode('utf8'))
 
 if __name__ == '__main__':
-    random_quote()
-    
+    Quotatore.random_quote()

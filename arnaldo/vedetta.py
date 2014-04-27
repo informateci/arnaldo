@@ -7,9 +7,11 @@ import tornado.web
 
 import threading
 
-from arnaldo import lasigna
+from arnaldo.brain import brain
+from arnaldo import dimme
+import bcrypt
 
-def htmella(s,code,content,msg):
+def htmella(s, code, content, msg):
     s.clear()
     s.set_status(code)
     s.set_header('Content-Type', content)
@@ -25,16 +27,15 @@ class sputa(tornado.web.RequestHandler):
             htmella(self,404,'text/html',"che ti levi di ulo?")
 
         def post(self):
-            from passlib.hash import bcrypt
 
             author  = self.get_argument("chie")
             message = self.get_argument("msg")
 
             if message:
                 bazza = self.get_argument("hasho")
-                print "%s,%s,%s" % (author,message,bazza)
+                print "%s,%s,%s" % (author, message, bazza)
 
-                cecco = bcrypt.verify(message+brain.get("httppasswd"), str(bazza))
+                cecco = bcrypt.verify(message + brain.get("httppasswd"), str(bazza))
                 if cecco:
                     if author:
                         out = (author,message)
@@ -43,11 +44,11 @@ class sputa(tornado.web.RequestHandler):
                     dimme.send(out)
                     self.redirect("/")
                 else:
-                     htmella(self,404,'text/html',"che ti levi di ulo?")
+                     htmella(self, 404, 'text/html', "che ti levi di ulo?")
 
 class Vedetta(threading.Thread):
     def run(self):
-        accatitipi = tornado.web.Application([(r"/", onore),(r"/catarro", sputa)])
+        accatitipi = tornado.web.Application([(r"/", onore), (r"/catarro", sputa)])
         http_server = tornado.httpserver.HTTPServer(accatitipi)
         http_server.listen(50102, '0.0.0.0')
         tornado.ioloop.IOLoop.instance().start()

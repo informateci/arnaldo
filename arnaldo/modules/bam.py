@@ -1,7 +1,11 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-import arnaldo.brain
+from arnaldo.brain import brain
+import time
+import re
+import datetime
+
 
 class BAM(Arnaldigno):
     def __init__(self, *args):
@@ -10,6 +14,7 @@ class BAM(Arnaldigno):
 
     @comanda('.')
     def BAMBAM(self, e):
+        print e.group(0)
         brain.set(e.source.nick, time.time())
         t = e.arguments[0]
         if self.BAM == t:
@@ -38,8 +43,10 @@ class BAM(Arnaldigno):
 
     @comanda('^arnaldo hai visto (.+)\\?')
     def chilhavisto(self, e, match):
-        try: ggallin=match.groups()[0]
-        except: ggallin=None
+        try:
+            ggallin = match.groups()[0]
+        except:
+            ggallin = None
 
         if not ggallin:
             return

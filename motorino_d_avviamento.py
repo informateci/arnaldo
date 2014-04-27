@@ -1,6 +1,4 @@
  #!/usr/bin/env python
-import SimpleHTTPServer
-import SocketServer
 import pickle
 import subprocess
 import signal
@@ -11,7 +9,8 @@ import redis
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-PORT    = 8000
+import sys
+PORT = 8000
 PROCESS = None
 
 def rinasci_arnaldo():
@@ -21,7 +20,7 @@ def rinasci_arnaldo():
         PROCESS.send_signal(signal.SIGUSR1)
     subprocess.check_call(['git', 'pull'])
     subprocess.check_call(['rm', '-rf', '*.pyc'])
-    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##informateci arnaldo'.split())
+    PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##eroina arnaldo'.split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
     accendi_il_cervello()
 

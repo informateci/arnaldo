@@ -55,7 +55,7 @@ class Accolli(Arnaldigno):
         urlo = "http://shell.appspot.com/shell.do"
         session = "agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
         para = (("statement", ggallin), ("session", session))
-        para = urllib.urlencode(para)
+        para = urllib2.urlencode(para)
         response = urllib2.urlopen(urlo+"?&"+para).read()
 
         self.reply(e,response)

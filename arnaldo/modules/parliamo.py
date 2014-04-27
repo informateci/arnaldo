@@ -4,8 +4,8 @@ from arnaldo.modules import Arnaldigno, comanda
 from arnaldo.modules.linkini import request_oembed
 
 from BeautifulSoup import BeautifulSoup
-import urllib2
-import random
+import time
+import bleach
 
 class Parliamo(Arnaldigno):
     def __init__(self, *args):
@@ -26,7 +26,7 @@ class Parliamo(Arnaldigno):
         if corpo != None:
             soup = BeautifulSoup(respa['html'])
             if soup.p:
-                text=bleach.clean(soup.p,tags=[], strip=True)
+                text=bleach.clean(soup.p, tags=[], strip=True)
 
         self.parliamo_summary = ' '.join(text.split('\n'))
         self.r(e, u'Parliamo di ' + respa.get('title',"macche'"))

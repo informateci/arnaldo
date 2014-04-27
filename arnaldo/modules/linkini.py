@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-import arnaldo.brain
+from arnaldo.brain import brain
 
 #
 
@@ -9,7 +9,9 @@ from collections import defaultdict
 import urllib2
 import datetime
 import re
-
+import json
+import hashlib
+import time
 #
 
 URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
@@ -39,7 +41,7 @@ def check_SI(p):
             return value
 
 def request_oembed(self, url):
-    query = urllib.urlencode((('url', url),))
+    query = urllib2.urlencode((('url', url),))
     data = urllib2.urlopen('http://noembed.com/embed?' + query)
     respa = json.loads(data.read()) #meglio una raspa d'una ruspa
     return respa
@@ -52,30 +54,32 @@ class Linkini(Arnaldigno):
             return True
 
         #tipo goto ma peggio
-        try:    respa = self.request_oembed(allurls[0][0])
-        except: pass
+        try:
+            respa = self.request_oembed(allurls[0][0])
+        except:
+            pass
 
-        thaurlhash= hashlib.md5(allurls[0][0]).hexdigest()
-        hashish=brain.brain.get("urlo:%s"%thaurlhash)
+        thaurlhash = hashlib.md5(allurls[0][0]).hexdigest()
+        hashish = brain.get("urlo:%s" % thaurlhash)
 
         try:
-            if hashish == None: #NO FUMO NO FUTURE
-                ts=time.time()
-                nic=e.source.nick
-                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,1))
+            if hashish is None: #NO FUMO NO FUTURE
+                ts = time.time()
+                nic = e.source.nick
+                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d" % (ts, nic, 1))
                 self.reply(e, respa['title'])
             else:
-                SECONDIANNO=31556926 #num secondi in un anno youdontsay.png
-                ts,nic,v=hashish.split(':')
-                ts=float(ts)
-                delta=time.time() -ts
-                v=int(v)+1
-                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d"%(ts,nic,v))
-                manti,expo=map(float,("%e"%(delta/SECONDIANNO)).split("e"))
-                symb,todo=check_SI(expo*v)
-                dignene="%.2f %sGaggo [postato da %s il %s]"%(manti+v,symb,nic,datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
+                secondianno = 31556926 #num secondi in un anno youdontsay.png
+                ts, nic, v = hashish.split(':')
+                ts = float(ts)
+                delta = time.time() - ts
+                v = int(v)+1
+                brain.brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, v))
+                manti, expo = map(float, ("%e"%(delta/secondianno)).split("e"))
+                symb, todo = check_SI(expo*v)
+                dignene = "%.2f %sGaggo [postato da %s il %s]" % \
+                          (manti+v, symb, nic, datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
                 self.reply(e, dignene)
-
         except:
             pass
 
