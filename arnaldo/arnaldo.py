@@ -43,7 +43,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(Quotatore(self))
         self.modules.append(Accolli(self))
         self.modules.append(Icsah(self))
-        #self.modules.append(BAM(self))
+        self.modules.append(BAM(self))
         self.modules.append(Linkini(self))
 
     def dimmeame(self, msg):

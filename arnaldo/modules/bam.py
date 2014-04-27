@@ -13,8 +13,7 @@ class BAM(Arnaldigno):
         self.BAM = None
 
     @comanda('.')
-    def BAMBAM(self, e):
-        print e.group(0)
+    def BAMBAM(self, e, match):
         brain.set(e.source.nick, time.time())
         t = e.arguments[0]
         if self.BAM == t:

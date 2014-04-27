@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo.brain import brain
+from arnaldo import brain
 
 from BeautifulSoup import BeautifulSoup
 import urllib2
@@ -55,5 +55,5 @@ class Sproloquio(Arnaldigno):
         soup = BeautifulSoup(response)
         l = soup.findAll("div", {"class": "post"})
         i = random.choice(l)
-        self.r("http://i.imgur.com/%s.jpg" % i.get("id"))
+        self.r(e, "http://i.imgur.com/%s.jpg" % i.get("id"))
 
