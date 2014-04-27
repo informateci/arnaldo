@@ -102,8 +102,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                     self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
                     continue
 
-        self.oembed_link(e)
-    
     def reply(self, e, m):
         multiline_tout = 0.5
         target = e.source.nick if e.target == self.connection.get_nickname() else e.target
@@ -148,6 +146,6 @@ def main():
 
     try:
         bot.start()
-    except:
+    except KeyboardInterrupt:
         T800.stop()
 
