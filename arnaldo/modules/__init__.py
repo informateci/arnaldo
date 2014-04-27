@@ -1,3 +1,5 @@
+from functools import partial
+
 def comanda(regex):
     def d(f):
         f.regex = regex
@@ -16,7 +18,7 @@ class Arnaldigno(object):
                 if '%s' in regexp:
                     regexp = regexp % (self.arnaldo.nickname,)
 
-                self.arnaldo.register_command(regexp, thing)
+                self.arnaldo.register_command(regexp, partial(thing, self))
 
     def r(self, e, m):
         self.arnaldo.reply(e, m)
