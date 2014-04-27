@@ -4,12 +4,7 @@ from arnaldo.modules import Arnaldigno, comanda
 from arnaldo.brain import brain
 
 #
-
-from collections import defaultdict
 import urllib2
-import datetime
-import re
-import json
 import hashlib
 import time
 #
@@ -56,8 +51,7 @@ class Linkini(Arnaldigno):
         #tipo goto ma peggio
         try:
             respa = self.request_oembed(allurls[0][0])
-        except:
-            pass
+        except: pass
 
         thaurlhash = hashlib.md5(allurls[0][0]).hexdigest()
         hashish = brain.get("urlo:%s" % thaurlhash)

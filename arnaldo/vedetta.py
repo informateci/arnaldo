@@ -7,8 +7,9 @@ import tornado.web
 
 import threading
 
-from arnaldo.brain import brain
-from arnaldo import dimme
+from brain import brain
+from blinker import signal as lasigna
+
 import bcrypt
 
 def htmella(s, code, content, msg):
@@ -17,6 +18,7 @@ def htmella(s, code, content, msg):
     s.set_header('Content-Type', content)
     s.finish(msg)
 
+dimme = lasigna('dimmelo')
 
 class onore(tornado.web.RequestHandler):
         def get(self):
