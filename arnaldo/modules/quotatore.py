@@ -41,11 +41,12 @@ class Quotatore(Arnaldigno):
 
         # <PAZO>
         k = brain.keys("quote:*")
-        listo = [eval(l) for l in brain.mget(*k)]
-        resp = [r for r in listo if regex.search(r['quote'])]
+        if len(k) > 0:
+            listo = [eval(l) for l in brain.mget(*k)]
+            resp = [r for r in listo if regex.search(r['quote'])]
         # </PAZO>
 
-        r = choice(resp) if len > 0 else None
+        r = choice(resp) if len(k) > 0 else None
         if r is None:
             self.r(e, 'no such quote')
             return None

@@ -1,5 +1,6 @@
 from functools import partial
 
+
 def comanda(regex):
     def d(f):
         f.regex = regex

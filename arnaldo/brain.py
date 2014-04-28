@@ -28,7 +28,7 @@ except:
         def rpush(self, a, v):
             self.suca[a] = self.suca.get(a, [])
             self.suca[a].append(v)
-            return len(self.suca[a]) -1
+            return len(self.suca[a]) - 1
         def delete(self, a):
             if self.suca.has_key(a):
                 del self.suca[a]
@@ -63,12 +63,13 @@ def getProverbioandid():
     if i2 >= i1:
         i2 += 1
     p = u"%s %s" % (brain.lindex("PROV1", i1).decode('utf8'), brain.lindex("PROV2", i2).decode('utf8'))
-    return (p, "%dP%d"%(i1,i2))
+    return p, "%dP%d" % (i1, i2)
 
 def getProverbiobyid(idp):
     try:
-        p=idp.split('P')
-        return u"%s %s" % (brain.lindex("PROV1", int(p[0])).decode('utf8'), brain.lindex("PROV2", int(p[1])).decode('utf8'))
+        p = idp.split('P')
+        return u"%s %s" % (brain.lindex("PROV1", int(p[0])).decode('utf8'),
+                           brain.lindex("PROV2", int(p[1])).decode('utf8'))
     except:
         return "macche'"
 

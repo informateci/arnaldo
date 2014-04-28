@@ -7,6 +7,7 @@ from BeautifulSoup import BeautifulSoup
 import urllib2
 import random
 
+
 class Sproloquio(Arnaldigno):
     @comanda('attardati')
     def attardati(self, e, match):
@@ -14,7 +15,7 @@ class Sproloquio(Arnaldigno):
 
     @comanda('ANAL')
     def anal(self, e, match):
-        self.r(e, "%s ANAL %s"%(brain.getCitta(),brain.getNomecen()))
+        self.r(e, "%s ANAL %s" % (brain.getCitta(), brain.getNomecen()))
 
     @comanda('proverbia')
     def proverbia(self, e, match):
@@ -23,7 +24,7 @@ class Sproloquio(Arnaldigno):
     def proverbiaandid(self):
         return brain.getProverbioandid()
 
-    def proverbiabyid(self,idp):
+    def proverbiabyid(self, idp):
         return brain.getProverbiobyid(idp)
 
     @comanda('beuta')
@@ -31,11 +32,11 @@ class Sproloquio(Arnaldigno):
         cocktail_id = random.randint(1, 4750)
         data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d" % cocktail_id)
         soup = BeautifulSoup(data.read())
-        directions = soup.findAll("div", { "class" : "recipeDirection" })
-        measures = soup.findAll("div", { "class" : "recipeMeasure" })
+        directions = soup.findAll("div", {"class": "recipeDirection"})
+        measures = soup.findAll("div", {"class": "recipeMeasure"})
 
         ret = []
-        ret += [u"== %s ==\n" % (soup.find("h2").text)]
+        ret += [u"== %s ==\n" % soup.find("h2").text]
 
         for m in measures:
             ret += [u' '.join([x.strip() for x in m.findAll(text=True)])]

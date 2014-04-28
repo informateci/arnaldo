@@ -4,43 +4,50 @@ from arnaldo.modules import Arnaldigno, comanda
 from arnaldo.brain import brain
 
 #
-import urllib2
+import urllib
 import hashlib
 import time
 import re
+import json
+import datetime
 #
 
-URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
+URL_RE = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)'
+                    ur'(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|'
+                    ur'[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
+
 
 def check_SI(p):
-    mapping = [(-24, ('y', 'yocto' )),
-               (-21, ('z', 'zepto' )),
-               (-18, ('a', 'atto'  )),
-               (-15, ('f', 'femto' )),
-               (-12, ('p', 'pico'  )),
-               ( -9, ('n', 'nano'  )),
-               ( -6, ('u', 'micro' )),
-               ( -3, ('m', 'mili'  )),
-               ( -2, ('c', 'centi' )),
-               ( -1, ('d', 'deci'  )),
-               (  3, ('k', 'kilo'  )),
-               (  6, ('M', 'mega'  )),
-               (  9, ('G', 'giga'  )),
-               ( 12, ('T', 'tera'  )),
-               ( 15, ('P', 'peta'  )),
-               ( 18, ('E', 'exa'   )),
-               ( 21, ('Z', 'zetta' )),
-               ( 24, ('Y', 'yotta' ))]
+    mapping = [(-24, ('y', 'yocto')),
+               (-21, ('z', 'zepto')),
+               (-18, ('a', 'atto')),
+               (-15, ('f', 'femto')),
+               (-12, ('p', 'pico')),
+               (-9, ('n', 'nano')),
+               (-6, ('u', 'micro')),
+               (-3, ('m', 'mili')),
+               (-2, ('c', 'centi')),
+               (-1, ('d', 'deci')),
+               (3, ('k', 'kilo')),
+               (6, ('M', 'mega')),
+               (9, ('G', 'giga')),
+               (12, ('T', 'tera')),
+               (15, ('P', 'peta')),
+               (18, ('E', 'exa')),
+               (21, ('Z', 'zetta')),
+               (24, ('Y', 'yotta'))]
 
     for check, value in mapping:
         if p <= check:
             return value
 
-def request_oembed(self, url):
-    query = urllib2.urlencode((('url', url),))
-    data = urllib2.urlopen('http://noembed.com/embed?' + query)
-    respa = json.loads(data.read()) #meglio una raspa d'una ruspa
+
+def request_oembed(url):
+    query = urllib.urlencode((('url', url),))
+    data = urllib.urlopen('http://noembed.com/embed?' + query)
+    respa = json.loads(data.read())  # meglio una raspa d'una ruspa
     return respa
+
 
 class Linkini(Arnaldigno):
     @comanda('.')
@@ -51,20 +58,20 @@ class Linkini(Arnaldigno):
 
         #tipo goto ma peggio
         try:
-            respa = self.request_oembed(allurls[0][0])
-        except: pass
-
+            respa = request_oembed(allurls[0][0])
+        except:
+            pass
         thaurlhash = hashlib.md5(allurls[0][0]).hexdigest()
         hashish = brain.get("urlo:%s" % thaurlhash)
 
         try:
-            if hashish is None: #NO FUMO NO FUTURE
+            if hashish is None:  # NO FUMO NO FUTURE
                 ts = time.time()
                 nic = e.source.nick
                 brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d" % (ts, nic, 1))
-                self.reply(e, respa['title'])
+                self.r(e, respa['title'])
             else:
-                secondianno = 31556926 #num secondi in un anno youdontsay.png
+                secondianno = 31556926  # num secondi in un anno youdontsay.png
                 ts, nic, v = hashish.split(':')
                 ts = float(ts)
                 delta = time.time() - ts
@@ -74,7 +81,7 @@ class Linkini(Arnaldigno):
                 symb, todo = check_SI(expo*v)
                 dignene = "%.2f %sGaggo [postato da %s il %s]" % \
                           (manti+v, symb, nic, datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
-                self.reply(e, dignene)
+                self.r(e, dignene)
         except:
             pass
 

@@ -3,29 +3,30 @@
 
 import re
 
-def tdecode(bytes):
+
+def tdecode(byti):
     try:
-        text = bytes.decode('utf-8')
+        text = byti.decode('utf-8')
     except UnicodeDecodeError:
         try:
-            text = bytes.decode('iso-8859-1')
+            text = byti.decode('iso-8859-1')
         except UnicodeDecodeError:
-            text = bytes.decode('cp1252')
+            text = byti.decode('cp1252')
     return text
 
 
-def tencode(bytes):
+def tencode(byti):
     try:
-        text = bytes.encode('utf-8')
+        text = byti.encode('utf-8')
     except UnicodeEncodeError:
         try:
-            text = bytes.encode('iso-8859-1')
+            text = byti.encode('iso-8859-1')
         except UnicodeEncodeError:
-            text = bytes.encode('cp1252')
+            text = byti.encode('cp1252')
     return text
 
 
-class BambaRosaNasaBuffer(object): #decoda a naso. VIVA!
+class BambaRosaNasaBuffer(object):  # decoda a naso. VIVA!
     line_sep_exp = re.compile(b'\r?\n')
 
     def __init__(self):
@@ -45,7 +46,10 @@ class BambaRosaNasaBuffer(object): #decoda a naso. VIVA!
         # save the last, unfinished, possibly empty line
         self.buffer = lines.pop()
         for line in iter(lines):
-            for encodi in [('utf-8','strict'),('latin-1','strict'),('utf-8','replace'),('utf-8','ignore')]: #tipo a tentativi ma peggio
+            for encodi in [('utf-8', 'strict'),
+                           ('latin-1', 'strict'),
+                           ('utf-8', 'replace'),
+                           ('utf-8', 'ignore')]: #tipo a tentativi ma peggio
                 try:
                     l = line.decode(encodi[0], encodi[1])
                     break

@@ -9,8 +9,8 @@ def pritaicsa(text):
     for row in range(int(brain.get("asciitable:rows"))):
         for c in text:
             icsa = str(icsa)+str(brain.lindex("asciitable:%s" % c, row))
-        icsa=icsa+'\n'
-    icsa=icsa+'\n'
+        icsa += '\n'
+    icsa += '\n'
     return icsa
 
 
@@ -26,12 +26,12 @@ class Icsah(Arnaldigno):
             return
         try:
             icsa = pritaicsa(ggallin)
-            self.reply(e, icsa)
+            self.r(e, icsa)
         except:
             pass
 
     @comanda('^bamba$')
     def rosa(self, e, match):
         icsa = pritaicsa("rosa")
-        self.reply(e, icsa)
+        self.r(e, icsa)
 

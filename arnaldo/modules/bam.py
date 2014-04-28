@@ -17,7 +17,7 @@ class BAM(Arnaldigno):
         brain.set(e.source.nick, time.time())
         t = e.arguments[0]
         if self.BAM == t:
-            self.reply(e, self.BAM)
+            self.r(e, self.BAM)
             self.BAM = None
         else:
             try:
@@ -31,7 +31,7 @@ class BAM(Arnaldigno):
                     else:
                         m = ''
                     t = re.sub('i?[aeiou]$', '', t, flags=re.IGNORECASE)
-                    self.reply(e, "%sISSIMO%s" % (t, m))
+                    self.r(e, "%sISSIMO%s" % (t, m))
                     self.BAM = None
                 else:
                     self.BAM = t
@@ -56,7 +56,7 @@ class BAM(Arnaldigno):
                 response = "chiaro il %s" % datetime.datetime.fromtimestamp(float(ts)).strftime('%d/%m/%y %H:%M:%S')
             else:
                 response = "macche'"
-            self.reply(e, response)
+            self.r(e, response)
         except:
             pass
 
