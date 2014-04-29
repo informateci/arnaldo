@@ -69,7 +69,7 @@ class Linkini(Arnaldigno):
                 delta = time.time() - ts
                 v = int(v)+1
                 brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, v))
-                manti, expo = map(float, ("%e"%(delta/secondianno)).split("e"))
+                manti, expo = map(float, ("%e" % (delta/secondianno)).split("e"))
                 symb, todo = check_SI(expo*v)
                 dignene = "%.2f %sGaggo [postato da %s il %s]" % \
                           (manti+v, symb, nic, datetime.datetime.fromtimestamp(ts).strftime('%d/%m/%y %H:%M:%S'))
