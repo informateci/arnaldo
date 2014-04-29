@@ -4,12 +4,9 @@
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-
 import threading
-
 from brain import brain
 from blinker import signal as lasigna
-
 import bcrypt
 
 
@@ -18,7 +15,6 @@ def htmella(s, code, content, msg):
     s.set_status(code)
     s.set_header('Content-Type', content)
     s.finish(msg)
-
 dimme = lasigna('dimmelo')
 
 
