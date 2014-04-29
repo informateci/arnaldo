@@ -77,7 +77,7 @@ def accendi_il_cervello():
         brain.delete("PROV1")
         for p1 in PROV1: #lista prima meta' dei proverbi in PROV1
             brain.rpush("PROV1"," ".join(p1))
-        del(PROV1)
+        del PROV1
 
     hs=hashlib.md5(open('dati/prov2.pkl').read()).hexdigest()
     if brain.get("prov2fhash") != hs:
@@ -89,13 +89,13 @@ def accendi_il_cervello():
         brain.delete("PROV2")
         for p2 in PROV2: #lista 2a meta' dei proverbi in PROV2
             brain.rpush("PROV2"," ".join(p2))
-        del(PROV2)
+        del PROV2
 
-    hs=hashlib.md5(open('dati/passvord.txt').read()).hexdigest()
+    hs = hashlib.md5(open('dati/passvord.txt').read()).hexdigest()
     if brain.get("passvordfhash") != hs:
-        brain.set("prov2fhash",hs)
-        passf=open('dati/passvord.txt','r')
-        brain.set("httppasswd",passf.readline()[:-1])
+        brain.set("prov2fhash", hs)
+        passf = open('dati/passvord.txt', 'r')
+        brain.set("httppasswd", passf.readline()[:-1])
         passf.close()
 
 
@@ -105,7 +105,10 @@ class do_the_404(tornado.web.RequestHandler):
             self.clear()
             self.set_status(404)
             self.set_header('Content-Type', 'text/html')
-            self.finish('<html><h1>ONORE AL COMMENDATORE</h1><audio autoplay loop><source src="http://k002.kiwi6.com/hotlink/7dfwc95g6j/ztuovbziexvt.128.mp3" type="audio/mp3"></audio><p><img alt="" src="http://25.media.tumblr.com/tumblr_lxom7sxjDv1qcy8xgo1_500.gif" class="alignnone" width="500" height="333"></p></html>')
+            self.finish('<html><h1>ONORE AL COMMENDATORE</h1><audio autoplay loop>'
+                        '<source src="http://k002.kiwi6.com/hotlink/7dfwc95g6j/ztuovbziexvt.128.mp3" type="audio/mp3">'
+                        '</audio><p><img alt="" src="http://25.media.tumblr.com/tumblr_lxom7sxjDv1qcy8xgo1_500.gif" '
+                        'class="alignnone" width="500" height="333"></p></html>')
 
 class le_poste(tornado.web.RequestHandler):
         def get(self):
