@@ -6,7 +6,7 @@ import tornado.ioloop
 import tornado.web
 import threading
 from brain import brain, dimme
-import bcrypt
+from passlib.hash import bcrypt
 
 
 def htmella(s, code, content, msg):
