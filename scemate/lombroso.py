@@ -1,5 +1,6 @@
 import redis
 import datetime
+import sys
 
 try:
     brain = redis.Redis("localhost")
@@ -14,7 +15,7 @@ import pickle
 def dump_quote():
 	keys = brain.keys("quote:*")
 	quotazze = brain.mget(*keys)
-	quotazze = [ eval(q) for q in quotazze ]
+	#quotazze = [ eval(q) for q in quotazze ]
 	# il formato e' list di {'date':string, 'quote': string, 'id':string, 'author': string}
 	pickle.dump( quotazze, open( "quotes_%s.p"%(datetime.datetime.now().strftime("%Y-%m-%d-%H:%M")), "wb" ) )
 
