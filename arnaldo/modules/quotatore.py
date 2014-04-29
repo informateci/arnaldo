@@ -50,7 +50,7 @@ class Quotatore(Arnaldigno):
         if r is None:
             self.r(e, 'no such quote')
             return None
-
+        print r
         self.r(e, '#%s: %s' % r['id'], r['quote'].decode('utf8'))
 
 if __name__ == '__main__':
