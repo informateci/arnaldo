@@ -9,9 +9,7 @@ import bleach
 
 
 class Parliamo(Arnaldigno):
-    def __init__(self, *args):
-        super(Parliamo, self).__init__(*args)
-        self.parliamo_summary = None
+    parliamo_summary = ""
 
     @comanda('e allora\\?$')
     def eallora(self, e, match):
