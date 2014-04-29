@@ -19,6 +19,8 @@ def rinasci_arnaldo():
 
     if PROCESS is not None:
         PROCESS.send_signal(signal.SIGUSR1)
+        PROCESS.kill()
+
     subprocess.check_call(['git', 'pull'])
     subprocess.check_call(['rm', '-rf', '*.pyc'])
     PROCESS = subprocess.Popen('python arnaldo.py irc.freenode.net ##informateci arnaldo'.split())
