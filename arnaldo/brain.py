@@ -2,8 +2,12 @@
 # vim: set fileencoding=utf-8:
 
 from random import choice, randint
+# ci fisto anche tutta la roba condivisibile, non condivisibile eticamente, condivisibile che si condivide
 import urllib
 import json
+from blinker import signal as lasigna
+
+dimme = lasigna('dimmelo')
 
 def request_oembed(url):
     query = urllib.urlencode((('url', url),))

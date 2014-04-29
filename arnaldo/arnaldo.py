@@ -1,7 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 from __future__ import unicode_literals
-from blinker import signal as lasigna
 import irc.bot
 import irc.strings
 import os
@@ -13,7 +12,7 @@ import signal
 
 ##
 from utieffa import *
-from vedetta import Vedetta
+from vedetta import Vedetta, dimme
 ##
 
 from modules.sproloquio import Sproloquio
@@ -24,7 +23,6 @@ from modules.icsah import Icsah
 from modules.bam import BAM
 from modules.linkini import Linkini
 
-dimme = lasigna('dimmelo')
 
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
