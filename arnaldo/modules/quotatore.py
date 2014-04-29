@@ -51,7 +51,7 @@ class Quotatore(Arnaldigno):
             self.r(e, 'no such quote')
             return None
         print respa
-        self.r(e, '#%s: %s' % respa['id'], respa['quote'].decode('utf8'))
+        self.r(e, '#%s: %s' % (respa['id'], respa['quote'].decode('utf8')))
 
 if __name__ == '__main__':
     Quotatore.random_quote()
