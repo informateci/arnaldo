@@ -2,6 +2,15 @@
 # vim: set fileencoding=utf-8:
 
 from random import choice, randint
+import urllib
+import json
+
+def request_oembed(url):
+    query = urllib.urlencode((('url', url),))
+    data = urllib.urlopen('http://noembed.com/embed?' + query)
+    respa = json.loads(data.read())  # meglio una raspa d'una ruspa
+    return respa
+
 
 try:
     import redis

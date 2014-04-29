@@ -9,7 +9,6 @@ import os.path
 import sys
 import time
 import traceback
-
 import signal
 
 ##
@@ -26,6 +25,7 @@ from modules.bam import BAM
 from modules.linkini import Linkini
 
 dimme = lasigna('dimmelo')
+
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
     def __init__(self, channel, nickname, server, port=6667):
@@ -116,10 +116,21 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         else:
             self.connection.privmsg(target, m)
 
+bot = None
+T800 = None
+
+
+def fista_duro_e_vai_sicuro():
+    if bot:
+        bot.on_muori()
+    if T800:
+        T800.stop()
+
 
 def main():
     print "meglio una raspa di una ruspa"
-
+    global T800
+    global bot
     if len(sys.argv) != 4:
         print "Usage: arnaldo <server[:port]> <channel> <nickname>"
         sys.exit(1)
@@ -139,10 +150,10 @@ def main():
     nickname = sys.argv[3]
 
     T800 = Vedetta()
-    T800.start() #I'm a friend of Sarah Connor. I was told she was here. Could I see her please?
+    T800.start()  # I'm a friend of Sarah Connor. I was told she was here. Could I see her please?
 
     bot = Arnaldo(channel, nickname, server, port)
-    signal.signal(signal.SIGUSR1, bot.on_muori)
+    signal.signal(signal.SIGUSR1, fista_duro_e_vai_sicuro)
 
     try:
         bot.start()

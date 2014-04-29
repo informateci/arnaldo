@@ -6,7 +6,7 @@ from arnaldo.modules import Arnaldigno, comanda
 from collections import defaultdict
 import urllib2
 import datetime
-
+import urllib
 
 class Accolli(Arnaldigno):
     def __init__(self, *args):
@@ -53,7 +53,7 @@ class Accolli(Arnaldigno):
         urlo = "http://shell.appspot.com/shell.do"
         session = "agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
         para = (("statement", ggallin), ("session", session))
-        para = urllib2.urlencode(para)
-        response = urllib2.urlopen(urlo+"?&"+para).read()
+        para = urllib.urlencode(para)
+        response = urllib.urlopen(urlo+"?&"+para).read()
         self.r(e, response)
 

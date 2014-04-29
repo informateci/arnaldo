@@ -1,14 +1,12 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo.brain import brain
+from arnaldo.brain import brain, request_oembed
 
 #
-import urllib
 import hashlib
 import time
 import re
-import json
 import datetime
 #
 
@@ -42,12 +40,6 @@ def check_SI(p):
             return value
 
 
-def request_oembed(url):
-    query = urllib.urlencode((('url', url),))
-    data = urllib.urlopen('http://noembed.com/embed?' + query)
-    respa = json.loads(data.read())  # meglio una raspa d'una ruspa
-    return respa
-
 
 class Linkini(Arnaldigno):
     @comanda('.')
@@ -68,7 +60,7 @@ class Linkini(Arnaldigno):
             if hashish is None:  # NO FUMO NO FUTURE
                 ts = time.time()
                 nic = e.source.nick
-                brain.brain.set("urlo:%s"%thaurlhash,"%f:%s:%d" % (ts, nic, 1))
+                brain.set("urlo:%s"%thaurlhash,"%f:%s:%d" % (ts, nic, 1))
                 self.r(e, respa['title'])
             else:
                 secondianno = 31556926  # num secondi in un anno youdontsay.png
@@ -76,7 +68,7 @@ class Linkini(Arnaldigno):
                 ts = float(ts)
                 delta = time.time() - ts
                 v = int(v)+1
-                brain.brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, v))
+                brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, v))
                 manti, expo = map(float, ("%e"%(delta/secondianno)).split("e"))
                 symb, todo = check_SI(expo*v)
                 dignene = "%.2f %sGaggo [postato da %s il %s]" % \

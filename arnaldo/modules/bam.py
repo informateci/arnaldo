@@ -51,7 +51,7 @@ class BAM(Arnaldigno):
             return
 
         try: 
-            ts=brain.brain.get(ggallin)
+            ts = brain.get(ggallin)
             if ts:
                 response = "chiaro il %s" % datetime.datetime.fromtimestamp(float(ts)).strftime('%d/%m/%y %H:%M:%S')
             else:
