@@ -49,6 +49,7 @@ class sputa(tornado.web.RequestHandler):
 
 
 class Vedetta(threading.Thread):
+    
     def run(self):
         accatitipi = tornado.web.Application([(r"/", onore), (r"/catarro", sputa)])
         http_server = tornado.httpserver.HTTPServer(accatitipi)
