@@ -49,13 +49,15 @@ class sputa(tornado.web.RequestHandler):
 
 
 class Vedetta(threading.Thread):
-    
+    http_server = None
     def run(self):
         accatitipi = tornado.web.Application([(r"/", onore), (r"/catarro", sputa)])
-        http_server = tornado.httpserver.HTTPServer(accatitipi)
-        http_server.listen(50102, '0.0.0.0')
+        self.http_server = tornado.httpserver.HTTPServer(accatitipi)
+        self.http_server.listen(50102, '0.0.0.0')
         tornado.ioloop.IOLoop.instance().start()
 
     def stop(self):
+        if self.http_server:
+            self.http_server.stop()
         tornado.ioloop.IOLoop.instance().stop()
 
