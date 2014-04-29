@@ -120,7 +120,7 @@ bot = None
 T800 = None
 
 
-def fista_duro_e_vai_sicuro():
+def fista_duro_e_vai_sicuro(ma, cche):
     if bot:
         bot.on_muori()
     if T800:

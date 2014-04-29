@@ -138,7 +138,7 @@ if __name__ == '__main__':
     rinasci_arnaldo()
    
     print "Starting webserver (%s)" % (PORT,)
-    accatitipi = tornado.web.Application([(r"/", do_the_404),(r"/github", le_poste)])
+    accatitipi = tornado.web.Application([(r"/", do_the_404), (r"/github", le_poste)])
     http_server = tornado.httpserver.HTTPServer(accatitipi)
     http_server.listen(PORT, '0.0.0.0')
     try:

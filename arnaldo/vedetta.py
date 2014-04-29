@@ -25,7 +25,7 @@ class onore(tornado.web.RequestHandler):
 
 class sputa(tornado.web.RequestHandler):
         def get(self):
-            htmella(self,404,'text/html',"che ti levi di ulo?")
+            htmella(self, 404, 'text/html', "che ti levi di ulo?")
 
         def post(self):
 
