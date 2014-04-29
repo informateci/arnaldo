@@ -7,17 +7,22 @@ import time
 from random import choice
 import re
 
+
 class Quotatore(Arnaldigno):
+
     @comanda('^%s[:, \\t]*addquote (.*)')
     def add_quote(self, e, match):
         author = e.source.nick
         quote = match.groups()[0]
         maxa = max([int(x.split(':')[1]) for x in brain.keys('quote:*')])
-        q = {"author": author, "date": str(time.time()), "id": str(maxa+1), "quote":quote }
-        brain.set("quote:%d" % (maxa+1), q)
+        q = {"author": author,
+             "date": str(time.time()),
+             "id": str(maxa + 1),
+             "quote": quote}
+        brain.set("quote:%d" % (maxa + 1), q)
 
     # prima che qualche faccia di merda si lamenti
-    # e' l'eval per ritrasformare il tostring di un 
+    # e' l'eval per ritrasformare il tostring di un
     # dizionario (di stringhe per giunta) di nuovo
     # nel dizionario originale.
     # vale la regola, se riuscite a romperlo bravi/lode/avete ragione
@@ -37,7 +42,7 @@ class Quotatore(Arnaldigno):
     def search_quote(self, e, match):
         pattern = match.groups()[0]
 
-        regex = re.compile(".*(%s).*"%pattern)
+        regex = re.compile(".*(%s).*" % pattern)
 
         # <PAZO>
         k = brain.keys("quote:*")

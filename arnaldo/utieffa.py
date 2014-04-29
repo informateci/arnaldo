@@ -48,11 +48,10 @@ class BambaRosaNasaBuffer(object):  # decoda a naso. VIVA!
             for encodi in [('utf-8', 'strict'),
                            ('latin-1', 'strict'),
                            ('utf-8', 'replace'),
-                           ('utf-8', 'ignore')]: #tipo a tentativi ma peggio
+                           ('utf-8', 'ignore')]:  # tipo a tentativi ma peggio
                 try:
                     l = line.decode(encodi[0], encodi[1])
                     break
                 except:
                     l = ""
             yield l
-

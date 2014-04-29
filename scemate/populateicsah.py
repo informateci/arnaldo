@@ -2,7 +2,6 @@ import redis
 import sys
 
 
-
 try:
     brain = redis.Redis("localhost")
 except:
@@ -114,7 +113,5 @@ ROWS = len(ASCIItable.values()[0])
 
 for k in ASCIItable.keys():
     for v in ASCIItable[k]:
-        brain.rpush("asciitable:%s"%k, v)
-brain.set("asciitable:rows",len(ASCIItable.values()[0]))
-
-
+        brain.rpush("asciitable:%s" % k, v)
+brain.set("asciitable:rows", len(ASCIItable.values()[0]))

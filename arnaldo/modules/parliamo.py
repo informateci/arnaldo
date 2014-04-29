@@ -18,7 +18,8 @@ class Parliamo(Arnaldigno):
 
     @comanda('(^allivello\\?)|(parliamo di)')
     def allivello(self, e, match):
-        wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#'+ str(time.time())
+        wikipedia_url = 'http://it.wikipedia.org/wiki/Speciale:PaginaCasuale#' + \
+            str(time.time())
         respa = request_oembed(wikipedia_url)
         corpo = respa.get('html', None)
         text = "macche'"
@@ -41,4 +42,3 @@ class Parliamo(Arnaldigno):
         if self.parliamo_summary:
             self.r(e, u'ಥ_ಥ  ockay')
             self.parliamo_summary = u'┌∩┐(◕_◕)┌∩┐'
-

@@ -10,10 +10,10 @@ import time
 import traceback
 import signal
 
-##
+#
 from utieffa import *
 from vedetta import Vedetta, dimme
-##
+#
 
 from modules.sproloquio import Sproloquio
 from modules.parliamo import Parliamo
@@ -24,11 +24,12 @@ from modules.bam import BAM
 from modules.linkini import Linkini
 
 
-
 class Arnaldo(irc.bot.SingleServerIRCBot):
+
     def __init__(self, channel, nickname, server, port=6667):
         irc.client.ServerConnection.buffer_class = BambaRosaNasaBuffer
-        irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
+        irc.bot.SingleServerIRCBot.__init__(
+            self, [(server, port)], nickname, nickname)
         self.nickname = nickname
         self.channel = channel
         self.commands = []
@@ -46,7 +47,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
     def dimmeame(self, msg):
         conn = self.connection
-        if type(msg) == type(()):
+        if isinstance(msg, type(())):
             conn.privmsg(self.channel, '<%s>: %s' % msg)
         else:
             conn.privmsg(self.channel, '* %s' % msg)
@@ -66,7 +67,9 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 pass
         if author is not None and message is not None:
             message = '[%s ha committato "%s"]' % (author, message)
-        self.connection.privmsg(self.channel, message if message is not None else "speriamo venga la guerra!" )
+        self.connection.privmsg(
+            self.channel,
+            message if message is not None else "speriamo venga la guerra!")
         self.connection.disconnect("mi levo di 'ulo.")
         sys.exit(0)
 
@@ -96,13 +99,19 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                     excfazza = "Error in"
                     for frame in traceback.extract_tb(sys.exc_info()[2]):
                         fname, lineno, fn, text = frame
-                        excfazza = "%s %s on line %d; " % (excfazza, fname, lineno)
-                    self.reply(e, excfazza+'      Exception: ' + str(ex).replace('\n', ' - '))
+                        excfazza = "%s %s on line %d; " % (
+                            excfazza, fname, lineno)
+                    self.reply(
+                        e,
+                        excfazza + '      Exception: ' + str(
+                            ex).replace('\n', ' - '))
                     continue
 
     def reply(self, e, m):
         multiline_tout = 0.5
-        target = e.source.nick if e.target == self.connection.get_nickname() else e.target
+        target = e.source.nick \
+            if e.target == self.connection.get_nickname() \
+            else e.target
         if '\n' in m:
             ll = m.split('\n')
             if len(ll) > 12:
@@ -148,7 +157,9 @@ def main():
     nickname = sys.argv[3]
 
     T800 = Vedetta()
-    T800.start()  # I'm a friend of Sarah Connor. I was told she was here. Could I see her please?
+    T800.start()
+    # I'm a friend of Sarah Connor. I was told she was here. Could I
+    # see her please?
 
     bot = Arnaldo(channel, nickname, server, port)
     signal.signal(signal.SIGUSR1, fista_duro_e_vai_sicuro)

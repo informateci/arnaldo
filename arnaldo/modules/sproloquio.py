@@ -9,6 +9,7 @@ import random
 
 
 class Sproloquio(Arnaldigno):
+
     @comanda('attardati')
     def attardati(self, e, match):
         self.r(e, u"Stefano %s Attardi" % brain.getAttardi().decode('utf8'))
@@ -30,7 +31,8 @@ class Sproloquio(Arnaldigno):
     @comanda('beuta')
     def beuta(self, e, match):
         cocktail_id = random.randint(1, 4750)
-        data = urllib2.urlopen("http://www.cocktaildb.com/recipe_detail?id=%d" % cocktail_id)
+        data = urllib2.urlopen(
+            "http://www.cocktaildb.com/recipe_detail?id=%d" % cocktail_id)
         soup = BeautifulSoup(data.read())
         directions = soup.findAll("div", {"class": "recipeDirection"})
         measures = soup.findAll("div", {"class": "recipeMeasure"})
@@ -57,4 +59,3 @@ class Sproloquio(Arnaldigno):
         l = soup.findAll("div", {"class": "post"})
         i = random.choice(l)
         self.r(e, "http://i.imgur.com/%s.jpg" % i.get("id"))
-
