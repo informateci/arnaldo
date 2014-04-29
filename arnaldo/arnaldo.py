@@ -53,7 +53,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         else:
             conn.privmsg(self.channel, '* %s' % msg)
 
-    def on_muori(self, a, b):
+    def on_muori(self):
         author = None
         message = None
         if os.path.isfile('arnaldo.commit'):
