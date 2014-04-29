@@ -46,12 +46,12 @@ class Quotatore(Arnaldigno):
             resp = [r for r in listo if regex.search(r['quote'])]
         # </PAZO>
 
-        r = choice(resp) if len(k) > 0 else None
-        if r is None:
+        respa = choice(resp) if len(k) > 0 else None
+        if respa is None:
             self.r(e, 'no such quote')
             return None
-        print r
-        self.r(e, '#%s: %s' % r['id'], r['quote'].decode('utf8'))
+        print respa
+        self.r(e, '#%s: %s' % respa['id'], respa['quote'].decode('utf8'))
 
 if __name__ == '__main__':
     Quotatore.random_quote()
