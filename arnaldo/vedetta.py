@@ -17,39 +17,46 @@ def htmella(s, code, content, msg):
 
 
 class onore(tornado.web.RequestHandler):
-        def get(self):
-            htmella(self, 200, 'text/html', "<html><h1>ONORE AL COMMENDATORE!</h1></html>")
+
+    def get(self):
+        htmella(self, 200,
+                'text/html',
+                "<html><h1>ONORE AL COMMENDATORE!</h1></html>")
 
 
 class sputa(tornado.web.RequestHandler):
-        def get(self):
-            htmella(self, 404, 'text/html', "che ti levi di ulo?")
 
-        def post(self):
+    def get(self):
+        htmella(self, 404, 'text/html', "che ti levi di ulo?")
 
-            author = self.get_argument("chie")
-            message = self.get_argument("msg")
+    def post(self):
 
-            if message:
-                bazza = self.get_argument("hasho")
-                print "%s,%s,%s" % (author, message, bazza)
+        author = self.get_argument("chie")
+        message = self.get_argument("msg")
 
-                cecco = bcrypt.verify(message + brain.get("httppasswd"), str(bazza))
-                if cecco:
-                    if author:
-                        out = (author,message)
-                    else:
-                        out = message
-                    dimme.send(out)
-                    self.redirect("/")
+        if message:
+            bazza = self.get_argument("hasho")
+            print "%s,%s,%s" % (author, message, bazza)
+
+            cecco = bcrypt.verify(message + brain.get(
+                "httppasswd"), str(bazza))
+            if cecco:
+                if author:
+                    out = (author, message)
                 else:
-                    htmella(self, 404, 'text/html', "che ti levi di ulo?")
+                    out = message
+                dimme.send(out)
+                self.redirect("/")
+            else:
+                htmella(self, 404, 'text/html', "che ti levi di ulo?")
 
 
 class Vedetta(threading.Thread):
     http_server = None
+
     def run(self):
-        accatitipi = tornado.web.Application([(r"/", onore), (r"/catarro", sputa)])
+        accatitipi = tornado.web.Application(
+            [(r"/", onore), (r"/catarro", sputa)])
         self.http_server = tornado.httpserver.HTTPServer(accatitipi)
         self.http_server.listen(50102, '0.0.0.0')
         tornado.ioloop.IOLoop.instance().start()
@@ -58,4 +65,3 @@ class Vedetta(threading.Thread):
         if self.http_server:
             self.http_server.stop()
         tornado.ioloop.IOLoop.instance().stop()
-

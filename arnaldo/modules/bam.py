@@ -8,6 +8,7 @@ import datetime
 
 
 class BAM(Arnaldigno):
+
     def __init__(self, *args):
         super(BAM, self).__init__(*args)
         self.BAM = None
@@ -50,13 +51,13 @@ class BAM(Arnaldigno):
         if not ggallin:
             return
 
-        try: 
+        try:
             ts = brain.get(ggallin)
             if ts:
-                response = "chiaro il %s" % datetime.datetime.fromtimestamp(float(ts)).strftime('%d/%m/%y %H:%M:%S')
+                response = "chiaro il %s" % datetime.datetime.fromtimestamp(
+                    float(ts)).strftime('%d/%m/%y %H:%M:%S')
             else:
                 response = "macche'"
             self.r(e, response)
         except:
             pass
-

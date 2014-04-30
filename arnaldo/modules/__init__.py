@@ -9,6 +9,7 @@ def comanda(regex):
 
 
 class Arnaldigno(object):
+
     def __init__(self, arnaldo):
         self.arnaldo = arnaldo
 
