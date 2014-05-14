@@ -44,10 +44,12 @@ class BAM(Arnaldigno):
                     self.BAM = t
                     if mastah:
                         self.r(e, '[mastah]')
+                        self.BAM = None
             except:
                 self.BAM = t
                 if mastah:
                     self.r(e, '[mastah]')
+                    self.BAM = None
 
         return True
 
