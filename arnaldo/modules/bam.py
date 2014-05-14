@@ -17,6 +17,9 @@ class BAM(Arnaldigno):
     def BAMBAM(self, e, match):
         brain.set(e.source.nick, time.time())
         t = e.arguments[0]
+
+        mastah = len(t) == len(self.BAM)
+        
         if self.BAM == t:
             self.r(e, self.BAM)
             self.BAM = None
@@ -36,8 +39,12 @@ class BAM(Arnaldigno):
                     self.BAM = None
                 else:
                     self.BAM = t
+                    if mastah:
+                        self.r(e, '[mastah]')
             except:
                 self.BAM = t
+                if mastah:
+                    self.r(e, '[mastah]')
 
         return True
 
