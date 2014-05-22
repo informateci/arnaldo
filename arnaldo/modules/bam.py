@@ -18,10 +18,7 @@ class BAM(Arnaldigno):
         brain.set(e.source.nick, time.time())
         t = e.arguments[0]
 
-        try:
-            mastah = len(t) == len(self.BAM)
-        except:
-            mastah = False
+        mastah = len(t) == len(self.BAM)
         
         if self.BAM == t:
             self.r(e, self.BAM)
