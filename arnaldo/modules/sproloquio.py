@@ -59,3 +59,12 @@ class Sproloquio(Arnaldigno):
         l = soup.findAll("div", {"class": "post"})
         i = random.choice(l)
         self.r(e, "http://i.imgur.com/%s.jpg" % i.get("id"))
+
+    @comanda('^peppa (.+)')
+    def peppa(self, e, match):
+        try:
+            uguale = match.groups()[0]
+            self.r(e, '<peppe> %s=merda' % uguale)
+        except:
+            pass
+
