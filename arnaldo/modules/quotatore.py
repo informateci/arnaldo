@@ -51,7 +51,7 @@ class Quotatore(Arnaldigno):
             resp = [r for r in listo if regex.search(r['quote'])]
         # </PAZO>
 
-        respa = choice(resp) if len(k) > 0 else None
+        respa = choice(resp) if len(resp) > 0 else None
         if respa is None:
             self.r(e, 'no such quote')
             return None
