@@ -1,4 +1,5 @@
 # vim: set fileencoding=utf-8:
+# -*- coding: utf8 -*-
 
 from arnaldo.modules import Arnaldigno, comanda
 from arnaldo import brain
@@ -11,6 +12,7 @@ import random
 import json
 
 imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
+
 
 class Sproloquio(Arnaldigno):
 
@@ -72,9 +74,8 @@ class Sproloquio(Arnaldigno):
     @comanda('^gugola (.+)')
     def gugola(self, e, match):
         try:
-            uguale = match.groups()[0]
+            uguale = match.groups()[0].encode('utf-8')
             response = urllib2.urlopen("http://ajax.googleapis.com/ajax/services/search/images?safe=off&tbs=isz:lt,istl:vga&rsz=8&v=1.0&q=" + urllib.quote(uguale))
             self.r(e, random.choice(json.loads(response.read())['responseData']['results'])['url'])
         except:
             pass
-
