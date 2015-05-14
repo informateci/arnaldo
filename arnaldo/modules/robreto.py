@@ -8,7 +8,9 @@ class Robreto(Arnaldigno):
     @comanda('(.*robreto.*)')
     def robreto(self, e, match):
         vow = "aeiouy"
+        vow += vow.upper()
         con = "bcdfghjklmnpqrstvwxz"
+        con += con.upper()
         cv_pattern = "(([%s])([%s]))" % (con, vow)
         cvc_pattern = "(([%s])([%s])([%s]))" % (con, vow, con)
 
