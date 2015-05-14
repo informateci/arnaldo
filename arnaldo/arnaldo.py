@@ -22,6 +22,7 @@ from modules.accolli import Accolli
 from modules.icsah import Icsah
 from modules.bam import BAM
 from modules.linkini import Linkini
+from modules.robreto import Robreto
 
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
@@ -44,6 +45,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(Icsah(self))
         self.modules.append(BAM(self))
         self.modules.append(Linkini(self))
+        self.modules.append(Robreto(self))
 
     def dimmeame(self, msg):
         conn = self.connection
