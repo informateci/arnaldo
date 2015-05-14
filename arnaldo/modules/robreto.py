@@ -11,8 +11,8 @@ class Robreto(Arnaldigno):
         vow += vow.upper()
         con = "bcdfghjklmnpqrstvwxz"
         con += con.upper()
-        cv_pattern = "(([%s])([%s]))" % (con, vow)
-        cvc_pattern = "(([%s])([%s])([%s]))" % (con, vow, con)
+        cv_pattern = "([%s][%s])" % (con, vow)
+        cvc_pattern = "([%s][%s][%s])" % (con, vow, con)
 
         tokenamelo = ["(robreto)", "([0-9A-Za-z]+)", "(\s+)", "(.)"]
         la_stringa = match.groups()[0]
@@ -26,11 +26,10 @@ class Robreto(Arnaldigno):
                 la_stringa = la_stringa.lstrip()
             else:
                 moneta = random.random()
-                cvs = re.findall(cv_pattern if (moneta > 0.5) else cvc_pattern , wut)
+                cvs = re.findall(cv_pattern if (moneta > 0.5) else cvc_pattern, wut)
                 if cvs:
-                    idx = random.randrange(0, len(cvs))
-                    rob = cvs[idx][2] + cvs[idx][1] if (moneta > 0.5) else cvs[idx][3] + cvs[idx][2] + cvs[idx][1]
-                    al_stingra += re.sub(cvs[idx][0], rob, wut, 1)
+                    torev = random.choice(cvs)
+                    al_stingra += re.sub(torev, torev[::-1], wut, 1)
                 else:
                     al_stingra += wut
 
