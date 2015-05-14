@@ -10,7 +10,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import sys
-PORT = 8000
+from arnaldo.conf import PORT, CHAN, NICK, SLISTEN
 PROCESS = None
 
 
@@ -24,7 +24,7 @@ def rinasci_arnaldo():
     subprocess.check_call(['git', 'pull'])
     subprocess.check_call(['rm', '-rf', '*.pyc'])
     PROCESS = subprocess.Popen(
-        'python arnaldo.py irc.freenode.net ##informateci arnaldo'.split())
+        ('python arnaldo.py irc.freenode.net %s %s'%(CHAN, NICK)).split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
     accendi_il_cervello()
 
@@ -145,14 +145,14 @@ class le_poste(tornado.web.RequestHandler):
 
 
 if __name__ == '__main__':
-    print 'Starting arnaldo'
+    print 'Starting %s' %NICK
     rinasci_arnaldo()
 
     print "Starting webserver (%s)" % (PORT,)
     accatitipi = tornado.web.Application([(
         r"/", do_the_404), (r"/github", le_poste)])
     http_server = tornado.httpserver.HTTPServer(accatitipi)
-    http_server.listen(PORT, '0.0.0.0')
+    http_server.listen(PORT, SLISTEN)
     try:
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:

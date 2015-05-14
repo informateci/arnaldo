@@ -2,13 +2,16 @@
 
 from arnaldo.modules import Arnaldigno, comanda
 from arnaldo import brain
-
+from imgurpython import ImgurClient
+from arnaldo.conf import imgur_client_id, imgur_client_secret
 from BeautifulSoup import BeautifulSoup
 import urllib2
 import random
 
+imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
 
 class Sproloquio(Arnaldigno):
+
 
     @comanda('attardati')
     def attardati(self, e, match):
@@ -53,12 +56,8 @@ class Sproloquio(Arnaldigno):
 
     @comanda('boobs please')
     def boobs(self, e, match):
-        urlo = "http://imgur.com/r/boobies/new/day/page/%d/hit?scrolled"
-        response = urllib2.urlopen(urlo % random.randint(1, 50)).read()
-        soup = BeautifulSoup(response)
-        l = soup.findAll("div", {"class": "post"})
-        i = random.choice(l)
-        self.r(e, "http://i.imgur.com/%s.jpg" % i.get("id"))
+        i = random.choice(imgurclient.subreddit_gallery('boobs'))
+        self.r(e, "%s" % i.link)
 
     @comanda('^peppa (.+)')
     def peppa(self, e, match):
