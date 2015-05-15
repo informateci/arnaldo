@@ -13,7 +13,7 @@ class Arnaldigno(object):
     def __init__(self, arnaldo):
         self.arnaldo = arnaldo
 
-        for name, thing in self.__class__.__dict__.iteritems():
+        for name, thing in self.__class__.__dict__.items():
             regexp = getattr(thing, 'regex', None)
 
             if regexp:

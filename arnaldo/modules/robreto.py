@@ -41,7 +41,7 @@ class Robreto(Arnaldigno):
 
 if __name__ == '__main__':
     def printamela(x):
-        print x
+        print(x)
 
     class Coso(object):
         def groups(self):
@@ -51,7 +51,7 @@ if __name__ == '__main__':
             pass
 
         def reply(self, x, y):
-            print y
+            print(y)
 
     c = Robreto(Coso())
     c.robreto(printamela, Coso())
