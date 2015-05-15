@@ -23,6 +23,7 @@ from modules.icsah import Icsah
 from modules.bam import BAM
 from modules.linkini import Linkini
 from modules.robreto import Robreto
+from modules.karma import Karmelo
 
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
@@ -46,6 +47,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         self.modules.append(BAM(self))
         self.modules.append(Linkini(self))
         self.modules.append(Robreto(self))
+        self.modules.append(Karmelo(self))
 
     def dimmeame(self, msg):
         conn = self.connection
@@ -164,7 +166,10 @@ def main():
     # see her please?
 
     bot = Arnaldo(channel, nickname, server, port)
-    signal.signal(signal.SIGUSR1, fista_duro_e_vai_sicuro)
+    try: # Windows workaround
+        signal.signal(signal.SIGUSR1, fista_duro_e_vai_sicuro)
+    except:
+        pass
 
     try:
         bot.start()

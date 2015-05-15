@@ -10,7 +10,7 @@ class Karmelo(Arnaldigno):
     @comanda('(.*)\+\+')
     def karmelone(self, e, match):
         u = self.arnaldo.channels[CHAN].users()
-        icche = '__karma_%s' % (match.groups()[0],)
+        icche = u'__karma_%s'.encode('utf-8') % (match.groups()[0],)
         if match.groups()[0] in u:
             k = brain.get(icche)
             brain.set(icche, 1 + (int(k) if k else 0))
@@ -21,7 +21,7 @@ class Karmelo(Arnaldigno):
     @comanda('(.*)\-\-')
     def karmelino(self, e, match):
         u = self.arnaldo.channels[CHAN].users()
-        icche = '__karma_%s' % (match.groups()[0],)
+        icche = u'__karma_%s'.encode('utf-8') % (match.groups()[0],)
         if match.groups()[0] in u:
             k = brain.get(icche)
             brain.set(icche, (int(k) if k else 0) - 1)
@@ -31,9 +31,9 @@ class Karmelo(Arnaldigno):
 
     @comanda('^%s\s*[:,]\s*(.*)\?' % (NICK, ))
     def karma(self, e, match):
-        icche = '__karma_%s' % (match.groups()[0],)
+        icche = u'__karma_%s'.encode('utf-8') % (match.groups()[0],)
         k = brain.get(icche)
         if k:
-            self.r(e, 'karma %s: %d' % (match.groups()[0], int(k)))
+            self.r(e, u'karma %s: %d'.encode('utf-8') % (match.groups()[0], int(k)))
         else:
-            self.r(e, '%s chi?' % (match.groups()[0], ))
+            self.r(e, u'%s chi?'.encode('utf-8') % (match.groups()[0], ))
