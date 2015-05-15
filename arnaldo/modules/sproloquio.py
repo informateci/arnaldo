@@ -5,8 +5,8 @@ from arnaldo.modules import Arnaldigno, comanda
 from arnaldo import brain
 from imgurpython import ImgurClient
 from arnaldo.conf import imgur_client_id, imgur_client_secret
-from BeautifulSoup import BeautifulSoup
-import urllib2
+from bs4 import BeautifulSoup
+#import urllib2
 import urllib
 import random
 import json

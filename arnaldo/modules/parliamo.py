@@ -4,7 +4,7 @@ from arnaldo.modules import Arnaldigno, comanda
 from arnaldo.brain import request_oembed
 
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import time
 import bleach
 

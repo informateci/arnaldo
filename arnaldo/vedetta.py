@@ -5,7 +5,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import threading
-from brain import brain, dimme
+from .brain import brain, dimme
 from passlib.hash import bcrypt
 
 
@@ -36,7 +36,7 @@ class sputa(tornado.web.RequestHandler):
 
         if message:
             bazza = self.get_argument("hasho")
-            print "%s,%s,%s" % (author, message, bazza)
+            print("%s,%s,%s" % (author, message, bazza))
 
             cecco = bcrypt.verify(message + brain.get(
                 "httppasswd"), str(bazza))

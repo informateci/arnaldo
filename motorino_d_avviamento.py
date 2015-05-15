@@ -2,7 +2,7 @@
 import pickle
 import subprocess
 import signal
-import urlparse
+import urllib.parse
 import json
 import hashlib
 import redis
@@ -24,7 +24,7 @@ def rinasci_arnaldo():
     subprocess.check_call(['git', 'pull'])
     subprocess.check_call(['rm', '-rf', '*.pyc'])
     PROCESS = subprocess.Popen(
-        ('python arnaldo.py irc.freenode.net %s %s'%(CHAN, NICK)).split())
+        ('python arnaldo.py irc.freenode.net %s %s' % (CHAN, NICK)).split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
     accendi_il_cervello()
 
@@ -35,67 +35,67 @@ def accendi_il_cervello():
     except:
         sys.exit("Insane in the membrane!!!")
 
-    hs = hashlib.md5(open('dati/SUB-EST2011-01.csv').read()).hexdigest()
+    hs = hashlib.md5(open('dati/SUB-EST2011-01.csv').read().encode('utf-8')).hexdigest()
     if brain.get("cyfhash") != hs:
         brain.set("cyfhash", hs)
         cyf = open('dati/SUB-EST2011-01.csv', 'r')
         cy = cyf.read()
         cyf.close()
-        print "Rigenero CITTA"
+        print("Rigenero CITTA")
         brain.delete("CITTA")
         for c in [[a.split(',')[1].upper() for a in (cy).split(",,,,")[6:-11]]][0]:
             brain.rpush(
                 "CITTA", c)  # in CITTA c'e' la lista delle citta' maiuscole
 
-    hs = hashlib.md5(open('dati/nounlist.txt').read()).hexdigest()
+    hs = hashlib.md5(open('dati/nounlist.txt').read().encode('utf-8')).hexdigest()
     if brain.get("nnfhash") != hs:
         brain.set("nnfhash", hs)
         nnf = open('dati/nounlist.txt', 'r')
         nn = nnf.read()
         nnf.close()
-        print "Rigenero NOMICEN"
+        print("Rigenero NOMICEN")
         brain.delete("NOMICEN")
         for n in nn.split('\n'):
             brain.rpush(
                 "NOMICEN", n.upper())  # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    hs = hashlib.md5(open('dati/attardi.txt').read()).hexdigest()
+    hs = hashlib.md5(open('dati/attardi.txt').read().encode('utf-8')).hexdigest()
     if brain.get("attaffhash") != hs:
         brain.set("attaffhash", hs)
         attaf = open('dati/attardi.txt', 'r')
         atta = attaf.readlines()
         attaf.close()
-        print "Rigenero ATTARDI"
+        print("Rigenero ATTARDI")
         brain.delete("ATTARDI")
         for a in [x.capitalize()[:-1] for x in atta]:
             brain.rpush(
                 "ATTARDI", a)  # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    hs = hashlib.md5(open('dati/prov1.pkl').read()).hexdigest()
+    hs = hashlib.md5(open('dati/prov1.pkl').read().encode('utf-8')).hexdigest()
     if brain.get("prov1fhash") != hs:
         brain.set("prov1fhash", hs)
         pkl_file = open('dati/prov1.pkl', 'rb')
         PROV1 = pickle.load(pkl_file)
         pkl_file.close()
-        print "Rigenero PROV1"
+        print("Rigenero PROV1")
         brain.delete("PROV1")
         for p1 in PROV1:  # lista prima meta' dei proverbi in PROV1
             brain.rpush("PROV1", " ".join(p1))
         del PROV1
 
-    hs = hashlib.md5(open('dati/prov2.pkl').read()).hexdigest()
+    hs = hashlib.md5(open('dati/prov2.pkl').read().encode('utf-8')).hexdigest()
     if brain.get("prov2fhash") != hs:
         brain.set("prov2fhash", hs)
         pkl_file = open('dati/prov2.pkl', 'rb')
         PROV2 = pickle.load(pkl_file)
         pkl_file.close()
-        print "Rigenero PROV2"
+        print("Rigenero PROV2")
         brain.delete("PROV2")
         for p2 in PROV2:  # lista 2a meta' dei proverbi in PROV2
             brain.rpush("PROV2", " ".join(p2))
         del PROV2
 
-    hs = hashlib.md5(open('dati/passvord.txt').read()).hexdigest()
+    hs = hashlib.md5(open('dati/passvord.txt').read().encode('utf-8')).hexdigest()
     if brain.get("passvordfhash") != hs:
         brain.set("prov2fhash", hs)
         passf = open('dati/passvord.txt', 'r')
@@ -121,7 +121,7 @@ class le_poste(tornado.web.RequestHandler):
         self.redirect("/")
 
     def post(self):
-        post_data = urlparse.parse_qs(self.request.body)
+        post_data = urllib.parse.parse_qs(self.request.body)
         author = None
         message = None
         for key, value in post_data.iteritems():
@@ -132,7 +132,7 @@ class le_poste(tornado.web.RequestHandler):
                     author = commits[0].get('author', None)
                     message = commits[0].get('message', None)
                     author = author.get('name', None)
-                    print "Commit di %s, comment: \"%s\"" % (author, message)
+                    print("Commit di %s, comment: \"%s\"" % (author, message))
 
         if author != None and message != None:
             f = open("arnaldo.commit", 'w')
@@ -145,10 +145,10 @@ class le_poste(tornado.web.RequestHandler):
 
 
 if __name__ == '__main__':
-    print 'Starting %s' %NICK
+    print('Starting %s' %NICK)
     rinasci_arnaldo()
 
-    print "Starting webserver (%s)" % (PORT,)
+    print("Starting webserver (%s)" % (PORT,))
     accatitipi = tornado.web.Application([(
         r"/", do_the_404), (r"/github", le_poste)])
     http_server = tornado.httpserver.HTTPServer(accatitipi)

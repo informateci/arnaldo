@@ -4,7 +4,8 @@
 from random import randint
 # ci fisto anche tutta la roba condivisibile,
 # non condivisibile eticamente, condivisibile che si condivide
-import urllib
+import urllib.parse
+import urllib.request
 import json
 from blinker import signal as lasigna
 
@@ -12,9 +13,9 @@ dimme = lasigna('dimmelo')
 
 
 def request_oembed(url):
-    query = urllib.urlencode((('url', url),))
-    data = urllib.urlopen('http://noembed.com/embed?' + query)
-    respa = json.loads(data.read())  # meglio una raspa d'una ruspa
+    query = urllib.parse.urlencode((('url', url),))
+    data = urllib.request.urlopen('http://noembed.com/embed?' + query)
+    respa = json.loads(data.read().decode('utf-8'))  # meglio una raspa d'una ruspa
     return respa
 
 
