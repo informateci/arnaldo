@@ -4,7 +4,6 @@ from arnaldo.modules import Arnaldigno, comanda
 #
 
 from collections import defaultdict
-import urllib2
 import datetime
 import urllib
 

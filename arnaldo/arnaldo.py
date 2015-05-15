@@ -11,19 +11,19 @@ import traceback
 import signal
 
 #
-from utieffa import *
-from vedetta import Vedetta, dimme
+from .utieffa import *
+from .vedetta import Vedetta, dimme
 #
 
-from modules.sproloquio import Sproloquio
-from modules.parliamo import Parliamo
-from modules.quotatore import Quotatore
-from modules.accolli import Accolli
-from modules.icsah import Icsah
-from modules.bam import BAM
-from modules.linkini import Linkini
-from modules.robreto import Robreto
-from modules.karma import Karmelo
+from .modules.sproloquio import Sproloquio
+from .modules.parliamo import Parliamo
+from .modules.quotatore import Quotatore
+from .modules.accolli import Accolli
+from .modules.icsah import Icsah
+from .modules.bam import BAM
+from .modules.linkini import Linkini
+from .modules.robreto import Robreto
+from .modules.karma import Karmelo
 
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
@@ -140,11 +140,11 @@ def fista_duro_e_vai_sicuro(ma, cche):
 
 
 def main():
-    print "meglio una raspa di una ruspa"
+    print("meglio una raspa di una ruspa")
     global T800
     global bot
     if len(sys.argv) != 4:
-        print "Usage: arnaldo <server[:port]> <channel> <nickname>"
+        print("Usage: arnaldo <server[:port]> <channel> <nickname>")
         sys.exit(1)
 
     s = sys.argv[1].split(":", 1)
@@ -153,7 +153,7 @@ def main():
         try:
             port = int(s[1])
         except ValueError:
-            print "Error: Erroneous port."
+            print("Error: Erroneous port.")
             sys.exit(1)
     else:
         port = 6667
@@ -167,7 +167,7 @@ def main():
     # see her please?
 
     bot = Arnaldo(channel, nickname, server, port)
-    try: # Windows workaround
+    try:  # Windows workaround
         signal.signal(signal.SIGUSR1, fista_duro_e_vai_sicuro)
     except:
         pass
