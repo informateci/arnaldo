@@ -26,8 +26,8 @@ class Karmelo(Arnaldigno):
     def karma(self, e, match):
         icche = match.groups()[0].lower()
         indove = u'__karma_%s'.encode('utf-8') % (icche,)
-        k = brain.get(icche)
+        k = brain.get(indove)
         if k:
-            self.r(e, u'karma %s: %d'.encode('utf-8') % (indove, int(k)))
+            self.r(e, u'karma %s: %d'.encode('utf-8') % (icche, int(k)))
         else:
-            self.r(e, u'%s chi?'.encode('utf-8') % (indove, ))
+            self.r(e, u'%s chi?'.encode('utf-8') % (icche, ))
