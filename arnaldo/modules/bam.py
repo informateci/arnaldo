@@ -5,8 +5,8 @@ from arnaldo.brain import brain
 import time
 import re
 import datetime
-
 runicode = r"u'\\N{(.*?)}'"
+
 class BAM(Arnaldigno):
 
     def __init__(self, *args):
