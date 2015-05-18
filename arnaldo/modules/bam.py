@@ -6,7 +6,7 @@ import time
 import re
 import datetime
 
-
+runicode = r"u'\\N{(.*?)}'"
 class BAM(Arnaldigno):
 
     def __init__(self, *args):
@@ -17,6 +17,12 @@ class BAM(Arnaldigno):
     def BAMBAM(self, e, match):
         brain.set(e.source.nick, time.time())
         t = e.arguments[0]
+        runi = re.search(runicode, t)
+        if (runi is not None):
+            try:
+                self.r(e, "%s" % eval(runi.group()) )
+            except:
+                pass
         if self.BAM == t:
             self.r(e, self.BAM)
             self.BAM = None
