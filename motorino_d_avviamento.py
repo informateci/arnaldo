@@ -136,7 +136,8 @@ class le_poste(tornado.web.RequestHandler):
 
         if author != None and message != None:
             f = open("arnaldo.commit", 'w')
-            f.write("%s:%s" % (author, message))
+            sw = "%s:%s" % (author, message)
+            f.write(sw.encode('utf8'))
             f.close()
             rinasci_arnaldo()
             self.clear()

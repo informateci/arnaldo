@@ -63,6 +63,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             try:
                 f = open('arnaldo.commit', "r")
                 allo = f.readline()
+                allo = allo.decode('utf8')
                 f.close()
                 allo = allo.split(':')
                 author = allo[0]
