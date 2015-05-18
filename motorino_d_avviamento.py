@@ -1,17 +1,23 @@
- #!/usr/bin/env python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import pickle
 import subprocess
 import signal
 import urllib.parse
 import json
 import hashlib
-import redis
+# import redis
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-import sys
+# import sys
+from arnaldo.brain import brain as cerebellum
 from arnaldo.conf import PORT, CHAN, NICK, SLISTEN
 PROCESS = None
+
+
+brain = cerebellum._brain
 
 
 def rinasci_arnaldo():
@@ -30,10 +36,6 @@ def rinasci_arnaldo():
 
 
 def accendi_il_cervello():
-    try:
-        brain = redis.Redis("localhost")
-    except:
-        sys.exit("Insane in the membrane!!!")
 
     hs = hashlib.md5(open('dati/SUB-EST2011-01.csv').read().encode('utf-8')).hexdigest()
     if brain.get("cyfhash") != hs:
@@ -57,7 +59,7 @@ def accendi_il_cervello():
         brain.delete("NOMICEN")
         for n in nn.split('\n'):
             brain.rpush(
-                "NOMICEN", n.upper())  # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
+                "NOMICEN", n.upper())  # in NOMI c'è la lista dei nomi (comuni) inglesi in maiuscolo
 
     hs = hashlib.md5(open('dati/attardi.txt').read().encode('utf-8')).hexdigest()
     if brain.get("attaffhash") != hs:
