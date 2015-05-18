@@ -19,88 +19,97 @@ def request_oembed(url):
     return respa
 
 
-try:
-    import redis
+class Redos:
 
-    brain = redis.Redis("localhost")
-    try:
-        brain.set('vaffanculo', 'uno')
-    except:
-        raise
-except:
-    # L'HAI VOLUTO IL DUCK TYPING?
+    def __init__(self):
+        try:
+            import redis
+            self._self = redis.Redis("localhost")
+        except ImportError:
+            print("")
+            self._self = {}
+        except ConnectionError:
+            self._self = {}
 
-    class suca:
+    def __getattribute__(self, item):
+        if item == '_self':
+            return object.__getattribute__(self, item)
 
-        def __init__(self):
-            self.suca = {}
+        try:
+            import redis
+        except ImportError:
+            return object.__getattribute__(self, item)
 
-        def set(self, a, b):
-            self.suca[a] = b
+        if isinstance(self._self, redis.Redis):
+            return getattr(self._self, item)
+        else:
+            return object.__getattribute__(self, item)
 
-        def get(self, a):
-            return self.suca.get(a, None)
+    def set(self, a, b):
+        self._self[a] = b
 
-        def llen(self, a):
-            return len(self.suca[a])
+    def get(self, a):
+        return self._self.get(a, None)
 
-        def lindex(self, a, i):
-            return len(self.suca[a][i])
+    def llen(self, a):
+        return len(self._self[a])
 
-        def rpush(self, a, v):
-            self.suca[a] = self.suca.get(a, [])
-            self.suca[a].append(v)
-            return len(self.suca[a]) - 1
+    def lindex(self, a, i):
+        return len(self._self[a][i])
 
-        def delete(self, a):
-            if a in self.suca:
-                del self.suca[a]
+    def rpush(self, a, v):
+        self._self[a] = self._self.get(a, [])
+        self._self[a].append(v)
+        return len(self._self[a]) - 1
 
-    brain = suca()
-
-
-def choicefromlist(name):
-    try:
-        i = randint(0, brain.llen(name) - 1)
-        return brain.lindex(name, i)
-    except:
-        return 'NISBA'
-
-
-def getCitta():
-    return choicefromlist("CITTA")
+    def delete(self, a):
+        if a in self._self:
+            del self._self[a]
 
 
-def getNomecen():
-    return choicefromlist("NOMICEN")
+class Brain:
 
+    def __init__(self):
+        self._brain = Redos()
 
-def getAttardi():
-    return choicefromlist("ATTARDI")
+    def choicefromlist(self, name):
+        try:
+            i = randint(0, self._brain.llen(name) - 1)
+            return self._brain.lindex(name, i)
+        except:
+            return 'NISBA'
 
+    @property
+    def città(self):
+        return self.choicefromlist("CITTA")
 
-def getProverbiUno():
-    return choicefromlist("PROV1")
+    def getNomecen(self):
+        return self.choicefromlist("NOMICEN")
 
+    def getAttardi(self):
+        return self.choicefromlist("ATTARDI")
 
-def getProverbiDue():
-    return choicefromlist("PROV2")
+    def getProverbiUno(self):
+        return self.choicefromlist("PROV1")
 
+    def getProverbiDue(self):
+        return self.choicefromlist("PROV2")
 
-def getProverbioandid():
-    i1 = randint(0, brain.llen("PROV1") - 1)
-    i2 = randint(0, brain.llen("PROV2") - 2)
-    if i2 >= i1:
-        i2 += 1
-    p = u"%s %s" % (brain.lindex("PROV1", i1).decode(
-        'utf8'), brain.lindex("PROV2", i2).decode('utf8'))
-    return p, "%dP%d" % (i1, i2)
+    def getProverbioandid(self):
+        i1 = randint(0, self._brain.llen("PROV1") - 1)
+        i2 = randint(0, self._brain.llen("PROV2") - 2)
+        if i2 >= i1:
+            i2 += 1
+        p = u"%s %s" % (self._brain.lindex("PROV1", i1).decode(
+            'utf8'), self._brain.lindex("PROV2", i2).decode('utf8'))
+        return p, "%dP%d" % (i1, i2)
 
+    def getProverbiobyid(self, idp):
+        try:
+            p = idp.split('P')
+            return u"%s %s" % (self._brain.lindex("PROV1", int(p[0])).decode('utf8'),
+                               self._brain.lindex("PROV2", int(p[1])).decode('utf8'))
+        except:
+            return
 
-def getProverbiobyid(idp):
-    try:
-        p = idp.split('P')
-        return u"%s %s" % (brain.lindex("PROV1", int(p[0])).decode('utf8'),
-                           brain.lindex("PROV2", int(p[1])).decode('utf8'))
-    except:
-        return "macche'"
+brain = Brain()
