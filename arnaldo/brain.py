@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # vim: set fileencoding=utf-8:
 
-from random import randint
+from random import randrange, shuffle
 # ci fisto anche tutta la roba condivisibile,
 # non condivisibile eticamente, condivisibile che si condivide
 import urllib.parse
@@ -19,7 +19,7 @@ def request_oembed(url):
     return respa
 
 
-class Redos:
+class Redox:
 
     def __init__(self):
         try:
@@ -37,13 +37,15 @@ class Redos:
 
         try:
             import redis
-        except ImportError:
+            return getattr(self._self, item)
+        except:
             return object.__getattribute__(self, item)
 
-        if isinstance(self._self, redis.Redis):
-            return getattr(self._self, item)
-        else:
-            return object.__getattribute__(self, item)
+    def lrand(self, a):
+        try:
+            return self.lindex(a, randrange(self.llen(a)))
+        except Exception:
+            return 'NISBA'
 
     def set(self, a, b):
         self._self[a] = b
@@ -67,49 +69,55 @@ class Redos:
             del self._self[a]
 
 
+redox = Redox()
+
+
 class Brain:
-
-    def __init__(self):
-        self._brain = Redos()
-
-    def choicefromlist(self, name):
-        try:
-            i = randint(0, self._brain.llen(name) - 1)
-            return self._brain.lindex(name, i)
-        except:
-            return 'NISBA'
+    global redox
 
     @property
     def città(self):
-        return self.choicefromlist("CITTA")
+        return redox.lrand("CITTA")
 
-    def getNomecen(self):
-        return self.choicefromlist("NOMICEN")
+    @property
+    def nomecen(self):
+        return redox.lrand("NOMICEN")
 
-    def getAttardi(self):
-        return self.choicefromlist("ATTARDI")
+    @property
+    def attardi(self):
+        return (lambda x: x[0].upper() + x[1:])(redox.lrand("ATTARDI"))
 
-    def getProverbiUno(self):
-        return self.choicefromlist("PROV1")
+    @property
+    def proverbiUno(self):
+        return redox.lrand("PROV1")
 
-    def getProverbiDue(self):
-        return self.choicefromlist("PROV2")
+    @property
+    def proverbiDue(self):
+        return redox.lrand("PROV2")
 
-    def getProverbioandid(self):
-        i1 = randint(0, self._brain.llen("PROV1") - 1)
-        i2 = randint(0, self._brain.llen("PROV2") - 2)
-        if i2 >= i1:
-            i2 += 1
-        p = u"%s %s" % (self._brain.lindex("PROV1", i1).decode(
-            'utf8'), self._brain.lindex("PROV2", i2).decode('utf8'))
-        return p, "%dP%d" % (i1, i2)
+    @property
+    def proverbioandid(self):
+        # prov1 e prov2 sono lunghi uguali
+        i = list(range(0, redox.llen("PROV1")))
+        shuffle(i)
+        # TODO: capire perché c'è in mezzo '\r'
+        p = ' '.join([
+            redox.lindex("PROV1", i[0]).replace(b'\r', b'').decode('utf8'),
+            redox.lindex("PROV2", i[1]).replace(b'\r', b'').decode('utf8')
+        ])
 
-    def getProverbiobyid(self, idp):
+        return p, "%dP%d" % (i[0], i[1])
+
+    @property
+    def proverbiobyid(self, idp):
         try:
             p = idp.split('P')
-            return u"%s %s" % (self._brain.lindex("PROV1", int(p[0])).decode('utf8'),
-                               self._brain.lindex("PROV2", int(p[1])).decode('utf8'))
+            return u' '.join([
+                redox.lindex("PROV1", int(p[0])).decode('utf8'),
+                redox.lindex("PROV2", int(p[1])).decode('utf8')
+            ])
         except:
             return
+
 
 brain = Brain()
