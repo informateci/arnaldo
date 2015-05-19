@@ -2,12 +2,11 @@
 # -*- coding: utf8 -*-
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo import brain
+from arnaldo.brain import brain
 from imgurpython import ImgurClient
 from arnaldo.conf import imgur_client_id, imgur_client_secret
 from bs4 import BeautifulSoup
-#import urllib2
-import urllib
+from urllib import request
 import random
 import json
 
@@ -16,29 +15,28 @@ imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
 
 class Sproloquio(Arnaldigno):
 
-
     @comanda('attardati')
     def attardati(self, e, match):
-        self.r(e, u"Stefano %s Attardi" % brain.getAttardi().decode('utf8'))
+        self.r(e, u"Stefano %s Attardi" % brain.attardi.decode('utf8'))
 
     @comanda('ANAL')
     def anal(self, e, match):
-        self.r(e, "%s ANAL %s" % (brain.getCitta(), brain.getNomecen()))
+        self.r(e, "%s ANAL %s" % (brain.città.decode('utf8'), brain.nomecen.decode('utf8')))
 
     @comanda('proverbia')
     def proverbia(self, e, match):
         self.r(e, self.proverbiaandid()[0])
 
     def proverbiaandid(self):
-        return brain.getProverbioandid()
+        return brain.proverbioandid
 
     def proverbiabyid(self, idp):
-        return brain.getProverbiobyid(idp)
+        return brain.proverbiobyid(idp)
 
     @comanda('beuta')
     def beuta(self, e, match):
         cocktail_id = random.randint(1, 4750)
-        data = urllib2.urlopen(
+        data = request.urlopen(
             "http://www.cocktaildb.com/recipe_detail?id=%d" % cocktail_id)
         soup = BeautifulSoup(data.read())
         directions = soup.findAll("div", {"class": "recipeDirection"})
@@ -75,7 +73,7 @@ class Sproloquio(Arnaldigno):
     def gugola(self, e, match):
         try:
             uguale = match.groups()[0].encode('utf-8')
-            response = urllib2.urlopen("http://ajax.googleapis.com/ajax/services/search/images?safe=off&tbs=isz:lt,istl:vga&rsz=8&v=1.0&q=" + urllib.quote(uguale))
+            response = request.urlopen("http://ajax.googleapis.com/ajax/services/search/images?safe=off&tbs=isz:lt,istl:vga&rsz=8&v=1.0&q=" + request.quote(uguale))
             self.r(e, random.choice(json.loads(response.read())['responseData']['results'])['url'])
         except:
             pass
