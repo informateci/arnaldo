@@ -1,7 +1,7 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo.brain import brain, request_oembed
+from arnaldo.brain import request_oembed, brain
 
 #
 import hashlib

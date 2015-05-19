@@ -5,7 +5,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import threading
-from .brain import brain, dimme
+from .brain import dimme, brain
 import bcrypt
 
 

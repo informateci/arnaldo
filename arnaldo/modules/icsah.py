@@ -1,7 +1,6 @@
 # vim: set fileencoding=utf-8:
-
-from arnaldo.modules import Arnaldigno, comanda
 from arnaldo.brain import brain
+from arnaldo.modules import Arnaldigno, comanda
 
 
 def pritaicsa(text):

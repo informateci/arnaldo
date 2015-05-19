@@ -1,7 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo.brain import brain
 
 import time
 from random import choice
@@ -12,18 +11,15 @@ class Quotatore(Arnaldigno):
 
     @comanda('^%s[:, \\t]*addquote (.*)')
     def add_quote(self, e, match):
-        try:
-            author = e.source.nick
-            quote = match.groups()[0]
-            maxa = max([int(x.split(':')[1]) for x in brain.keys('quote:*')])
-            q = {"author": author,
-                 "date": str(time.time()),
-                 "id": str(maxa + 1),
-                 "quote": quote}
-            brain.set(u"quote:%d" % (maxa + 1), q)
-            self.r(e, "vai agile [#%d]"%(maxa+1))
-        except:
-            self.r(e, "macche'")
+        author = e.source.nick
+        quote = match.groups()[0]
+        maxa = max([int(x.split(':')[1]) for x in self.brain.keys('quote:*')])
+        q = {"author": author,
+             "date": str(time.time()),
+             "id": str(maxa + 1),
+             "quote": quote}
+        self.brain.set("quote:%d" % (maxa + 1), q)
+        self.r(e, "vai agile [#%d]"%(maxa+1))
 
     # prima che qualche faccia di merda si lamenti
     # e' l'eval per ritrasformare il tostring di un
@@ -34,7 +30,7 @@ class Quotatore(Arnaldigno):
 
     @comanda('^%s[:, \\t]*quote$')
     def random_quote(self, e, match):
-        q = brain.get(choice(brain.keys("quote:*")))
+        q = self.brain.get(choice(self.brain.keys("quote:*")))
 
         if q is None:
             return
@@ -48,7 +44,7 @@ class Quotatore(Arnaldigno):
         if match is None:
             return
 
-        q = brain.get("quote:%s" % match.groups()[0])
+        q = self.brain.get("quote:%s" % match.groups()[0])
 
         if q is None:
             return
@@ -63,9 +59,9 @@ class Quotatore(Arnaldigno):
         regex = re.compile(".*(%s).*" % pattern)
 
         # <PAZO>
-        k = brain.keys("quote:*")
+        k = self.brain.keys("quote:*")
         if len(k) > 0:
-            listo = [eval(l) for l in brain.mget(*k)]
+            listo = [eval(l) for l in self.brain.mget(*k)]
             resp = [r for r in listo if regex.search(r['quote'])]
         # </PAZO>
 

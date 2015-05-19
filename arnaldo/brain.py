@@ -4,42 +4,33 @@
 from random import randrange, shuffle
 # ci fisto anche tutta la roba condivisibile,
 # non condivisibile eticamente, condivisibile che si condivide
-import urllib.parse
-import urllib.request
+from urllib import request, parse
 import json
+import redis
 from blinker import signal as lasigna
 
 dimme = lasigna('dimmelo')
 
 
 def request_oembed(url):
-    query = urllib.parse.urlencode((('url', url),))
-    data = urllib.request.urlopen('http://noembed.com/embed?' + query)
+    query = parse.urlencode((('url', url),))
+    data = request.urlopen('http://noembed.com/embed?' + query)
     respa = json.loads(data.read().decode('utf-8'))  # meglio una raspa d'una ruspa
     return respa
 
 
-class Redox:
+class Redisnt:
 
-    def __init__(self):
+    robba = {}
+
+    def __init__(self, x):
+        print("Ignoring", x)
+
+    def lrand(self, a):
         try:
-            import redis
-            self._self = redis.Redis("localhost")
-        except ImportError:
-            print("")
-            self._self = {}
-        except ConnectionError:
-            self._self = {}
-
-    def __getattribute__(self, item):
-        if item == '_self':
-            return object.__getattribute__(self, item)
-
-        try:
-            import redis
-            return getattr(self._self, item)
-        except:
-            return object.__getattribute__(self, item)
+            return self.lindex(a, randrange(self.llen(a)))
+        except Exception:
+            return 'NISBA'
 
     def lrand(self, a):
         try:
@@ -48,62 +39,83 @@ class Redox:
             return 'NISBA'
 
     def set(self, a, b):
-        self._self[a] = b
+        Redisnt.robba[a] = b
 
     def get(self, a):
-        return self._self.get(a, None)
+        return Redisnt.robba.get(a, None)
 
     def llen(self, a):
-        return len(self._self[a])
+        return len(Redisnt.robba[a])
 
     def lindex(self, a, i):
-        return len(self._self[a][i])
+        return Redisnt.robba[a][i]
 
     def rpush(self, a, v):
-        self._self[a] = self._self.get(a, [])
-        self._self[a].append(v)
-        return len(self._self[a]) - 1
+        Redisnt.robba[a] = Redisnt.robba.get(a, [])
+        Redisnt.robba[a].append(v)
+        return len(Redisnt.robba[a]) - 1
 
     def delete(self, a):
-        if a in self._self:
-            del self._self[a]
+        if a in Redisnt.robba:
+            del Redisnt.robba[a]
+
+
+class RedisExtended(redis.Redis):
+
+    def lrand(self, a):
+        try:
+            return self.lindex(a, randrange(self.llen(a)))
+        except Exception:
+            return 'NISBA'
+
+
+try:
+    import redis.exceptions
+    q = redis.Redis("localhost")
+    q.get("stocazzo")
+    Redox = RedisExtended
+except redis.exceptions.ConnectionError:
+    print("No redis server")
+finally:
+    Redox = Redisnt
 
 
 redox = Redox()
 
 
 class Brain:
-    global redox
+
+    def __init__(self):
+        self.data = Redox("localhost")
 
     @property
-    def città(self):
-        return redox.lrand("CITTA")
+    def citta(self):
+        return self.data.lrand("CITTA")
 
     @property
     def nomecen(self):
-        return redox.lrand("NOMICEN")
+        return self.data.lrand("NOMICEN")
 
     @property
     def attardi(self):
-        return (lambda x: x[0].upper() + x[1:])(redox.lrand("ATTARDI"))
+        return (lambda x: x[0].upper() + x[1:])(self.data.lrand("ATTARDI"))
 
     @property
     def proverbiUno(self):
-        return redox.lrand("PROV1")
+        return self.data.lrand("PROV1")
 
     @property
     def proverbiDue(self):
-        return redox.lrand("PROV2")
+        return self.data.lrand("PROV2")
 
     @property
     def proverbioandid(self):
         # prov1 e prov2 sono lunghi uguali
-        i = list(range(0, redox.llen("PROV1")))
+        i = list(range(0, self.data.llen("PROV1")))
         shuffle(i)
-        # TODO: capire perché c'è in mezzo '\r'
         p = ' '.join([
-            redox.lindex("PROV1", i[0]).replace(b'\r', b'').decode('utf8'),
-            redox.lindex("PROV2", i[1]).replace(b'\r', b'').decode('utf8')
+            self.data.lindex("PROV1", i[0]),
+            self.data.lindex("PROV2", i[1])
         ])
 
         return p, "%dP%d" % (i[0], i[1])
@@ -113,11 +125,11 @@ class Brain:
         try:
             p = idp.split('P')
             return u' '.join([
-                redox.lindex("PROV1", int(p[0])).decode('utf8'),
-                redox.lindex("PROV2", int(p[1])).decode('utf8')
+                self.data.lindex("PROV1", int(p[0])),
+                self.data.lindex("PROV2", int(p[1]))
             ])
-        except:
-            return
+        except Exception as e:
+            print('proverbiobyid', e)
 
 
 brain = Brain()

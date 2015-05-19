@@ -5,7 +5,7 @@ from arnaldo.modules import Arnaldigno, comanda
 
 from collections import defaultdict
 import datetime
-import urllib
+from urllib import request, parse
 
 
 class Accolli(Arnaldigno):
@@ -24,7 +24,7 @@ class Accolli(Arnaldigno):
         if not len(l) or ((d - l[0]).total_seconds() < 60 * 30 and len(l) < 3):
             self.contabrazze[h].append(d)
             urlo = match.groups()[0]
-            response = urllib2.urlopen(
+            response = request.urlopen(
                 "http://brazzifier.ueuo.com/index.php?urlz=" + urlo
             ).read()
             self.r(e, response)
@@ -42,7 +42,7 @@ class Accolli(Arnaldigno):
         else:
             request += "tweetid=Pontifex_it"
 
-        response = urllib2.urlopen(
+        response = request.urlopen(
             "http://markoviami.appspot.com/" + request
         ).read().decode('utf8')
         self.r(e, response)
@@ -59,6 +59,6 @@ class Accolli(Arnaldigno):
         urlo = "http://shell.appspot.com/shell.do"
         session = "agVzaGVsbHITCxIHU2Vzc2lvbhjdlpXJnooGDA"
         para = (("statement", ggallin), ("session", session))
-        para = urllib.urlencode(para)
-        response = urllib.urlopen(urlo + "?&" + para).read()
+        para = parse.urlencode(para)
+        response = request.urlopen(urlo + "?&" + para).read()
         self.r(e, response)
