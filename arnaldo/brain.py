@@ -80,9 +80,6 @@ finally:
     Redox = Redisnt
 
 
-redox = Redox()
-
-
 class Brain:
 
     def __init__(self):
