@@ -1,12 +1,12 @@
 # vim: set fileencoding=utf-8:
 # -*- coding: utf8 -*-
+from arnaldo.brain import brain
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo.brain import brain
 from imgurpython import ImgurClient
 from arnaldo.conf import imgur_client_id, imgur_client_secret
 from bs4 import BeautifulSoup
-from urllib import request
+from urllib import request, parse
 import random
 import json
 import requests
@@ -19,11 +19,11 @@ class Sproloquio(Arnaldigno):
 
     @comanda('attardati')
     def attardati(self, e, match):
-        self.r(e, u"Stefano %s Attardi" % brain.attardi.decode('utf8'))
+        self.r(e, u"Stefano %s Attardi" % brain.attardi)
 
     @comanda('ANAL')
     def anal(self, e, match):
-        self.r(e, "%s ANAL %s" % (brain.città.decode('utf8'), brain.nomecen.decode('utf8')))
+        self.r(e, "%s ANAL %s" % (brain.citta, brain.nomecen.upper()))
 
     @comanda('proverbia')
     def proverbia(self, e, match):
@@ -68,13 +68,13 @@ class Sproloquio(Arnaldigno):
         try:
             uguale = match.groups()[0]
             self.r(e, '<peppe> %s=merda' % uguale)
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     @comanda('^gugola (.+)')
     def gugola(self, e, match):
         try:
             uguale = match.groups()[0].encode('utf-8')
             self.r(e, random.choice(requests.get("https://duckduckgo.com/i.js?q=%s&o=json" % urllib.quote(uguale)).json()['results'])['image'])
-        except:
-            pass
+        except Exception as e:
+            print('gugola:', e)
