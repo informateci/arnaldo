@@ -1,7 +1,6 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo.brain import brain
 
 import time
 from random import choice
@@ -14,12 +13,12 @@ class Quotatore(Arnaldigno):
     def add_quote(self, e, match):
         author = e.source.nick
         quote = match.groups()[0]
-        maxa = max([int(x.split(':')[1]) for x in brain.keys('quote:*')])
+        maxa = max([int(x.split(':')[1]) for x in self.brain.keys('quote:*')])
         q = {"author": author,
              "date": str(time.time()),
              "id": str(maxa + 1),
              "quote": quote}
-        brain.set("quote:%d" % (maxa + 1), q)
+        self.brain.set("quote:%d" % (maxa + 1), q)
 
     # prima che qualche faccia di merda si lamenti
     # e' l'eval per ritrasformare il tostring di un
@@ -30,7 +29,7 @@ class Quotatore(Arnaldigno):
 
     @comanda('^%s[:, \\t]*quote$')
     def random_quote(self, e, match):
-        q = brain.get(choice(brain.keys("quote:*")))
+        q = self.brain.get(choice(self.brain.keys("quote:*")))
 
         if q is None:
             return
@@ -45,9 +44,9 @@ class Quotatore(Arnaldigno):
         regex = re.compile(".*(%s).*" % pattern)
 
         # <PAZO>
-        k = brain.keys("quote:*")
+        k = self.brain.keys("quote:*")
         if len(k) > 0:
-            listo = [eval(l) for l in brain.mget(*k)]
+            listo = [eval(l) for l in self.brain.mget(*k)]
             resp = [r for r in listo if regex.search(r['quote'])]
         # </PAZO>
 

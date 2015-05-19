@@ -1,6 +1,5 @@
 # vim: set fileencoding=utf-8:
 
-from __future__ import unicode_literals
 import irc.bot
 import irc.strings
 import os
@@ -11,6 +10,9 @@ import traceback
 import signal
 
 #
+from arnaldo.brain import brain
+from arnaldo.conf import CHAN, SLISTEN, PORT, arnaldo_port, arnaldo_server
+from arnaldo.conf import NICK
 from .utieffa import *
 from .vedetta import Vedetta, dimme
 #
@@ -25,6 +27,8 @@ from .modules.linkini import Linkini
 from .modules.robreto import Robreto
 from .modules.karma import Karmelo
 
+import multiprocessing
+
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
 
@@ -38,20 +42,13 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
         dimme.connect(self.dimmeame)
 
-        self.modules = []
-        self.modules.append(Sproloquio(self))
-        self.modules.append(Parliamo(self))
-        self.modules.append(Quotatore(self))
-        self.modules.append(Accolli(self))
-        self.modules.append(Icsah(self))
-        self.modules.append(BAM(self))
-        self.modules.append(Linkini(self))
-        self.modules.append(Robreto(self))
-        self.modules.append(Karmelo(self))
+        self.modules = [x(self) for x in [
+            Accolli, BAM, Icsah, Karmelo, Linkini, Parliamo, Quotatore, Robreto, Sproloquio
+        ]]
 
     def dimmeame(self, msg):
         conn = self.connection
-        if isinstance(msg, type(())):
+        if isinstance(msg, tuple):
             conn.privmsg(self.channel, '<%s>: %s' % msg)
         else:
             conn.privmsg(self.channel, '* %s' % msg)
@@ -127,51 +124,33 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         else:
             self.connection.privmsg(target, m)
 
-bot = None
-T800 = None
 
+class ArnaldoProcess(multiprocessing.Process):
 
-def fista_duro_e_vai_sicuro(ma, cche):
-    if bot:
-        bot.on_muori()
-    if T800:
-        T800.stop()
+    def __init__(self):
+        super(multiprocessing.Process, self).__init__()
+        self.T800 = None
+        self.bot = None
 
+    def run(self):
+        self.T800 = Vedetta()
+        self.T800.start()
+        self.bot = Arnaldo(CHAN, NICK, arnaldo_server, arnaldo_port)
 
-def main():
-    print("meglio una raspa di una ruspa")
-    global T800
-    global bot
-    if len(sys.argv) != 4:
-        print("Usage: arnaldo <server[:port]> <channel> <nickname>")
-        sys.exit(1)
+        try:  # Windows workaround
+            signal.signal(signal.SIGUSR1, self.fista_duro_e_vai_sicuro)
+        except:
+            pass
 
-    s = sys.argv[1].split(":", 1)
-    server = s[0]
-    if len(s) == 2:
         try:
-            port = int(s[1])
-        except ValueError:
-            print("Error: Erroneous port.")
-            sys.exit(1)
-    else:
-        port = 6667
+            self.bot.start()
+        except KeyboardInterrupt:
+            self.T800.stop()
 
-    channel = sys.argv[2]
-    nickname = sys.argv[3]
-
-    T800 = Vedetta()
-    T800.start()
-    # I'm a friend of Sarah Connor. I was told she was here. Could I
-    # see her please?
-
-    bot = Arnaldo(channel, nickname, server, port)
-    try:  # Windows workaround
-        signal.signal(signal.SIGUSR1, fista_duro_e_vai_sicuro)
-    except:
-        pass
-
-    try:
-        bot.start()
-    except KeyboardInterrupt:
-        T800.stop()
+    def fista_duro_e_vai_sicuro(self, ma, cche):
+        print("fisto duro e vado sicuro")
+        if self.bot:
+            self.bot.on_muori()
+        if self.T800:
+            self.T800.stop()
+        print("per davvero")
