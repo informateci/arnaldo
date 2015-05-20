@@ -6,11 +6,11 @@ import signal
 import urllib.parse
 import json
 import hashlib
+import arnaldo.brain as b
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 
-from arnaldo.brain import redox
 from arnaldo.arnaldo import ArnaldoProcess
 from arnaldo.conf import PORT, NICK, SLISTEN
 import os
@@ -26,8 +26,6 @@ def rinasci_arnaldo():
 
     subprocess.check_call(['git', 'pull'])
     subprocess.check_call(['rm', '-rf', '*.pyc'])
-    """PROCESS = subprocess.Popen(
-        ('python arnaldo.py irc.freenode.net %s %s' % (CHAN, NICK)).split())"""
     accendi_il_cervello()
     PROCESS = ArnaldoProcess()
     PROCESS.start()
@@ -45,15 +43,21 @@ def accendi_il_cervello():
         ('dati/prov2.txt', 'PROV2')
     ]
 
+    redox = b.brain.data
+
     for (data_file, redis_name) in fosforo:
         h = hashlib.md5(open(data_file).read().encode('utf8')).hexdigest()
-        if redox.get('__hash_' + redis_name).decode('utf8') != h:
+        ascio = redox.get('__hash_' + redis_name)
+        if (ascio is None) or (ascio.decode('utf8') != h):
             redox.set('__hash_' + redis_name, h)
             with open(data_file, 'r') as f:
                 lines = f.readlines()
             print("Rigenero", redis_name)
+            redox.delete(redis_name)
             for line in lines:
                 redox.rpush(redis_name, bytes(line.encode('utf8')).decode('utf8').strip())
+
+    print(redox.keys('*'))
 
     hs = hashlib.md5(open('dati/passvord.txt').read().encode('utf-8')).hexdigest()
     if redox.get("passvordfhash") != hs:

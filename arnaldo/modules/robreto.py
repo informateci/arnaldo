@@ -1,6 +1,7 @@
-from arnaldo.modules import Arnaldigno, comanda
 import re
 import random
+
+from arnaldo.modules import Arnaldigno, comanda
 
 
 class Robreto(Arnaldigno):

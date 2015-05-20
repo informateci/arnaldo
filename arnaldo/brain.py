@@ -7,7 +7,6 @@ from random import randrange, shuffle
 from urllib import request, parse
 import json
 import redis
-import re
 from blinker import signal as lasigna
 
 dimme = lasigna('dimmelo')
@@ -20,50 +19,6 @@ def request_oembed(url):
     return respa
 
 
-class Redisnt:
-
-    robba = {}
-
-    def __init__(self, x):
-        print("Ignoring", x)
-
-    def keys(self, pattern):
-        return [x for x in Redisnt.robba.keys() if re.match(pattern, x)]
-
-    def lrand(self, a):
-        try:
-            return self.lindex(a, randrange(self.llen(a)))
-        except Exception:
-            return 'NISBA'
-
-    def lrand(self, a):
-        try:
-            return self.lindex(a, randrange(self.llen(a)))
-        except Exception:
-            return 'NISBA'
-
-    def set(self, a, b):
-        Redisnt.robba[a] = b
-
-    def get(self, a):
-        return Redisnt.robba.get(a, None)
-
-    def llen(self, a):
-        return len(Redisnt.robba[a])
-
-    def lindex(self, a, i):
-        return Redisnt.robba[a][i]
-
-    def rpush(self, a, v):
-        Redisnt.robba[a] = Redisnt.robba.get(a, [])
-        Redisnt.robba[a].append(v)
-        return len(Redisnt.robba[a]) - 1
-
-    def delete(self, a):
-        if a in Redisnt.robba:
-            del Redisnt.robba[a]
-
-
 class RedisExtended(redis.Redis):
 
     def lrand(self, a):
@@ -73,44 +28,30 @@ class RedisExtended(redis.Redis):
             return 'NISBA'
 
 
-try:
-    import redis.exceptions
-    q = redis.Redis("localhost")
-    q.get("SHAMALAYAN")
-    Redox = RedisExtended
-except (redis.exceptions.ConnectionError, Exception) as e:
-    print(e)
-    Redox = Redisnt
-
-
-redox = Redox("localhost")
-print('redox is', type(redox))
-
-
 class Brain:
 
     def __init__(self):
-        self.data = Redox("localhost")
+        self.data = RedisExtended("localhost")
 
     @property
     def citta(self):
-        return self.data.lrand("CITTA")
+        return self.data.lrand("CITTA").decode('utf8')
 
     @property
     def nomecen(self):
-        return self.data.lrand("NOMICEN")
+        return self.data.lrand("NOMICEN").decode('utf8')
 
     @property
     def attardi(self):
-        return (lambda x: x[0].upper() + x[1:])(self.data.lrand("ATTARDI"))
+        return (lambda x: x[0].upper() + x[1:].lower())(self.data.lrand("ATTARDI").decode('utf8'))
 
     @property
     def proverbiUno(self):
-        return self.data.lrand("PROV1")
+        return self.data.lrand("PROV1").decode('utf8')
 
     @property
     def proverbiDue(self):
-        return self.data.lrand("PROV2")
+        return self.data.lrand("PROV2").decode('utf8')
 
     @property
     def proverbioandid(self):
@@ -118,8 +59,8 @@ class Brain:
         i = list(range(0, self.data.llen("PROV1")))
         shuffle(i)
         p = ' '.join([
-            self.data.lindex("PROV1", i[0]),
-            self.data.lindex("PROV2", i[1])
+            self.data.lindex("PROV1", i[0]).decode('utf8'),
+            self.data.lindex("PROV2", i[1]).decode('utf8')
         ])
 
         return p, "%dP%d" % (i[0], i[1])
@@ -129,11 +70,10 @@ class Brain:
         try:
             p = idp.split('P')
             return u' '.join([
-                self.data.lindex("PROV1", int(p[0])),
-                self.data.lindex("PROV2", int(p[1]))
+                self.data.lindex("PROV1", int(p[0]).decode('utf8')),
+                self.data.lindex("PROV2", int(p[1]).decode('utf8'))
             ])
         except Exception as e:
             print('proverbiobyid', e)
-
 
 brain = Brain()

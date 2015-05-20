@@ -1,14 +1,14 @@
 # vim: set fileencoding=utf-8:
 # -*- coding: utf8 -*-
-from arnaldo.brain import brain, redox
+from urllib import request, parse
+import random
+import json
 
 from arnaldo.modules import Arnaldigno, comanda
 from imgurpython import ImgurClient
 from arnaldo.conf import imgur_client_id, imgur_client_secret
 from bs4 import BeautifulSoup
-from urllib import request, parse
-import random
-import json
+import arnaldo.brain as b
 
 imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
 
@@ -17,21 +17,21 @@ class Sproloquio(Arnaldigno):
 
     @comanda('attardati')
     def attardati(self, e, match):
-        self.r(e, u"Stefano %s Attardi" % brain.attardi)
+        self.r(e, u"Stefano %s Attardi" % b.brain.attardi)
 
     @comanda('ANAL')
     def anal(self, e, match):
-        self.r(e, "%s ANAL %s" % (brain.citta, brain.nomecen.upper()))
+        self.r(e, "%s ANAL %s" % (b.brain.citta, b.brain.nomecen.upper()))
 
     @comanda('proverbia')
     def proverbia(self, e, match):
         self.r(e, self.proverbiaandid()[0])
 
     def proverbiaandid(self):
-        return brain.proverbioandid
+        return b.brain.proverbioandid
 
     def proverbiabyid(self, idp):
-        return brain.proverbiobyid(idp)
+        return b.brain.proverbiobyid(idp)
 
     @comanda('beuta')
     def beuta(self, e, match):

@@ -1,10 +1,11 @@
 # vim: set fileencoding=utf-8:
-from arnaldo.brain import redox
-from arnaldo.modules import Arnaldigno, comanda
 import pickle
 import time
 from random import choice
 import re
+import arnaldo.brain as b
+
+from arnaldo.modules import Arnaldigno, comanda
 
 
 class Quotatore(Arnaldigno):
@@ -13,17 +14,17 @@ class Quotatore(Arnaldigno):
     def add_quote(self, e, match):
         author = e.source.nick
         quote = match.groups()[0]
-        maxa = max([int(x.decode('utf8').split(':')[1]) for x in redox.keys('quote:*')] + [-1])
+        maxa = max([int(x.decode('utf8').split(':')[1]) for x in b.brain.data.keys('quote:*')] + [-1])
         q = {"author": author,
              "date": str(time.time()),
              "id": str(maxa + 1),
              "quote": quote}
         # Si può usare pure json, come ve pare
-        redox.set("quote:%d" % (maxa + 1), pickle.dumps(q))
+        b.brain.data.set("quote:%d" % (maxa + 1), pickle.dumps(q))
 
     @comanda('^%s[:, \\t]*quote$')
     def random_quote(self, e, match):
-        q = redox.get(choice(redox.keys("quote:*")))
+        q = b.brain.data.get(choice(b.brain.data.keys("quote:*")))
         if q is None:
             self.r(e, 'NOPE.WAV')
         # Si può usare pure json, come ve pare
@@ -37,9 +38,9 @@ class Quotatore(Arnaldigno):
         regex = re.compile(".*(%s).*" % pattern)
 
         # <PAZO>
-        k = redox.keys("quote:*")
+        k = b.brain.data.keys("quote:*")
         if len(k) > 0:
-            listo = [pickle.loads(l) for l in redox.mget(*k)]
+            listo = [pickle.loads(l) for l in b.brain.data.mget(*k)]
             resp = [r for r in listo if regex.search(r['quote'])]
         # </PAZO>
 

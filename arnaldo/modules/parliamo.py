@@ -1,11 +1,10 @@
 # vim: set fileencoding=utf-8:
 
+import time
+
 from arnaldo.modules import Arnaldigno, comanda
 from arnaldo.brain import request_oembed
-
-
 from bs4 import BeautifulSoup
-import time
 import bleach
 
 

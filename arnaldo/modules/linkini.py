@@ -1,7 +1,8 @@
 # vim: set fileencoding=utf-8:
 
 from arnaldo.modules import Arnaldigno, comanda
-from arnaldo.brain import request_oembed, brain
+from arnaldo.brain import request_oembed
+import arnaldo.brain as b
 
 #
 import hashlib
@@ -55,13 +56,13 @@ class Linkini(Arnaldigno):
         except:
             pass
         thaurlhash = hashlib.md5(allurls[0][0]).hexdigest()
-        hashish = brain.get("urlo:%s" % thaurlhash)
+        hashish = b.brain.get("urlo:%s" % thaurlhash)
 
         try:
             if hashish is None:  # NO FUMO NO FUTURE
                 ts = time.time()
                 nic = e.source.nick
-                brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, 1))
+                b.brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, 1))
                 self.r(e, respa['title'])
             else:
                 secondianno = 31556926  # num secondi in un anno youdontsay.png
@@ -69,7 +70,7 @@ class Linkini(Arnaldigno):
                 ts = float(ts)
                 delta = time.time() - ts
                 v = int(v) + 1
-                brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, v))
+                b.brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, v))
                 manti, expo = map(
                     float,
                     ("%e" % (delta / secondianno)).split("e"))
