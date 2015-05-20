@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8:
 # -*- coding: utf8 -*-
-from arnaldo.brain import brain
+from arnaldo.brain import brain, redox
 
 from arnaldo.modules import Arnaldigno, comanda
 from imgurpython import ImgurClient
@@ -75,6 +75,6 @@ class Sproloquio(Arnaldigno):
     def gugola(self, e, match):
         try:
             uguale = match.groups()[0].encode('utf-8')
-            self.r(e, random.choice(requests.get("https://duckduckgo.com/i.js?q=%s&o=json" % urllib.quote(uguale)).json()['results'])['image'])
+            self.r(e, random.choice(requests.get("https://duckduckgo.com/i.js?q=%s&o=json" % parse.quote(uguale)).json()['results'])['image'])
         except Exception as e:
             print('gugola:', e)
