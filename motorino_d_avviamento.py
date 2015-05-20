@@ -10,7 +10,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 
-from arnaldo.brain import brain
+from arnaldo.brain import redox
 from arnaldo.arnaldo import ArnaldoProcess
 from arnaldo.conf import PORT, NICK, SLISTEN
 import os
@@ -44,8 +44,6 @@ def accendi_il_cervello():
         ('dati/prov1.txt', 'PROV1'),
         ('dati/prov2.txt', 'PROV2')
     ]
-
-    redox = brain.data
 
     for (data_file, redis_name) in fosforo:
         h = hashlib.md5(open(data_file).read().encode('utf8')).hexdigest()
