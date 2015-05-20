@@ -7,6 +7,7 @@ from random import randrange, shuffle
 from urllib import request, parse
 import json
 import redis
+import re
 from blinker import signal as lasigna
 
 dimme = lasigna('dimmelo')
@@ -25,6 +26,9 @@ class Redisnt:
 
     def __init__(self, x):
         print("Ignoring", x)
+
+    def keys(self, pattern):
+        return [x for x in Redisnt.robba.keys() if re.match(pattern, x)]
 
     def lrand(self, a):
         try:
@@ -72,15 +76,15 @@ class RedisExtended(redis.Redis):
 try:
     import redis.exceptions
     q = redis.Redis("localhost")
-    q.get("stocazzo")
+    q.get("SHAMALAYAN")
     Redox = RedisExtended
-except redis.exceptions.ConnectionError:
-    print("No redis server")
-finally:
+except (redis.exceptions.ConnectionError, Exception) as e:
+    print(e)
     Redox = Redisnt
 
 
 redox = Redox("localhost")
+print('redox is', type(redox))
 
 
 class Brain:
