@@ -47,7 +47,7 @@ def accendi_il_cervello():
 
     for (data_file, redis_name) in fosforo:
         h = hashlib.md5(open(data_file).read().encode('utf8')).hexdigest()
-        if redox.get('__hash_' + redis_name) != h:
+        if redox.get('__hash_' + redis_name).decode('utf8') != h:
             redox.set('__hash_' + redis_name, h)
             with open(data_file, 'r') as f:
                 lines = f.readlines()
