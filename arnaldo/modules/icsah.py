@@ -1,19 +1,17 @@
 # vim: set fileencoding=utf-8:
-from arnaldo.brain import brain
 from arnaldo.modules import Arnaldigno, comanda
-
-
-def pritaicsa(text):
-    icsa = ""
-    for row in range(int(brain.get("asciitable:rows"))):
-        for c in text:
-            icsa = str(icsa) + str(brain.lindex("asciitable:%s" % c, row))
-        icsa += '\n'
-    icsa += '\n'
-    return icsa
-
+import arnaldo.brain as b
 
 class Icsah(Arnaldigno):
+
+    def pritaicsa(self, text):
+        icsa = ""
+        for row in range(int(b.brain.get("asciitable:rows"))):
+            for c in text:
+                icsa = str(icsa) + str(b.brain.lindex("asciitable:%s" % c, row))
+            icsa += '\n'
+        icsa += '\n'
+        return icsa
 
     @comanda('^icsah (.+)')
     def icsah(self, e, match):
@@ -24,12 +22,12 @@ class Icsah(Arnaldigno):
         if not ggallin:
             return
         try:
-            icsa = pritaicsa(ggallin)
+            icsa = self.pritaicsa(ggallin)
             self.r(e, icsa)
         except:
             pass
 
     @comanda('^bamba$')
     def rosa(self, e, match):
-        icsa = pritaicsa("rosa")
+        icsa = self.pritaicsa("rosa")
         self.r(e, icsa)

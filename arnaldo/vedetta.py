@@ -1,11 +1,13 @@
 #! /usr/bin/env python
 # vim: set fileencoding=utf-8:
 
+import threading
+
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-import threading
-from .brain import dimme, brain
+from .brain import dimme
+import arnaldo.brain as b
 import bcrypt
 
 
@@ -38,7 +40,7 @@ class sputa(tornado.web.RequestHandler):
             bazza = self.get_argument("hasho")
             print("%s,%s,%s" % (author, message, bazza))
 
-            cecco = bcrypt.verify(message + brain.get(
+            cecco = bcrypt.verify(message + b.brain.data.get(
                 "httppasswd"), str(bazza))
             if cecco:
                 if author:

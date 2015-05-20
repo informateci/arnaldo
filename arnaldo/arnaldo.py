@@ -1,7 +1,5 @@
 # vim: set fileencoding=utf-8:
 
-import irc.bot
-import irc.strings
 import os
 import os.path
 import sys
@@ -9,8 +7,12 @@ import time
 import traceback
 import signal
 
+import irc.bot
+import irc.strings
+
+
 #
-from arnaldo.conf import CHAN, SLISTEN, PORT, arnaldo_port, arnaldo_server
+from arnaldo.conf import CHAN, arnaldo_port, arnaldo_server
 from arnaldo.conf import NICK
 from .utieffa import *
 from .vedetta import Vedetta, dimme
