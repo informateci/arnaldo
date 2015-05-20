@@ -7,7 +7,7 @@ from arnaldo.modules import Arnaldigno, comanda
 
 class Karmelo(Arnaldigno):
 
-    @comanda(r'(.*)\+\+')
+    @comanda(r'^([^\s]+)\+\+')
     def karmelone(self, e, match):
         icche = match.groups()[0]
         indove = u'__karma_%s' % (icche.lower(),)
@@ -15,7 +15,7 @@ class Karmelo(Arnaldigno):
         redox.set(indove, 1 + (int(k) if k else 0))
         self.r(e, 'vabbé')
 
-    @comanda(r'(.*)\-\-')
+    @comanda(r'^([^\s]+)\-\-')
     def karmelino(self, e, match):
         icche = match.groups()[0]
         indove = u'__karma_%s' % (icche.lower(),)

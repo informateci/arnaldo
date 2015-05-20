@@ -10,7 +10,6 @@ import traceback
 import signal
 
 #
-from arnaldo.brain import brain
 from arnaldo.conf import CHAN, SLISTEN, PORT, arnaldo_port, arnaldo_server
 from arnaldo.conf import NICK
 from .utieffa import *
@@ -23,6 +22,7 @@ from .modules.quotatore import Quotatore
 from .modules.accolli import Accolli
 from .modules.icsah import Icsah
 from .modules.bam import BAM
+from .modules.fitura import Fitura
 from .modules.linkini import Linkini
 from .modules.robreto import Robreto
 from .modules.karma import Karmelo
@@ -43,7 +43,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
         dimme.connect(self.dimmeame)
 
         self.modules = [x(self) for x in [
-            Accolli, BAM, Icsah, Karmelo, Linkini, Parliamo, Quotatore, Robreto, Sproloquio
+            Accolli, BAM, Fitura, Icsah, Karmelo, Linkini, Parliamo, Quotatore, Robreto, Sproloquio
         ]]
 
     def dimmeame(self, msg):
