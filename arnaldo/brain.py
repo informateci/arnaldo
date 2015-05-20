@@ -80,6 +80,9 @@ finally:
     Redox = Redisnt
 
 
+redox = Redox("localhost")
+
+
 class Brain:
 
     def __init__(self):

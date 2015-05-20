@@ -1,11 +1,5 @@
-import redis
-import sys
+from arnaldo.brain import redox
 
-
-try:
-    brain = redis.Redis("localhost")
-except:
-    sys.exit("Insane in the membrane!!!")
 
 letterforms = '''\
        |       |       |       |       |       |       | |
@@ -113,5 +107,5 @@ ROWS = len(ASCIItable.values()[0])
 
 for k in ASCIItable.keys():
     for v in ASCIItable[k]:
-        brain.rpush("asciitable:%s" % k, v)
-brain.set("asciitable:rows", len(ASCIItable.values()[0]))
+        redox.rpush("asciitable:%s" % k, v)
+redox.set("asciitable:rows", len(ASCIItable.values()[0]))
