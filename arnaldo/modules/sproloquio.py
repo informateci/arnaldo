@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8:
 # -*- coding: utf8 -*-
-from arnaldo.brain import brain
+from arnaldo.brain import brain, redox
 
 from arnaldo.modules import Arnaldigno, comanda
 from imgurpython import ImgurClient
@@ -73,6 +73,7 @@ class Sproloquio(Arnaldigno):
     def gugola(self, e, match):
         try:
             uguale = match.groups()[0].encode('utf-8')
+
             response = request.urlopen(
                 "http://ajax.googleapis.com/ajax/services/search/images?safe=off&tbs=isz:lt,istl:vga&rsz=8&v=1.0&q=" +
                 parse.quote(uguale)
