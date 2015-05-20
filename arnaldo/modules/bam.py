@@ -1,6 +1,5 @@
 # vim: set fileencoding=utf-8:
-from arnaldo.brain import brain
-
+from arnaldo.brain import redox
 from arnaldo.modules import Arnaldigno, comanda
 import time
 import re
@@ -15,7 +14,7 @@ class BAM(Arnaldigno):
 
     @comanda('.')
     def BAMBAM(self, e, match):
-        brain.data.set(e.source.nick, time.time())
+        redox.set(e.source.nick, time.time())
         t = e.arguments[0]
         if self.BAM == t:
             self.r(e, self.BAM)
@@ -52,7 +51,7 @@ class BAM(Arnaldigno):
             return
 
         try:
-            ts = brain.data.get(ggallin)
+            ts = redox.get(ggallin)
             if ts:
                 response = "chiaro il %s" % datetime.datetime.fromtimestamp(
                     float(ts)).strftime('%d/%m/%y %H:%M:%S')
