@@ -15,6 +15,9 @@ class Karmelo(Arnaldigno):
         brain.set(indove, 1 + (int(k) if k else 0))
         # self.r(e, 'vabbé'.decode('utf-8')) # non cagare il cazzo
 
+        k = brain.get(indove)
+        self.r(e, u'%s: %d'.encode('utf-8') % (icche, int(k)))
+
     @comanda('(.*)\-\-')
     def karmelino(self, e, match):
         icche = match.groups()[0].lower()
