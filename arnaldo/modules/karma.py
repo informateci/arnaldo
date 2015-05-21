@@ -13,7 +13,7 @@ class Karmelo(Arnaldigno):
         indove = u'__karma_%s'.encode('utf-8') % (icche,)
         k = brain.get(indove)
         brain.set(indove, 1 + (int(k) if k else 0))
-        self.r(e, 'vabbé'.decode('utf-8'))
+        # self.r(e, 'vabbé'.decode('utf-8')) # non cagare il cazzo
 
     @comanda('(.*)\-\-')
     def karmelino(self, e, match):
