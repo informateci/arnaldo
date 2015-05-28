@@ -10,6 +10,8 @@ import urllib2
 import urllib
 import random
 import json
+import requests
+
 
 imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
 
@@ -75,7 +77,6 @@ class Sproloquio(Arnaldigno):
     def gugola(self, e, match):
         try:
             uguale = match.groups()[0].encode('utf-8')
-            response = urllib2.urlopen("http://ajax.googleapis.com/ajax/services/search/images?safe=off&tbs=isz:lt,istl:vga&rsz=8&v=1.0&q=" + urllib.quote(uguale))
-            self.r(e, random.choice(json.loads(response.read())['responseData']['results'])['url'])
+            self.r(e, random.choice(requests.get("https://duckduckgo.com/i.js?q=%s&o=json" % urllib.quote(uguale)).json()['results'])['image'])
         except:
             pass
