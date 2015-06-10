@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from arnaldo.brain import brain
-from arnaldo.conf import NICK
+from arnaldo.conf import NICK, CHAN
 from arnaldo.modules import Arnaldigno, comanda
 
 
@@ -10,20 +10,20 @@ class Karmelo(Arnaldigno):
     @comanda('(.*)\+\+')
     def karmelone(self, e, match):
         icche = match.groups()[0].lower()
-        indove = u'__karma_%s'.encode('utf-8') % (icche,)
-        k = brain.get(indove)
-        brain.set(indove, 1 + (int(k) if k else 0))
-        # self.r(e, 'vabbé'.decode('utf-8')) # non cagare il cazzo
-
-        k = brain.get(indove)
-        self.r(e, u'%s: %d'.encode('utf-8') % (icche, int(k)))
+        print self.arnaldo.channels[CHAN].users()
+        if icche in self.arnaldo.channels[CHAN].users():
+            indove = u'__karma_%s'.encode('utf-8') % (icche,)
+            k = (lambda x: int(x) if x is not None else 0)(brain.get(indove)) + 1
+            brain.set(indove, k)
+            self.r(e, u'%s: %d'.encode('utf-8') % (icche, k))
 
     @comanda('(.*)\-\-')
     def karmelino(self, e, match):
         icche = match.groups()[0].lower()
-        indove = u'__karma_%s'.encode('utf-8') % (icche,)
-        k = brain.get(indove)
-        brain.set(indove, (int(k) if k else 0) - 1)
+        if icche in self.arnaldo.channels[CHAN].users():
+            indove = u'__karma_%s'.encode('utf-8') % (icche,)
+            k = (lambda x: int(x) if x is not None else 0)(brain.get(indove)) - 1
+            brain.set(indove, k)
 
     @comanda('^%s\s*[:,]\s*(.*)\?' % (NICK, ))
     def karma(self, e, match):
