@@ -12,18 +12,18 @@ class Quotatore(Arnaldigno):
 
     @comanda('^%s[:, \\t]*addquote (.*)')
     def add_quote(self, e, match):
-		try:
-		    author = e.source.nick
-		    quote = match.groups()[0]
-		    maxa = max([int(x.split(':')[1]) for x in brain.keys('quote:*')])
-		    q = {"author": author,
-		         "date": str(time.time()),
-		         "id": str(maxa + 1),
-		         "quote": quote}
-		    brain.set("quote:%d" % (maxa + 1), q)
-			self.r(e, "vai agile [#%d]"%(maxa+1))
-		except:
-			self.r(e, "macche'")
+        try:
+            author = e.source.nick
+            quote = match.groups()[0]
+            maxa = max([int(x.split(':')[1]) for x in brain.keys('quote:*')])
+            q = {"author": author,
+                 "date": str(time.time()),
+                 "id": str(maxa + 1),
+                 "quote": quote}
+            brain.set("quote:%d" % (maxa + 1), q)
+            self.r(e, "vai agile [#%d]"%(maxa+1))
+        except:
+            self.r(e, "macche'")
 
     # prima che qualche faccia di merda si lamenti
     # e' l'eval per ritrasformare il tostring di un
