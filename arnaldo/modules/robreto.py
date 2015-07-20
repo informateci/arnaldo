@@ -27,7 +27,7 @@ class Robreto(Arnaldigno):
                 la_stringa = la_stringa.lstrip()
             else:
                 moneta = random.random()
-                cvs = re.findall(ll_pattern if (moneta > 0.5) else cvc_pattern, wut)
+                cvs = re.findall(ll_pattern if (moneta > 0.5) else cvc_pattern, wut[1:-1])
                 if cvs:
                     torev = random.choice(cvs)
                     al_stingra += re.sub(torev, torev[::-1], wut, 1)
