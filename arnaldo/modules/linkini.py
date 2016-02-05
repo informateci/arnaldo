@@ -63,7 +63,7 @@ class Linkini(Arnaldigno):
                 nic = e.source.nick
                 brain.set("urlo:%s" % thaurlhash, "%f:%s:%d" % (ts, nic, 1))
                 self.r(e, respa['title'])
-            else:
+            elif "[pnd]" not in e.arguments[0].lower():
                 secondianno = 31556926  # num secondi in un anno youdontsay.png
                 ts, nic, v = hashish.split(':')
                 ts = float(ts)
