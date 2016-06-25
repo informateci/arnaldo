@@ -42,6 +42,20 @@ class Quotatore(Arnaldigno):
         q = eval(q)
         self.r(e, '#%s: %s' % (q['id'], q['quote'].decode('utf8')))
 
+    @comanda('^%s[:, \\t]*quote #(\d+)$')
+    def get_quote(self, e, match):
+
+        if match is None:
+            return
+
+        q = brain.get("quote:%s" % match.groups(0))
+
+        if q is None:
+            return
+
+        q = eval(q)
+        self.r(e, '#%s: %s' % (q['id'], q['quote'].decode('utf8')))
+
     @comanda('^%s[:, \\t]*quote (.*)$')
     def search_quote(self, e, match):
         pattern = match.groups()[0]
