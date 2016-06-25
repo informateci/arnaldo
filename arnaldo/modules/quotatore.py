@@ -56,7 +56,7 @@ class Quotatore(Arnaldigno):
         q = eval(q)
         self.r(e, '#%s: %s' % (q['id'], q['quote'].decode('utf8')))
 
-    @comanda('^%s[:, \\t]*quote (.*)$')
+    @comanda('^%s[:, \\t]*quote ([^#]*)$')
     def search_quote(self, e, match):
         pattern = match.groups()[0]
 
