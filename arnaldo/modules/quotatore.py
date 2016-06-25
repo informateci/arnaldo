@@ -48,7 +48,7 @@ class Quotatore(Arnaldigno):
         if match is None:
             return
 
-        q = brain.get("quote:%s" % match.groups(0))
+        q = brain.get("quote:%s" % match.groups()[0])
 
         if q is None:
             return
