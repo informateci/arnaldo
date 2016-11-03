@@ -21,7 +21,7 @@ def request_oembed(url):
 try:
     import redis
 
-    brain = redis.Redis("localhost")
+    brain = redis.Redis("localhost", decode_responses=True)
     try:
         brain.set('vaffanculo', 'uno')
     except:
@@ -102,4 +102,4 @@ def getProverbiobyid(idp):
         return u"%s %s" % (brain.lindex("PROV1", int(p[0])).decode('utf8'),
                            brain.lindex("PROV2", int(p[1])).decode('utf8'))
     except:
-        return "macche'"
+        return u"macche'"

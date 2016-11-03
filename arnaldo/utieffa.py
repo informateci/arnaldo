@@ -11,7 +11,7 @@ def tdecode(byti):
             text = byti.decode('iso-8859-1')
         except UnicodeDecodeError:
             text = byti.decode('cp1252')
-    return text
+    return u""+text
 
 
 def tencode(byti):
@@ -22,7 +22,7 @@ def tencode(byti):
             text = byti.encode('iso-8859-1')
         except UnicodeEncodeError:
             text = byti.encode('cp1252')
-    return text
+    return u""+text
 
 
 class BambaRosaNasaBuffer(object):  # decoda a naso. VIVA!
@@ -50,8 +50,8 @@ class BambaRosaNasaBuffer(object):  # decoda a naso. VIVA!
                            ('utf-8', 'replace'),
                            ('utf-8', 'ignore')]:  # tipo a tentativi ma peggio
                 try:
-                    l = line.decode(encodi[0], encodi[1])
+                    l = u"" + line.decode(encodi[0], encodi[1])
                     break
                 except:
-                    l = ""
+                    l = u""
             yield l

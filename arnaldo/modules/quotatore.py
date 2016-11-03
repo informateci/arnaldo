@@ -20,7 +20,7 @@ class Quotatore(Arnaldigno):
                  "date": str(time.time()),
                  "id": str(maxa + 1),
                  "quote": quote}
-            brain.set("quote:%d" % (maxa + 1), q)
+            brain.set(u"quote:%d" % (maxa + 1), q)
             self.r(e, "vai agile [#%d]"%(maxa+1))
         except:
             self.r(e, "macche'")

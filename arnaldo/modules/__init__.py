@@ -23,4 +23,4 @@ class Arnaldigno(object):
                 self.arnaldo.register_command(regexp, partial(thing, self))
 
     def r(self, e, m):
-        self.arnaldo.reply(e, m)
+        self.arnaldo.reply(e, u""+m)
