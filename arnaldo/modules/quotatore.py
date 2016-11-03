@@ -40,7 +40,7 @@ class Quotatore(Arnaldigno):
             return
 
         q = eval(q)
-        self.r(e, '#%s: %s' % (q['id'], q['quote'].decode('utf8')))
+        self.r(e, '#%s: %s' % (q['id'], q['quote']))
 
     @comanda('^%s[:, \\t]*quote #(\d+)$')
     def get_quote(self, e, match):
@@ -54,7 +54,7 @@ class Quotatore(Arnaldigno):
             return
 
         q = eval(q)
-        self.r(e, '#%s: %s' % (q['id'], q['quote'].decode('utf8')))
+        self.r(e, '#%s: %s' % (q['id'], q['quote']))
 
     @comanda('^%s[:, \\t]*quote ([^#]*)$')
     def search_quote(self, e, match):
@@ -73,7 +73,7 @@ class Quotatore(Arnaldigno):
         if respa is None:
             self.r(e, 'no such quote')
             return None
-        self.r(e, '#%s: %s' % (respa['id'], respa['quote'].decode('utf8')))
+        self.r(e, '#%s: %s' % (respa['id'], respa['quote']))
 
 if __name__ == '__main__':
     Quotatore.random_quote()
