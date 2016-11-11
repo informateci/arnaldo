@@ -40,7 +40,7 @@ class Quotatore(Arnaldigno):
             return
 
         q = eval(q)
-        self.r(e, u'#%s: %s' % (q['id'], unicode(q['quote'], 'utf-8')))
+        self.r(e, u'#%s: %s' % (q['id'], q['quote']))
 
     @comanda('^%s[:, \\t]*quote #(\d+)$')
     def get_quote(self, e, match):
