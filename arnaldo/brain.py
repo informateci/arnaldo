@@ -91,15 +91,14 @@ def getProverbioandid():
     i2 = randint(0, brain.llen("PROV2") - 2)
     if i2 >= i1:
         i2 += 1
-    p = u"%s %s" % (brain.lindex("PROV1", i1).decode(
-        'utf8'), brain.lindex("PROV2", i2).decode('utf8'))
+    p = u"%s %s" % (brain.lindex("PROV1", i1), brain.lindex("PROV2", i2))
     return p, "%dP%d" % (i1, i2)
 
 
 def getProverbiobyid(idp):
     try:
         p = idp.split('P')
-        return u"%s %s" % (brain.lindex("PROV1", int(p[0])).decode('utf8'),
-                           brain.lindex("PROV2", int(p[1])).decode('utf8'))
+        return u"%s %s" % (brain.lindex("PROV1", int(p[0])),
+                           brain.lindex("PROV2", int(p[1])))
     except:
         return u"macche'"
