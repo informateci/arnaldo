@@ -8,6 +8,7 @@ import hashlib
 import time
 import re
 import datetime
+import requests
 #
 
 URL_RE = re.compile(
@@ -42,6 +43,25 @@ def check_SI(p):
 
 
 class Linkini(Arnaldigno):
+
+    @comanda('spotify')
+    def despotifizzalo(self, e, match):
+        allurls = URL_RE.findall(e.arguments[0])
+        if len(allurls) != 1:
+            return True
+
+        traducella = requests.get('https://songwhip.com/' + allurls[0][0])
+
+        if traducella.status_code != 200:
+            return True
+
+        tutubers = re.findall('https://youtube.com/watch\?v=[^"]+', traducella.text)
+
+        if len(tutubers) > 0:
+            self.r(e, "^---- " + tutubers[0])
+
+        return True
+
 
     @comanda('.')
     def oembeddalo(self, e, match):
