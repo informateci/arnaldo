@@ -46,11 +46,17 @@ class Linkini(Arnaldigno):
 
     @comanda('spotify')
     def despotifizzalo(self, e, match):
+        matcharella = re.match('.*spotify:track:([a-zA-Z0-9]+)', e.arguments[0])
         allurls = URL_RE.findall(e.arguments[0])
-        if len(allurls) != 1:
+
+        if matcharella is not None:
+            spotisource = 'https://open.spotify.com/track/' + matcharella.groups()[0]
+        elif len(allurls) == 1:
+            spotisource = allurls[0][0]
+        else:
             return True
 
-        traducella = requests.get('https://songwhip.com/' + allurls[0][0])
+        traducella = requests.get('https://songwhip.com/' + spotisource)
 
         if traducella.status_code != 200:
             return True
