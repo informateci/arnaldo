@@ -48,7 +48,7 @@ class Accolli(Arnaldigno):
         ).read().decode('utf8')
         self.r(e, response)
 
-    @comanda('^facci (.+)')
+    # @comanda('^facci (.+)') # MA TI CHETI?
     def accollo(self, e, match):
         try:
             ggallin = match.groups()[0]
