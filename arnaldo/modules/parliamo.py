@@ -3,7 +3,7 @@
 from arnaldo.modules import Arnaldigno, comanda
 from arnaldo.brain import request_oembed
 
-
+from random import choice
 from BeautifulSoup import BeautifulSoup
 import time
 import bleach
@@ -14,7 +14,7 @@ class Parliamo(Arnaldigno):
 
     @comanda('e allora\\?$')
     def eallora(self, e, match):
-        self.r(e, "e allora le foibe?")
+        self.r(e, choice(["e allora le foibe?", "e allora bibbiano?"])
 
     @comanda('(^allivello\\?)|(parliamo di)')
     def allivello(self, e, match):
