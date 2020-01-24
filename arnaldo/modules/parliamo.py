@@ -14,7 +14,7 @@ class Parliamo(Arnaldigno):
 
     @comanda('e allora\\?$')
     def eallora(self, e, match):
-        self.r(e, choice(["e allora le foibe?", "e allora bibbiano?"])
+        self.r(e, choice(["e allora le foibe?", "e allora bibbiano?"]))
 
     @comanda('(^allivello\\?)|(parliamo di)')
     def allivello(self, e, match):
