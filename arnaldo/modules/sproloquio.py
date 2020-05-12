@@ -62,7 +62,7 @@ class Sproloquio(Arnaldigno):
 
     @comanda('boobs please')
     def boobs(self, e, match):
-        i = random.choice(imgurclient.subreddit_gallery('boobies'))
+        i = random.choice(requests.get('http://www.reddit.com/r/boobies/new.json', headers = {'User-agent': 'Boobs bot'} ).json()['data']['children'])['data']['url']
         self.r(e, "%s" % i.link)
 
     @comanda('^peppa (.+)')
