@@ -24,7 +24,7 @@ def rinasci_arnaldo():
     subprocess.check_call(['git', 'pull'])
     subprocess.check_call(['rm', '-rf', '*.pyc'])
     PROCESS = subprocess.Popen(
-        ('python arnaldo.py irc.freenode.net %s %s'%(CHAN, NICK)).split())
+        ('python arnaldo.py irc.libera.chat %s %s'%(CHAN, NICK)).split())
     subprocess.Popen('rm -f arnaldo.commit'.split())
     accendi_il_cervello()
 
