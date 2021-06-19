@@ -10,19 +10,18 @@ runicode = r"u'\\N{(.*?)}'"
 
 
 class BAM(Arnaldigno):
-
     def __init__(self, *args):
         super(BAM, self).__init__(*args)
         self.BAM = None
 
-    @comanda('.')
+    @comanda(".")
     def BAMBAM(self, e, match):
         b.brain.data.set(e.source.nick, time.time())
         t = e.arguments[0]
         runi = re.search(runicode, t)
-        if (runi is not None):
+        if runi is not None:
             try:
-                self.r(e, "%s" % eval(runi.group()) )
+                self.r(e, "%s" % eval(runi.group()))
             except Exception:
                 pass
         if self.BAM == t:
@@ -30,16 +29,15 @@ class BAM(Arnaldigno):
             self.BAM = None
         else:
             try:
-                if self.BAM.lower() == self.BAM and \
-                        self.BAM.upper() == t:
+                if self.BAM.lower() == self.BAM and self.BAM.upper() == t:
                     marks = re.compile("([!?.;:]+)$")
                     m = marks.search(t)
                     if m:
                         m = m.groups()[0]
-                        t = marks.sub('', t)
+                        t = marks.sub("", t)
                     else:
-                        m = ''
-                    t = re.sub('i?[aeiou]$', '', t, flags=re.IGNORECASE)
+                        m = ""
+                    t = re.sub("i?[aeiou]$", "", t, flags=re.IGNORECASE)
                     self.r(e, "%sISSIMO%s" % (t, m))
                     self.BAM = None
                 else:
@@ -49,7 +47,7 @@ class BAM(Arnaldigno):
 
         return True
 
-    @comanda('^arnaldo hai visto (.+)\\?')
+    @comanda("^arnaldo hai visto (.+)\\?")
     def chilhavisto(self, e, match):
         try:
             ggallin = match.groups()[0]
@@ -63,7 +61,8 @@ class BAM(Arnaldigno):
             ts = b.brain.data.get(ggallin)
             if ts:
                 response = "chiaro il %s" % datetime.datetime.fromtimestamp(
-                    float(ts)).strftime('%d/%m/%y %H:%M:%S')
+                    float(ts)
+                ).strftime("%d/%m/%y %H:%M:%S")
             else:
                 response = "macche'"
             self.r(e, response)
