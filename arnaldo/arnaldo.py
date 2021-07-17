@@ -12,10 +12,11 @@ import irc.strings
 
 
 #
-from arnaldo.conf import CHAN, arnaldo_port, arnaldo_server
+from arnaldo.conf import CHAN, PORT, SERVER
 from arnaldo.conf import NICK
 from .utieffa import *
 from .vedetta import Vedetta, dimme
+
 #
 
 from .modules.sproloquio import Sproloquio
@@ -33,38 +34,48 @@ import multiprocessing
 
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
-
     def __init__(self, channel, nickname, server, port=6667):
         irc.client.ServerConnection.buffer_class = BambaRosaNasaBuffer
-        irc.bot.SingleServerIRCBot.__init__(
-            self, [(server, port)], nickname, nickname)
+        irc.bot.SingleServerIRCBot.__init__(self, [(server, port)], nickname, nickname)
         self.nickname = nickname
         self.channel = channel
         self.commands = []
 
         dimme.connect(self.dimmeame)
 
-        self.modules = [x(self) for x in [
-            Accolli, BAM, Fitura, Icsah, Karmelo, Linkini, Parliamo, Quotatore, Robreto, Sproloquio
-        ]]
+        self.modules = [
+            x(self)
+            for x in [
+                Accolli,
+                BAM,
+                Fitura,
+                Icsah,
+                Karmelo,
+                Linkini,
+                Parliamo,
+                Quotatore,
+                Robreto,
+                Sproloquio,
+            ]
+        ]
 
     def dimmeame(self, msg):
         conn = self.connection
         if isinstance(msg, tuple):
-            conn.privmsg(self.channel, '<%s>: %s' % msg)
+            conn.privmsg(self.channel, "<%s>: %s" % msg)
         else:
-            conn.privmsg(self.channel, '* %s' % msg)
+            conn.privmsg(self.channel, "* %s" % msg)
 
     def on_muori(self):
         author = None
         message = None
-        if os.path.isfile('arnaldo.commit'):
+        if os.path.isfile("arnaldo.commit"):
             try:
-                f = open('arnaldo.commit', "r")
+                f = open("arnaldo.commit", "r")
                 allo = f.readline()
-                allo = allo.decode('utf8')
+                allo = allo.decode("utf8")
                 f.close()
-                allo = allo.split(':')
+                allo = allo.split(":")
                 author = allo[0]
                 message = ":".join(allo[1:])
             except:
@@ -73,7 +84,8 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             message = '[%s ha committato "%s"]' % (author, message)
         self.connection.privmsg(
             self.channel,
-            message if message is not None else "speriamo venga la guerra!")
+            message if message is not None else "speriamo venga la guerra!",
+        )
         self.connection.disconnect("mi levo di 'ulo.")
         sys.exit(0)
 
@@ -103,21 +115,19 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                     excfazza = "Error in"
                     for frame in traceback.extract_tb(sys.exc_info()[2]):
                         fname, lineno, fn, text = frame
-                        excfazza = "%s %s on line %d; " % (
-                            excfazza, fname, lineno)
+                        excfazza = "%s %s on line %d; " % (excfazza, fname, lineno)
                     self.reply(
-                        e,
-                        excfazza + '      Exception: ' + str(
-                            ex).replace('\n', ' - '))
+                        e, excfazza + "      Exception: " + str(ex).replace("\n", " - ")
+                    )
                     continue
 
     def reply(self, e, m):
         multiline_tout = 0.5
-        target = e.source.nick \
-            if e.target == self.connection.get_nickname() \
-            else e.target
-        if '\n' in m:
-            ll = m.split('\n')
+        target = (
+            e.source.nick if e.target == self.connection.get_nickname() else e.target
+        )
+        if "\n" in m:
+            ll = m.split("\n")
             if len(ll) > 12:
                 self.connection.privmsg(target, "flodda tu ma'")
             else:
@@ -129,7 +139,6 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
 
 
 class ArnaldoProcess(multiprocessing.Process):
-
     def __init__(self):
         super(multiprocessing.Process, self).__init__()
         self.T800 = None
@@ -138,7 +147,7 @@ class ArnaldoProcess(multiprocessing.Process):
     def run(self):
         self.T800 = Vedetta()
         self.T800.start()
-        self.bot = Arnaldo(CHAN, NICK, arnaldo_server, arnaldo_port)
+        self.bot = Arnaldo(CHAN, NICK, SERVER)
 
         try:  # Windows workaround
             signal.signal(signal.SIGUSR1, self.fista_duro_e_vai_sicuro)

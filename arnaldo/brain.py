@@ -8,6 +8,7 @@ from urllib import request, parse
 import json
 import redis
 from blinker import signal as lasigna
+from arnaldo.conf import REDIS
 
 dimme = lasigna('dimmelo')
 
@@ -31,7 +32,7 @@ class RedisExtended(redis.Redis):
 class Brain:
 
     def __init__(self):
-        self.data = RedisExtended("localhost")
+        self.data = RedisExtended(REDIS)
 
     @property
     def citta(self):
