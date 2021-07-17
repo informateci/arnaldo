@@ -75,4 +75,3 @@ out/
 #arnaldo/conf.py
 dati/passvord.txt
 py-venv/.env
-.env
