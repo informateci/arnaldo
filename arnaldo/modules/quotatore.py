@@ -1,40 +1,65 @@
 # vim: set fileencoding=utf-8:
-import pickle
+
+from arnaldo.modules import Arnaldigno, comanda
+from arnaldo.brain import brain
+
 import time
 from random import choice
 import re
-import arnaldo.brain as b
-
-from arnaldo.modules import Arnaldigno, comanda
 
 
 class Quotatore(Arnaldigno):
     @comanda("^%s[:, \\t]*addquote (.*)")
     def add_quote(self, e, match):
-        author = e.source.nick
-        quote = match.groups()[0]
-        maxa = max(
-            [int(x.decode("utf8").split(":")[1]) for x in b.brain.data.keys("quote:*")]
-            + [-1]
-        )
-        q = {
-            "author": author,
-            "date": str(time.time()),
-            "id": str(maxa + 1),
-            "quote": quote,
-        }
-        # Si può usare pure json, come ve pare
-        b.brain.data.set("quote:%d" % (maxa + 1), pickle.dumps(q))
-        self.r(e, "vai agile [#%d]" % (maxa + 1))
+        try:
+            author = e.source.nick
+            quote = match.groups()[0]
+            chiava = [int(x.split(":")[1]) for x in brain.keys("quote:*")]
+            maxa = max(chiava) if len(chiava) > 0 else 0
+            q = {
+                "author": author,
+                "date": str(time.time()),
+                "id": str(maxa + 1),
+                "quote": quote,
+            }
+            brain.set(u"quote:%d" % (maxa + 1), q)
+            self.r(e, "vai agile [#%d]" % (maxa + 1))
+        except:
+            self.r(e, "macche'")
+
+    # prima che qualche faccia di merda si lamenti
+    # e' l'eval per ritrasformare il tostring di un
+    # dizionario (di stringhe per giunta) di nuovo
+    # nel dizionario originale.
+    # vale la regola, se riuscite a romperlo bravi/lode/avete ragione
+    # altrimenti ANDATE IN CULO.
 
     @comanda("^%s[:, \\t]*quote$")
     def random_quote(self, e, match):
-        q = b.brain.data.get(choice(b.brain.data.keys("quote:*")))
+        try:
+            q = brain.get(choice(brain.keys("quote:*")))
+        except:
+            self.r(e, "macche'")
+
         if q is None:
             self.r(e, "NOPE.WAV")
             return
-        # Si può usare pure json, come ve pare
-        q = pickle.loads(q)
+
+        q = eval(q)
+        self.r(e, u"#%s: %s" % (q["id"], q["quote"]))
+
+    @comanda(r"^%s[:, \\t]*quote #(\d+)$")
+    def get_quote(self, e, match):
+
+        if match is None:
+            return
+
+        q = brain.get("quote:%s" % match.groups()[0])
+
+        if q is None:
+            return
+
+        q = eval(q)
         self.r(e, "#%s: %s" % (q["id"], q["quote"]))
 
     @comanda("^%s[:, \\t]*quote ([^#]*)$")
@@ -44,10 +69,12 @@ class Quotatore(Arnaldigno):
         regex = re.compile(".*(%s).*" % pattern)
 
         # <PAZO>
-        k = b.brain.data.keys("quote:*")
+        k = brain.keys("quote:*")
         if len(k) > 0:
-            listo = [pickle.loads(l) for l in b.brain.data.mget(*k)]
+            listo = [eval(l) for l in brain.mget(*k)]
             resp = [r for r in listo if regex.search(r["quote"])]
+        else:
+            resp = []
         # </PAZO>
 
         respa = choice(resp) if len(resp) > 0 else None

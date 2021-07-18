@@ -1,7 +1,14 @@
-from arnaldo.brain import redox
+from arnaldo.conf import REDIS
+import redis
+import sys
 
 
-letterforms = '''\
+try:
+    brain = redis.Redis(REDIS)
+except:
+    sys.exit("Insane in the membrane!!!")
+
+letterforms = """\
        |       |       |       |       |       |       | |
   XXX  |  XXX  |  XXX  |   X   |       |  XXX  |  XXX  |!|
   X  X |  X  X |  X  X |       |       |       |       |"|
@@ -97,15 +104,15 @@ X      | X     |  X    |   X   |    X  |     X |      X|\|
    X   |   X   |   X   |       |   X   |   X   |   X   |||
   XXX  |     X |     X |     XX|     X |     X |  XXX  |}|
  XX    |X  X  X|    XX |       |       |       |       |~|
-'''.splitlines()
+""".splitlines()
 
 ASCIItable = {}
 for form in letterforms:
-    if '|' in form:
-        ASCIItable[form[-2]] = form[:-3].split('|')
-ROWS = len(ASCIItable.values()[0])
+    if "|" in form:
+        ASCIItable[form[-2]] = form[:-3].split("|")
+ROWS = len(list(ASCIItable.values())[0])
 
 for k in ASCIItable.keys():
     for v in ASCIItable[k]:
-        redox.rpush("asciitable:%s" % k, v)
-redox.set("asciitable:rows", len(ASCIItable.values()[0]))
+        brain.rpush("asciitable:%s" % k, v)
+brain.set("asciitable:rows", len(list(ASCIItable.values())[0]))

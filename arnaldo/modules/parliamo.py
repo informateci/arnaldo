@@ -42,5 +42,5 @@ class Parliamo(Arnaldigno):
     @comanda("anche no")
     def ancheno(self, e, match):
         if self.parliamo_summary:
-            self.r(e, u"ಥ_ಥ  ockay")
-            self.parliamo_summary = u"┌∩┐(◕_◕)┌∩┐"
+            self.r(e, "ಥ_ಥ  ockay")
+            self.parliamo_summary = "┌∩┐(◕_◕)┌∩┐"

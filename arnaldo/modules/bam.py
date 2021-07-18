@@ -1,10 +1,10 @@
 # vim: set fileencoding=utf-8:
+
+from arnaldo.modules import Arnaldigno, comanda
+from arnaldo.brain import brain
 import time
 import re
 import datetime
-
-from arnaldo.modules import Arnaldigno, comanda
-import arnaldo.brain as b
 
 runicode = r"u'\\N{(.*?)}'"
 
@@ -16,7 +16,7 @@ class BAM(Arnaldigno):
 
     @comanda(".")
     def BAMBAM(self, e, match):
-        b.brain.data.set(e.source.nick, time.time())
+        brain.set(e.source.nick, time.time())
         t = e.arguments[0]
         runi = re.search(runicode, t)
         if runi is not None:
@@ -58,7 +58,7 @@ class BAM(Arnaldigno):
             return
 
         try:
-            ts = b.brain.data.get(ggallin)
+            ts = brain.get(ggallin)
             if ts:
                 response = "chiaro il %s" % datetime.datetime.fromtimestamp(
                     float(ts)

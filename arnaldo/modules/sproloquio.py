@@ -4,10 +4,10 @@ from urllib import request, parse
 import random
 
 from arnaldo.modules import Arnaldigno, comanda
+from arnaldo import brain
 from imgurpython import ImgurClient
 from arnaldo.conf import imgur_client_id, imgur_client_secret
 from bs4 import BeautifulSoup
-import arnaldo.brain as b
 import requests
 
 imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
@@ -16,21 +16,21 @@ imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
 class Sproloquio(Arnaldigno):
     @comanda("attardati")
     def attardati(self, e, match):
-        self.r(e, u"Stefano %s Attardi" % b.brain.attardi)
+        self.r(e, u"Stefano %s Attardi" % brain.getAttardi().decode("utf8"))
 
     @comanda("ANAL")
     def anal(self, e, match):
-        self.r(e, "%s ANAL %s" % (b.brain.citta, b.brain.nomecen.upper()))
+        self.r(e, "%s ANAL %s" % (brain.getCitta(), brain.getNomecen()))
 
     @comanda("proverbia")
     def proverbia(self, e, match):
         self.r(e, self.proverbiaandid()[0])
 
     def proverbiaandid(self):
-        return b.brain.proverbioandid
+        return brain.getProverbioandid()
 
     def proverbiabyid(self, idp):
-        return b.brain.proverbiobyid(idp)
+        return brain.getProverbiobyid(idp)
 
     @comanda("beuta")
     def beuta(self, e, match):
@@ -46,14 +46,14 @@ class Sproloquio(Arnaldigno):
         ret += [u"== %s ==\n" % soup.find("h2").text]
 
         for m in measures:
-            ret += [u" ".join([x.strip() for x in m.findAll(text=True)])]
+            ret += [" ".join([x.strip() for x in m.findAll(text=True)])]
 
-        ret += [u""]
+        ret += [""]
 
         for d in directions:
-            ret += [u" ".join([x.strip() for x in d.findAll(text=True)])]
+            ret += [" ".join([x.strip() for x in d.findAll(text=True)])]
 
-        ret += [u"enjoy"]
+        ret += ["enjoy"]
         self.r(e, "\n".join(ret))
 
     @comanda("boobs please")
