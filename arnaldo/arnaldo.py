@@ -30,8 +30,6 @@ from .modules.linkini import Linkini
 from .modules.robreto import Robreto
 from .modules.karma import Karmelo
 
-import multiprocessing
-
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
     def __init__(self, channel, nickname, server, port=6667):
@@ -138,31 +136,51 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
             self.connection.privmsg(target, m)
 
 
-class ArnaldoProcess(multiprocessing.Process):
-    def __init__(self):
-        super(multiprocessing.Process, self).__init__()
-        self.T800 = None
-        self.bot = None
+bot = None
+T800 = None
 
-    def run(self):
-        self.T800 = Vedetta()
-        self.T800.start()
-        self.bot = Arnaldo(CHAN, NICK, SERVER)
 
-        try:  # Windows workaround
-            signal.signal(signal.SIGUSR1, self.fista_duro_e_vai_sicuro)
-        except:
-            pass
+def fista_duro_e_vai_sicuro(ma, cche):
+    if bot:
+        bot.on_muori()
+    if T800:
+        T800.stop()
 
+
+def main():
+    print("meglio una raspa di una ruspa")
+    global T800
+    global bot
+    if len(sys.argv) != 4:
+        print("Usage: arnaldo <server[:port]> <channel> <nickname>")
+        sys.exit(1)
+
+    s = sys.argv[1].split(":", 1)
+    server = s[0]
+    if len(s) == 2:
         try:
-            self.bot.start()
-        except KeyboardInterrupt:
-            self.T800.stop()
+            port = int(s[1])
+        except ValueError:
+            print("Error: Erroneous port.")
+            sys.exit(1)
+    else:
+        port = PORT
 
-    def fista_duro_e_vai_sicuro(self, ma, cche):
-        print("fisto duro e vado sicuro")
-        if self.bot:
-            self.bot.on_muori()
-        if self.T800:
-            self.T800.stop()
-        print("per davvero")
+    channel = sys.argv[2]
+    nickname = sys.argv[3]
+
+    T800 = Vedetta()
+    T800.start()
+    # I'm a friend of Sarah Connor. I was told she was here. Could I
+    # see her please?
+
+    bot = Arnaldo(channel, nickname, server, port)
+    try:  # Windows workaround
+        signal.signal(signal.SIGUSR1, fista_duro_e_vai_sicuro)
+    except:
+        pass
+
+    try:
+        bot.start()
+    except KeyboardInterrupt:
+        T800.stop()

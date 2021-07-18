@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import pickle
 import subprocess
 import signal
 import urllib.parse
 import json
 import hashlib
-import arnaldo.brain as b
+import redis
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-
-from arnaldo.arnaldo import ArnaldoProcess
-from arnaldo.conf import PORT, NICK, SLISTEN
-import os
+import sys
+from arnaldo.conf import PORT, SERVER, CHAN, NICK, SLISTEN, REDIS
 
 PROCESS = None
 
@@ -22,51 +20,93 @@ def rinasci_arnaldo():
     global PROCESS
 
     if PROCESS is not None:
-        os.kill(PROCESS.pid, signal.SIGUSR1)
-        os.kill(PROCESS.pid, signal.SIGTERM)
+        PROCESS.send_signal(signal.SIGUSR1)
+        PROCESS.kill()
 
-    # subprocess.check_call(['git', 'pull'])
+    try:
+        subprocess.check_call(["git", "pull"])
+    except:
+        print("io ho provato a pullare ma m'ha fatto brutto, vedi te")
     subprocess.check_call(["rm", "-rf", "*.pyc"])
-    accendi_il_cervello()
-    PROCESS = ArnaldoProcess()
-    PROCESS.start()
-
+    PROCESS = subprocess.Popen(
+        ("python -m arnaldo %s %s %s" % (SERVER, CHAN, NICK)).split()
+    )
     subprocess.Popen("rm -f arnaldo.commit".split())
+    accendi_il_cervello()
 
 
 def accendi_il_cervello():
+    try:
+        brain = redis.Redis(REDIS)
+    except:
+        sys.exit("Insane in the membrane!!!")
 
-    fosforo = [
-        ("dati/citta.txt", "CITTA"),
-        ("dati/nounlist.txt", "NOMICEN"),
-        ("dati/attardi.txt", "ATTARDI"),
-        ("dati/prov1.txt", "PROV1"),
-        ("dati/prov2.txt", "PROV2"),
-    ]
+    hs = hashlib.md5(open("dati/SUB-EST2011-01.csv", "rb").read()).hexdigest()
+    if brain.get("cyfhash") != hs:
+        brain.set("cyfhash", hs)
+        cyf = open("dati/SUB-EST2011-01.csv", "r")
+        cy = cyf.read()
+        cyf.close()
+        print("Rigenero CITTA")
+        brain.delete("CITTA")
+        for c in [[a.split(",")[1].upper() for a in (cy).split(",,,,")[6:-11]]][0]:
+            brain.rpush("CITTA", c)  # in CITTA c'e' la lista delle citta' maiuscole
 
-    redox = b.brain.data
+    hs = hashlib.md5(open("dati/nounlist.txt", "rb").read()).hexdigest()
+    if brain.get("nnfhash") != hs:
+        brain.set("nnfhash", hs)
+        nnf = open("dati/nounlist.txt", "r")
+        nn = nnf.read()
+        nnf.close()
+        print("Rigenero NOMICEN")
+        brain.delete("NOMICEN")
+        for n in nn.split("\n"):
+            brain.rpush(
+                "NOMICEN", n.upper()
+            )  # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    for (data_file, redis_name) in fosforo:
-        h = hashlib.md5(open(data_file).read().encode("utf8")).hexdigest()
-        ascio = redox.get("__hash_" + redis_name)
-        if (ascio is None) or (ascio.decode("utf8") != h):
-            redox.set("__hash_" + redis_name, h)
-            with open(data_file, "r") as f:
-                lines = f.readlines()
-            print("Rigenero", redis_name)
-            redox.delete(redis_name)
-            for line in lines:
-                redox.rpush(
-                    redis_name, bytes(line.encode("utf8")).decode("utf8").strip()
-                )
+    hs = hashlib.md5(open("dati/attardi.txt", "rb").read()).hexdigest()
+    if brain.get("attaffhash") != hs:
+        brain.set("attaffhash", hs)
+        attaf = open("dati/attardi.txt", "r")
+        atta = attaf.readlines()
+        attaf.close()
+        print("Rigenero ATTARDI")
+        brain.delete("ATTARDI")
+        for a in [x.capitalize()[:-1] for x in atta]:
+            brain.rpush(
+                "ATTARDI", a
+            )  # in NOMIc'e' la lista dei nomi (comuni) inglesi in maiuscolo
 
-    print(redox.keys("*"))
+    hs = hashlib.md5(open("dati/prov1.pkl", "rb").read()).hexdigest()
+    if brain.get("prov1fhash") != hs:
+        brain.set("prov1fhash", hs)
+        pkl_file = open("dati/prov1.pkl", "rb")
+        PROV1 = pickle.load(pkl_file)
+        pkl_file.close()
+        print("Rigenero PROV1")
+        brain.delete("PROV1")
+        for p1 in PROV1:  # lista prima meta' dei proverbi in PROV1
+            brain.rpush("PROV1", " ".join(p1))
+        del PROV1
 
-    hs = hashlib.md5(open("dati/passvord.txt").read().encode("utf-8")).hexdigest()
-    if redox.get("passvordfhash") != hs:
-        redox.set("prov2fhash", hs)
+    hs = hashlib.md5(open("dati/prov2.pkl", "rb").read()).hexdigest()
+    if brain.get("prov2fhash") != hs:
+        brain.set("prov2fhash", hs)
+        pkl_file = open("dati/prov2.pkl", "rb")
+        PROV2 = pickle.load(pkl_file)
+        pkl_file.close()
+        print("Rigenero PROV2")
+        brain.delete("PROV2")
+        for p2 in PROV2:  # lista 2a meta' dei proverbi in PROV2
+            brain.rpush("PROV2", " ".join(p2))
+        del PROV2
+
+    hs = hashlib.md5(open("dati/passvord.txt", "rb").read()).hexdigest()
+    if brain.get("passvordfhash") != hs:
+        brain.set("prov2fhash", hs)
         passf = open("dati/passvord.txt", "r")
-        redox.set("httppasswd", passf.readline()[:-1])
+        brain.set("httppasswd", passf.readline()[:-1])
         passf.close()
 
 
@@ -124,4 +164,5 @@ if __name__ == "__main__":
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         # faster pussycat
-        os.kill(PROCESS.pid, signal.SIGTERM)
+        PROCESS.kill()
+        # PROCESS.kill()

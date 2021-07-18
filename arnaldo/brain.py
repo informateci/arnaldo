@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 # vim: set fileencoding=utf-8:
 
-from random import randrange, shuffle
+from random import randint
+
 # ci fisto anche tutta la roba condivisibile,
 # non condivisibile eticamente, condivisibile che si condivide
 from urllib import request, parse
@@ -10,71 +11,98 @@ import redis
 from blinker import signal as lasigna
 from arnaldo.conf import REDIS
 
-dimme = lasigna('dimmelo')
+dimme = lasigna("dimmelo")
 
 
 def request_oembed(url):
-    query = parse.urlencode((('url', url),))
-    data = request.urlopen('http://noembed.com/embed?' + query)
-    respa = json.loads(data.read().decode('utf-8'))  # meglio una raspa d'una ruspa
+    query = parse.urlencode((("url", url),))
+    data = request.urlopen("http://noembed.com/embed?" + query)
+    respa = json.loads(data.read().decode("utf-8"))  # meglio una raspa d'una ruspa
     return respa
 
 
-class RedisExtended(redis.Redis):
+try:
+    import redis
 
-    def lrand(self, a):
-        try:
-            return self.lindex(a, randrange(self.llen(a)))
-        except Exception:
-            return 'NISBA'
+    brain = redis.Redis(REDIS, decode_responses=True)
+    try:
+        brain.set("vaffanculo", "uno")
+    except:
+        raise
+except:
+    # L'HAI VOLUTO IL DUCK TYPING?
+
+    class suca:
+        def __init__(self):
+            self.suca = {}
+
+        def set(self, a, b):
+            self.suca[a] = b
+
+        def get(self, a):
+            return self.suca.get(a, None)
+
+        def llen(self, a):
+            return len(self.suca[a])
+
+        def lindex(self, a, i):
+            return len(self.suca[a][i])
+
+        def rpush(self, a, v):
+            self.suca[a] = self.suca.get(a, [])
+            self.suca[a].append(v)
+            return len(self.suca[a]) - 1
+
+        def delete(self, a):
+            if a in self.suca:
+                del self.suca[a]
+
+    brain = suca()
 
 
-class Brain:
+def choicefromlist(name):
+    try:
+        i = randint(0, brain.llen(name) - 1)
+        return brain.lindex(name, i)
+    except:
+        return "NISBA"
 
-    def __init__(self):
-        self.data = RedisExtended(REDIS)
 
-    @property
-    def citta(self):
-        return self.data.lrand("CITTA").decode('utf8')
+def getCitta():
+    return choicefromlist("CITTA")
 
-    @property
-    def nomecen(self):
-        return self.data.lrand("NOMICEN").decode('utf8')
 
-    @property
-    def attardi(self):
-        return (lambda x: x[0].upper() + x[1:].lower())(self.data.lrand("ATTARDI").decode('utf8'))
+def getNomecen():
+    return choicefromlist("NOMICEN")
 
-    @property
-    def proverbiUno(self):
-        return self.data.lrand("PROV1").decode('utf8')
 
-    @property
-    def proverbiDue(self):
-        return self.data.lrand("PROV2").decode('utf8')
+def getAttardi():
+    return choicefromlist("ATTARDI")
 
-    @property
-    def proverbioandid(self):
-        # prov1 e prov2 sono lunghi uguali
-        i = list(range(0, self.data.llen("PROV1")))
-        shuffle(i)
-        p = ' '.join([
-            self.data.lindex("PROV1", i[0]).decode('utf8'),
-            self.data.lindex("PROV2", i[1]).decode('utf8')
-        ])
 
-        return p, "%dP%d" % (i[0], i[1])
+def getProverbiUno():
+    return choicefromlist("PROV1")
 
-    @property
-    def proverbiobyid(self, idp):
-        try:
-            p = idp.split('P')
-            return u' '.join([
-                self.data.lindex("PROV1", int(p[0]).decode('utf8')),
-                self.data.lindex("PROV2", int(p[1]).decode('utf8'))
-            ])
-        except Exception as e:
-            print('proverbiobyid', e)
 
-brain = Brain()
+def getProverbiDue():
+    return choicefromlist("PROV2")
+
+
+def getProverbioandid():
+    i1 = randint(0, brain.llen("PROV1") - 1)
+    i2 = randint(0, brain.llen("PROV2") - 2)
+    if i2 >= i1:
+        i2 += 1
+    p = "%s %s" % (brain.lindex("PROV1", i1), brain.lindex("PROV2", i2))
+    return p, "%dP%d" % (i1, i2)
+
+
+def getProverbiobyid(idp):
+    try:
+        p = idp.split("P")
+        return "%s %s" % (
+            brain.lindex("PROV1", int(p[0])),
+            brain.lindex("PROV2", int(p[1])),
+        )
+    except:
+        return "macche'"
