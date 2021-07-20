@@ -123,29 +123,32 @@ class le_poste(tornado.web.RequestHandler):
         self.redirect("/")
 
     def post(self):
-        print(self.request.body)
-        post_data = urllib.parse.parse_qs(self.request.body)
-        author = None
-        message = None
-        for key, value in post_data.items():
-            if key == "payload" and len(value) > 0:
-                payload = json.loads(value[0])
-                commits = payload.get("commits", None)
-                if commits is not None and len(commits) > 0:
-                    author = commits[0].get("author", None)
-                    message = commits[0].get("message", None)
-                    author = author.get("name", None)
-                    print('Commit di %s, comment: "%s"' % (author, message))
+        try:
+            post_data = urllib.parse.parse_qs(self.request.body.decode())
+            author = None
+            message = None
+            for key, value in post_data.items():
+                if key == "payload" and len(value) > 0:
+                    payload = json.loads(value[0])
+                    commits = payload.get("commits", None)
+                    if commits is not None and len(commits) > 0:
+                        author = commits[0].get("author", None)
+                        message = commits[0].get("message", None)
+                        author = author.get("name", None)
+                        print('Commit di %s, comment: "%s"' % (author, message))
 
-        if author is not None and message is not None:
-            f = open("arnaldo.commit", "w")
-            sw = "%s:%s" % (author, message)
-            f.write(sw.encode("utf8"))
-            f.close()
-            rinasci_arnaldo()
-            self.clear()
-            self.set_status(200)
-            self.finish("OK")
+            if author is not None and message is not None:
+                f = open("arnaldo.commit", "w")
+                sw = "%s:%s" % (author, message)
+                f.write(sw.encode("utf8"))
+                f.close()
+                rinasci_arnaldo()
+                self.clear()
+                self.set_status(200)
+                self.finish("OK")
+        except:
+            print("FU FORSE DAMAGGIO O VANAGLORIA?")
+            print(self.request.body.decode())
 
 
 if __name__ == "__main__":
