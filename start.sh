@@ -7,7 +7,7 @@ grep "${RUNAS_UID}" /etc/passwd > /dev/null || adduser -S -u "${RUNAS_UID}" "${R
 
 # CHI NON CLONA È COMPLICE
 if [ ! -d ./.git ] ; then
-    chown "${RUNAS_USER}:${RUNAS_GROUP}" .
+    chown -R "${RUNAS_USER}:${RUNAS_GROUP}" .
     git clone https://github.com/informateci/arnaldo.git .
     git checkout python3
 fi

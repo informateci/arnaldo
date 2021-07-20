@@ -11,7 +11,7 @@ import tornado.httpserver
 import tornado.ioloop
 import tornado.web
 import sys
-from arnaldo.conf import PORT, SERVER, CHAN, NICK, SLISTEN, REDIS
+from arnaldo.conf import PORT, SERVER, CHAN, NICK, SLISTEN, REDIS, PASSVORD
 
 PROCESS = None
 
@@ -102,12 +102,7 @@ def accendi_il_cervello():
             brain.rpush("PROV2", " ".join(p2))
         del PROV2
 
-    hs = hashlib.md5(open("dati/passvord.txt", "rb").read()).hexdigest()
-    if brain.get("passvordfhash") != hs:
-        brain.set("prov2fhash", hs)
-        passf = open("dati/passvord.txt", "r")
-        brain.set("httppasswd", passf.readline()[:-1])
-        passf.close()
+    brain.set("httppasswd", PASSVORD)
 
 
 class do_the_404(tornado.web.RequestHandler):
