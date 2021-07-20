@@ -124,7 +124,6 @@ class le_poste(tornado.web.RequestHandler):
 
     def post(self):
         print(self.request.body)
-
         post_data = urllib.parse.parse_qs(self.request.body)
         author = None
         message = None
