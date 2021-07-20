@@ -138,16 +138,16 @@ class le_poste(tornado.web.RequestHandler):
                         print('Commit di %s, comment: "%s"' % (author, message))
 
             if author is not None and message is not None:
-                f = open("arnaldo.commit", "w")
-                sw = "%s:%s" % (author, message)
-                f.write(sw.encode("utf8"))
-                f.close()
+                with open("arnaldo.commit", "w") as f:
+                    sw = "%s:%s" % (author, message)
+                    f.write(sw)
                 rinasci_arnaldo()
                 self.clear()
                 self.set_status(200)
                 self.finish("OK")
         except Exception as e:
             import traceback
+
             traceback.print_exc()
             print("FU FORSE DAMAGGIO O VANAGLORIA?")
             print(self.request.body.decode())
