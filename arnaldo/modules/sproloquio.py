@@ -1,6 +1,6 @@
 # vim: set fileencoding=utf-8:
 # -*- coding: utf8 -*-
-from urllib import request, parse
+from urllib import parse
 import random
 
 from arnaldo.modules import Arnaldigno, comanda
@@ -35,10 +35,15 @@ class Sproloquio(Arnaldigno):
     @comanda("beuta")
     def beuta(self, e, match):
         cocktail_id = random.randint(1, 4750)
-        data = request.urlopen(
-            "http://www.cocktaildb.com/recipe_detail?id=%d" % cocktail_id
+        data = requests.get(
+            "http://web.archive.org/web/20160820200809/http://www.cocktaildb.com/recipe_detail",
+            params={"id": cocktail_id},
         )
-        soup = BeautifulSoup(data.read())
+        if not data.ok:
+            self.r(e, "oggi bimbi si va a secco")
+            return
+
+        soup = BeautifulSoup(data.text)
         directions = soup.findAll("div", {"class": "recipeDirection"})
         measures = soup.findAll("div", {"class": "recipeMeasure"})
 
