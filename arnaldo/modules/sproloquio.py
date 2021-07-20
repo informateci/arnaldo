@@ -16,7 +16,7 @@ imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
 class Sproloquio(Arnaldigno):
     @comanda("attardati")
     def attardati(self, e, match):
-        self.r(e, u"Stefano %s Attardi" % brain.getAttardi().decode("utf8"))
+        self.r(e, "Stefano %s Attardi" % brain.getAttardi())
 
     @comanda("ANAL")
     def anal(self, e, match):
