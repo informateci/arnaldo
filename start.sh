@@ -6,10 +6,10 @@ grep "${RUNAS_GID}" /etc/group > /dev/null || addgroup -g "${RUNAS_GID}" "${RUNA
 grep "${RUNAS_UID}" /etc/passwd > /dev/null || adduser -S -u "${RUNAS_UID}" "${RUNAS_USER}"
 
 # CHI NON CLONA È COMPLICE
+chown -R "${RUNAS_USER}:${RUNAS_GROUP}" .
 if [ ! -d ./.git ] ; then
-    chown -R "${RUNAS_USER}:${RUNAS_GROUP}" .
-    git clone https://github.com/informateci/arnaldo.git .
-    git checkout python3
+    runuser -g $RUNAS_GROUP -m -u $RUNAS_USER -- git clone https://github.com/informateci/arnaldo.git .
+    runuser -g $RUNAS_GROUP -m -u $RUNAS_USER -- git checkout python3
 fi
 
 exec runuser -g $RUNAS_GROUP -m -u $RUNAS_USER -- "$@"
