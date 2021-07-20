@@ -126,7 +126,7 @@ class le_poste(tornado.web.RequestHandler):
         post_data = urllib.parse.parse_qs(self.request.body)
         author = None
         message = None
-        for key, value in post_data.iteritems():
+        for key, value in post_data.items():
             if key == "payload" and len(value) > 0:
                 payload = json.loads(value[0])
                 commits = payload.get("commits", None)
