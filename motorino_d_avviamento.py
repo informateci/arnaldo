@@ -147,7 +147,10 @@ class le_poste(tornado.web.RequestHandler):
                 self.clear()
                 self.set_status(200)
                 self.finish("OK")
-        except:
+        except Exception as e:
+            import traceback
+
+            traceback.print_exc()
             print("FU FORSE DAMAGGIO O VANAGLORIA?")
             print(self.request.body.decode())
 
