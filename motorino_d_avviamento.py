@@ -123,7 +123,7 @@ class le_poste(tornado.web.RequestHandler):
         self.redirect("/")
 
     def post(self):
-        print(self.reqeust.body)
+        print(self.request.body)
 
         post_data = urllib.parse.parse_qs(self.request.body)
         author = None
