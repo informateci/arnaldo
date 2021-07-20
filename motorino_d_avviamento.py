@@ -123,10 +123,10 @@ class le_poste(tornado.web.RequestHandler):
         self.redirect("/")
 
     def post(self):
+        print(self.reqeust.body)
         post_data = urllib.parse.parse_qs(self.request.body)
         author = None
         message = None
-        print(post_data)
         for key, value in post_data.items():
             if key == "payload" and len(value) > 0:
                 payload = json.loads(value[0])
