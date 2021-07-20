@@ -123,7 +123,6 @@ class le_poste(tornado.web.RequestHandler):
         self.redirect("/")
 
     def post(self):
-
         try:
             post_data = urllib.parse.parse_qs(self.request.body.decode())
             author = None
@@ -149,7 +148,6 @@ class le_poste(tornado.web.RequestHandler):
                 self.finish("OK")
         except Exception as e:
             import traceback
-
             traceback.print_exc()
             print("FU FORSE DAMAGGIO O VANAGLORIA?")
             print(self.request.body.decode())
