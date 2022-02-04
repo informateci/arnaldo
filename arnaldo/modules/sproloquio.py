@@ -93,3 +93,14 @@ class Sproloquio(Arnaldigno):
             )
         except Exception as e:
             print("gugola:", e)
+
+    @comanda('^che bell(. .+)')
+    def belo(self, e, match):
+        try:
+            virgilio = match.groups()[0]
+            if len(virgilio) > 5 and len(virgilio) <= 30:
+                self.r(e, 'bell%s... e` come il treno!' % virgilio)
+        except:
+            pass
+
+
