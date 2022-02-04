@@ -80,3 +80,14 @@ class Sproloquio(Arnaldigno):
             self.r(e, random.choice(requests.get("https://duckduckgo.com/i.js?q=%s&o=json" % urllib.quote(uguale)).json()['results'])['image'])
         except:
             pass
+
+    @comanda('^che bell(. .+)')
+    def belo(self, e, match):
+        try:
+            virgilio = match.groups()[0].encode('utf-8')
+            if len(virgilio) > 5 and len(virgilio) <= 30:
+                self.r(e, u'bell%s... e` come il treno!' % virgilio)
+        except:
+            pass
+
+
