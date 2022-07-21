@@ -4,7 +4,7 @@ from arnaldo import brain
 
 class Disco(Arnaldigno):
     @comanda(
-        r"(((luned|marted|gioved|venerd)[iì]'*|sabato)[\s]+sera|mercoled[iì]i'*|domenica)\?*$"
+        r"^(((luned|marted|gioved|venerd)[iì]'*|sabato)[\s]+sera|mercoled[iì]i'*|domenica)\?*"
     )
     def aladiscoteca(self, e, match):
         ducazzate = {
