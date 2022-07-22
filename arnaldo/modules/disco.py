@@ -21,5 +21,5 @@ class Disco(Arnaldigno):
             if cazzata in ducazzate:
                 for c in ducazzate[cazzata][:-1]:
                     self.r(e, c)
-                dove = ducazzate[-1] + dove
+                dove = ducazzate[cazzata][-1] + dove
         self.r(e, dove)
