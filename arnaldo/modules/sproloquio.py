@@ -10,7 +10,7 @@ from arnaldo.conf import imgur_client_id, imgur_client_secret
 from bs4 import BeautifulSoup
 import requests
 
-imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
+#imgurclient = ImgurClient(imgur_client_id, imgur_client_secret)
 
 
 class Sproloquio(Arnaldigno):
