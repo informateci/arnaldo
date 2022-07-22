@@ -55,6 +55,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 Quotatore,
                 Robreto,
                 Sproloquio,
+                Disco,
             ]
         ]
 
