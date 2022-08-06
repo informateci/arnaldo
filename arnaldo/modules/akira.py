@@ -17,7 +17,7 @@ class Akira(Arnaldigno):
         return True
 
     @comanda(r'KANED(A+)([!?]*)')
-    def tetsuo(self, e, match):
+    def kaneda(self, e, match):
 
         aaa, esclama = match.groups()
         ooo = "O" * len(aaa)
