@@ -30,6 +30,7 @@ from .modules.linkini import Linkini
 from .modules.robreto import Robreto
 from .modules.karma import Karmelo
 from .modules.disco import Disco
+from .modules.akira import Akira
 
 
 class Arnaldo(irc.bot.SingleServerIRCBot):
@@ -56,6 +57,7 @@ class Arnaldo(irc.bot.SingleServerIRCBot):
                 Robreto,
                 Sproloquio,
                 Disco,
+                Akira,
             ]
         ]
 
