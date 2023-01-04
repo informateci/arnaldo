@@ -71,6 +71,20 @@ class Linkini(Arnaldigno):
 
         return True
 
+
+    @comanda("twitter.com\\/")
+    def nitterizzamelo(self, e, match):
+        matcharella = re.search("https?:..(www.)?twitter.com\\/[^ ]*status[^ ]*", e.arguments[0])
+        if matcharella is None:
+            return True
+
+        urla = matcharella[0]
+        nittera = urla.replace("twitter.com", "nitter.net")
+
+        self.r(e, nittera)
+        return True
+
+
     @comanda(".")
     def oembeddalo(self, e, match):
         allurls = URL_RE.findall(e.arguments[0])
