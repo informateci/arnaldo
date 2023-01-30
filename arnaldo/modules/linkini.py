@@ -87,6 +87,7 @@ class Linkini(Arnaldigno):
 
     @comanda(".")
     def oembeddalo(self, e, match):
+        print("EEEEEEEEEEEEEE", e.source.nick, e.target, self.arnaldo.connection.get_nickname())
         if self.arnaldo.nickname == e.source.nick:
             # se sono io non mi cao
             return True
