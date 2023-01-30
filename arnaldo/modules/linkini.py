@@ -87,7 +87,7 @@ class Linkini(Arnaldigno):
 
     @comanda(".")
     def oembeddalo(self, e, match):
-        if self.nickname == e.source.nick:
+        if self.arnaldo.nickname == e.source.nick:
             # se sono io non mi cao
             return True
         allurls = URL_RE.findall(e.arguments[0])
