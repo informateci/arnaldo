@@ -84,10 +84,10 @@ class Sproloquio(Arnaldigno):
         try:
             x = match.groups()[0].upper()
 
-            self.r(e, x)
+            self.r(e, ' '.join([z for z in x]))
             for i in range(1, len(x)-1):
-                self.r(e, f"{x[i]}{' ' * (len(x) - 2) }{x[len(x) - i - 1]}")
-            self.r(e, x[::-1])
+                self.r(e, f"{x[i]}{' ' * (2*(len(x) - 2)+1) }{x[len(x) - i - 1]}")
+            self.r(e, ' '.join([z for z in x[::-1]]))
 
         except Exception as e:
             print(e)
