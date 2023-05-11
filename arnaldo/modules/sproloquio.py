@@ -79,6 +79,19 @@ class Sproloquio(Arnaldigno):
         except Exception as e:
             print(e)
 
+    @comanda("^gagga (.+)")
+    def gagga(self, e, match):
+        try:
+            x = match.groups()[0].upper()
+
+            self.r(e, x)
+            for i in range(1, len(x)-1):
+                self.r(e, f"{x[i]}{' ' * (len(x) - 2) }{x[len(x) - i - 1]}")
+            self.r(e, x[::-1])
+
+        except Exception as e:
+            print(e)
+
     @comanda("^gugola (.+)")
     def gugola(self, e, match):
         try:
