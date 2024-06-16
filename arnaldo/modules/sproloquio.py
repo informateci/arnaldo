@@ -66,7 +66,7 @@ class Sproloquio(Arnaldigno):
         i = random.choice(
             requests.get(
                 "http://www.reddit.com/r/boobies/new.json",
-                headers={"User-agent": "Boobs bot"},
+                headers={"User-agent": "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:122.0) Gecko/201B00B5 Firefox/122.0"},
             ).json()["data"]["children"]
         )["data"]["url"]
         self.r(e, "%s" % i)
